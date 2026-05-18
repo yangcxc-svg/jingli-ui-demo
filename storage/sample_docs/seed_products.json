@@ -1,0 +1,3085 @@
+{
+  "products": [
+    {
+      "product_id": "PROD-EARBUDS-001",
+      "sku": "SKU-SV-ANC30-WHT",
+      "brand": "声微 SonoVibe",
+      "series": "AirNova 系列",
+      "name": "声微 AirNova 30 真无线降噪耳机",
+      "model": "AirNova 30",
+      "category": "真无线降噪耳机",
+      "subcategory": "入耳式降噪耳机",
+      "price": 299,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/sonovibe-airnova-30",
+      "image_url": "/product-images/earbuds.jpeg",
+      "release_date": "2026-03-10",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "预算有限用户"
+      ],
+      "use_cases": [
+        "日常通勤",
+        "自习室学习",
+        "轻度运动"
+      ],
+      "highlights": [
+        "25dB 主动降噪，学生党入门首选",
+        "单次续航 7 小时，搭配充电盒总续航 30 小时",
+        "IPX4 防水，运动无忧"
+      ],
+      "specs": {
+        "降噪深度": "25dB",
+        "单次续航": "7小时",
+        "总续航（含充电盒）": "30小时",
+        "蓝牙版本": "5.3",
+        "编解码": "AAC / SBC",
+        "单耳重量": "4.8g",
+        "防水等级": "IPX4",
+        "驱动单元": "10mm 复合振膜",
+        "充电接口": "Type-C",
+        "通话麦克风": "双麦通话降噪"
+      },
+      "variants": [
+        {
+          "variant_id": "SV-AN30-WHT",
+          "name": "云白",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "SV-AN30-BLK",
+          "name": "墨黑",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "SV-AN30-BLU",
+          "name": "雾蓝",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "299 元价位降噪表现超预期",
+        "佩戴轻盈舒适，长时间使用不累",
+        "充电盒小巧便携"
+      ],
+      "cons": [
+        "高频细节略有损失，不适合发烧友",
+        "不支持 LDAC 编解码",
+        "降噪深度在嘈杂地铁环境下稍显不足"
+      ],
+      "not_recommended_for": [
+        "对音质有极高要求的发烧友",
+        "经常在极嘈杂环境下使用的用户"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "入门降噪",
+        "轻便佩戴",
+        "高性价比"
+      ],
+      "rating": {
+        "score": 4.3,
+        "review_count": 3260,
+        "summary": "性价比之选，降噪和续航在这个价位表现不错，适合学生和轻度使用者。音质中规中矩，胜在便宜好用。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "支持以旧换新补贴 50 元"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "声微 AirNova 30 是声微品牌于 2026 年 3 月推出的入门级真无线降噪耳机，定价 299 元，是目前市场上 300 元以内最值得关注的主动降噪耳机之一。该耳机采用 10mm 复合振膜驱动单元，支持 25dB 主动降噪，能够有效过滤公交、教室等中等噪音环境中的低频噪声。蓝牙 5.3 连接稳定，支持 AAC 和 SBC 编解码，音质表现中正均衡，低频有一定量感，中频人声清晰，但高频延展一般。单次续航约 7 小时，配合充电盒总续航可达 30 小时，日常通勤和学习场景下可轻松使用一周以上。单耳重量仅 4.8g，长时间佩戴舒适度良好。IPX4 防水等级可应对轻度运动出汗。该耳机主要面向学生党和预算有限的消费者，在自习室、图书馆、公交地铁等场景下能显著降低环境干扰。不过，由于降噪深度为 25dB，面对地铁报站、施工噪音等强噪声景时降噪效果有限。同时不支持 LDAC 高清编解码，对音质有较高追求的用户建议选择同系列更高端的 AirNova 50 或 AirNova Pro。整体来看，AirNova 30 是 300 元以内的稳妥之选，适合第一次购买降噪耳机的用户。"
+    },
+    {
+      "product_id": "PROD-EARBUDS-002",
+      "sku": "SKU-SV-ANC50-SLV",
+      "brand": "声微 SonoVibe",
+      "series": "AirNova 系列",
+      "name": "声微 AirNova 50 真无线降噪耳机",
+      "model": "AirNova 50",
+      "category": "真无线降噪耳机",
+      "subcategory": "入耳式降噪耳机",
+      "price": 599,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/sonovibe-airnova-50",
+      "image_url": "/product-images/earbuds.jpeg",
+      "release_date": "2026-03-10",
+      "status": "available",
+      "target_users": [
+        "通勤上班族",
+        "学生党进阶用户"
+      ],
+      "use_cases": [
+        "地铁通勤",
+        "办公会议",
+        "影音娱乐"
+      ],
+      "highlights": [
+        "38dB 深度降噪，地铁通勤利器",
+        "支持 LDAC 高清编解码，音质更出色",
+        "通透模式自然，适合办公交流"
+      ],
+      "specs": {
+        "降噪深度": "38dB",
+        "单次续航": "8小时",
+        "总续航（含充电盒）": "36小时",
+        "蓝牙版本": "5.3",
+        "编解码": "LDAC / AAC / SBC",
+        "单耳重量": "5.2g",
+        "防水等级": "IPX4",
+        "驱动单元": "11mm 镀钛振膜",
+        "充电接口": "Type-C / 无线充电",
+        "通话麦克风": "三麦通话降噪 + AI 风噪过滤"
+      },
+      "variants": [
+        {
+          "variant_id": "SV-AN50-SLV",
+          "name": "星银",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "SV-AN50-BLK",
+          "name": "墨黑",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "SV-AN50-GRN",
+          "name": "松绿",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "降噪深度优秀，地铁场景下表现明显",
+        "LDAC 加持下音质提升显著",
+        "支持无线充电，使用更便捷"
+      ],
+      "cons": [
+        "开启 LDAC 后续航缩短至约 6 小时",
+        "耳压感比 AirNova 30 明显，部分用户不适应",
+        "充电盒体积略大"
+      ],
+      "not_recommended_for": [
+        "对耳压感敏感的用户",
+        "不常处于嘈杂环境的居家用户"
+      ],
+      "comparison_tags": [
+        "通勤优先",
+        "降噪强",
+        "LDAC",
+        "中端性价比"
+      ],
+      "rating": {
+        "score": 4.5,
+        "review_count": 2180,
+        "summary": "600 元价位综合表现出色的降噪耳机，降噪和音质均有明显提升，通勤族的理想选择。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "支持以旧换新补贴 80 元"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "声微 AirNova 50 是 AirNova 系列的中端进阶款，定价 599 元，于 2026 年 3 月与入门款 AirNova 30 同期发布。相比 AirNova 30，该耳机在降噪、音质和功能性上有全面提升。降噪深度达到 38dB，在地铁、公交等嘈杂通勤环境中表现优秀，能够明显削弱引擎轰鸣和人声嘈杂。驱动单元升级为 11mm 镀钛振膜，支持 LDAC 高清编解码，音质层次感更丰富，低频下潜更深，人声结像清晰。不过开启 LDAC 后续航会从 8 小时缩短至约 6 小时。充电盒支持 Type-C 有线和无线两种充电方式，总续航 36 小时。三麦通话降噪搭配 AI 风噪过滤算法，在户外通话时也能保持清晰。通透模式表现自然，适合在办公环境中需要随时与同事交流的场景。该耳机主要面向每日通勤的上班族和追求音质提升的学生进阶用户。但需注意，38dB 降噪带来的耳压感相比入门款更明显，对耳压敏感的用户建议到线下门店试戴。如果主要在安静环境使用、不常乘坐公共交通，入门款 AirNova 30 已经够用。AirNova 50 是 500-700 元价位通勤降噪耳机的优选，在降噪与音质之间取得了良好平衡。"
+    },
+    {
+      "product_id": "PROD-EARBUDS-003",
+      "sku": "SKU-SV-ANCPRO-GLD",
+      "brand": "声微 SonoVibe",
+      "series": "AirNova 系列",
+      "name": "声微 AirNova Pro 真无线降噪耳机",
+      "model": "AirNova Pro",
+      "category": "真无线降噪耳机",
+      "subcategory": "入耳式降噪耳机",
+      "price": 999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/sonovibe-airnova-pro",
+      "image_url": "/product-images/earbuds.jpeg",
+      "release_date": "2026-04-15",
+      "status": "available",
+      "target_users": [
+        "音质爱好者",
+        "商务人士",
+        "通勤上班族"
+      ],
+      "use_cases": [
+        "飞机出行",
+        "高铁通勤",
+        "高品质音乐欣赏",
+        "商务会议"
+      ],
+      "highlights": [
+        "45dB 旗舰级自适应降噪，安静如入无人之境",
+        "双单元同轴设计，Hi-Res Audio 认证",
+        "空间音频 + 头部追踪，沉浸式影音体验"
+      ],
+      "specs": {
+        "降噪深度": "45dB（自适应）",
+        "单次续航": "9小时",
+        "总续航（含充电盒）": "38小时",
+        "蓝牙版本": "5.4",
+        "编解码": "LDAC / aptX Adaptive / AAC / SBC",
+        "单耳重量": "5.6g",
+        "防水等级": "IP55",
+        "驱动单元": "10mm 动圈 + 知微动铁 同轴双单元",
+        "充电接口": "Type-C / 无线充电",
+        "通话麦克风": "六麦波束成形 + AI 深度降噪",
+        "特色功能": "空间音频 / 头部追踪 / 自适应降噪 / 多设备无缝切换"
+      },
+      "variants": [
+        {
+          "variant_id": "SV-ANPRO-GLD",
+          "name": "香槟金",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "SV-ANPRO-BLK",
+          "name": "曜石黑",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "SV-ANPRO-WHT",
+          "name": "陶瓷白",
+          "price_delta": 0,
+          "stock_status": "low_stock"
+        }
+      ],
+      "pros": [
+        "降噪深度和自适应调节在千元价位数一数二",
+        "双单元音质细腻，高低频表现均衡",
+        "空间音频体验出色，看视频身临其境"
+      ],
+      "cons": [
+        "999 元价格对预算敏感用户有门槛",
+        "充电盒较入门款明显增大",
+        "功能丰富但 App 设置项较多，上手需要适应"
+      ],
+      "not_recommended_for": [
+        "预算在 500 元以下的学生用户",
+        "只需基础听歌功能的轻度使用者"
+      ],
+      "comparison_tags": [
+        "旗舰降噪",
+        "Hi-Res音质",
+        "商务通话",
+        "价格高体验好"
+      ],
+      "rating": {
+        "score": 4.7,
+        "review_count": 1560,
+        "summary": "AirNova 系列旗舰，降噪、音质、通话三项全优，千元价位标杆产品。适合追求极致体验的用户。"
+      },
+      "after_sales": {
+        "warranty": "18个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "支持一年内免费更换耳套两次"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "声微 AirNova Pro 是 AirNova 系列的旗舰款真无线降噪耳机，定价 999 元，于 2026 年 4 月发布。作为系列顶配，AirNova Pro 在降噪性能上达到了 45dB 自适应降噪，内置环境感知芯片可根据周围噪声自动调节降噪等级，在飞机、高铁等高噪声场景下表现尤为突出。音质方面采用 10mm 动圈与知微动铁同轴双单元设计，通过 Hi-Res Audio 认证，支持 LDAC 和 aptX Adaptive 编解码，高频细腻通透，低频有力不轰头，中频人声温润。空间音频配合头部追踪功能让影音娱乐体验大幅提升。通话方面搭载六麦波束成形与 AI 深度降噪算法，即使在嘈杂街头也能保证对方听清你的声音，非常适合商务人士。续航方面，单次使用 9 小时，总续航 38 小时。IP55 防尘防水等级应对日常使用绰绰有余。与同系列 AirNova 30（299元）和 AirNova 50（599元）相比，Pro 版在降噪深度、音质、通话和特色功能上均有质的飞跃，但价格也翻倍。对于日常通勤需求不高、预算有限的学生用户，AirNova 50 已经足够好。而 AirNova Pro 更适合追求极致降噪和音质的商务人士、音乐爱好者和频繁出差的用户。这是声微品牌在千元价位段最具竞争力的产品。"
+    },
+    {
+      "product_id": "PROD-PHONE-001",
+      "sku": "SKU-XL-V20SE-BLU",
+      "brand": "星朗 Stellaris",
+      "series": "V20 系列",
+      "name": "星朗 V20 SE 5G 智能手机",
+      "model": "V20 SE",
+      "category": "手机",
+      "subcategory": "5G智能手机",
+      "price": 1499,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/stellaris-v20se",
+      "image_url": "https://example.com/images/stellaris-v20se.png",
+      "release_date": "2026-02-20",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "老年用户",
+        "预算敏感用户"
+      ],
+      "use_cases": [
+        "日常社交",
+        "网课学习",
+        "轻度游戏"
+      ],
+      "highlights": [
+        "天玑 7300 芯片，日常流畅不卡顿",
+        "6.67 英寸 120Hz OLED 屏，护眼认证",
+        "5000mAh 大电池 + 33W 快充"
+      ],
+      "specs": {
+        "芯片": "天璇 7300（虚构）",
+        "屏幕": "6.67英寸 OLED 120Hz",
+        "主摄": "5000万像素 f/1.8",
+        "前置": "1600万像素",
+        "电池": "5000mAh",
+        "快充": "33W 有线",
+        "存储": "8GB+128GB / 8GB+256GB",
+        "重量": "185g",
+        "系统": "StarOS 4.0（基于安卓14）",
+        "防水": "IP53"
+      },
+      "variants": [
+        {
+          "variant_id": "XL-V20SE-BLU-128",
+          "name": "远山蓝 8+128GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20SE-BLK-128",
+          "name": "星夜黑 8+128GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20SE-BLU-256",
+          "name": "远山蓝 8+256GB",
+          "price_delta": 200,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20SE-BLK-256",
+          "name": "星夜黑 8+256GB",
+          "price_delta": 200,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "1499 元起步价极具竞争力",
+        "OLED 120Hz 屏在这个价位少见",
+        "电池大续航好，一天一充绰绰有余"
+      ],
+      "cons": [
+        "拍照能力中规中矩��夜景一般",
+        "仅 33W 快充，充满需约 70 分钟",
+        "塑料中框质感偏廉价"
+      ],
+      "not_recommended_for": [
+        "对拍照有较高要求的用户",
+        "重度游戏玩家"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "大电池",
+        "5G入门",
+        "高性价比"
+      ],
+      "rating": {
+        "score": 4.2,
+        "review_count": 4520,
+        "summary": "千元价位的均衡之选，续航和屏幕是亮点，日常使用完全够用，性价比突出。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "碎屏险首年 99 元"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "星朗 V20 SE 是星朗品牌 2026 年初推出的入门级 5G 智能手机，定价 1499 元起（8+128GB），是目前 1500 元以内综合体验最均衡的机型之一。该手机搭载天璇 7300 处理器，采用 6nm 工艺，日常应用流畅，轻度游戏也能应付。6.67 英寸 OLED 屏幕支持 120Hz 高刷新率，通过低蓝光护眼认证，色彩表现在同价位中属于上游。5000mAh 大电池是其核心优势，配合低功耗芯片，中度使用可轻松撑过一天半，非常适合不方便频繁充电的学生和老年用户。33W 有线快充虽不算快，但从 10% 充到 100% 大约 70 分钟，可以接受。主摄 5000 万像素在光线充足时成像清晰，色彩准确，但夜景和暗光环境下噪点明显，不太适合摄影爱好者。机身重 185g 比较轻薄，但塑料中框在质感上有所妥协。该手机最适合预算有限的学生党、对手机性能要求不高的老年用户，以及只需日常社交、刷视频、网课的轻度使用者。如果对拍照或游戏性能有更高需求，建议加预算看同系列 V20 或 V20 Pro。V20 SE 是星朗 V20 系列的入门担当，优点在于该有的都有，缺点也都在可以接受的范围内。"
+    },
+    {
+      "product_id": "PROD-PHONE-002",
+      "sku": "SKU-XL-V20-GRN",
+      "brand": "星朗 Stellaris",
+      "series": "V20 系列",
+      "name": "星朗 V20 5G 智能手机",
+      "model": "V20",
+      "category": "手机",
+      "subcategory": "5G智能手机",
+      "price": 2499,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/stellaris-v20",
+      "image_url": "https://example.com/images/stellaris-v20.png",
+      "release_date": "2026-02-20",
+      "status": "available",
+      "target_users": [
+        "通勤上班族",
+        "大学生",
+        "拍照爱好者"
+      ],
+      "use_cases": [
+        "日常通勤",
+        "社交拍照",
+        "中度游戏",
+        "影音娱乐"
+      ],
+      "highlights": [
+        "天璇 9200 旗舰芯片，性能强劲",
+        "5000万像素 OIS 主摄 + 1200万超广角",
+        "67W 快充 + 4800mAh，快充续航两不误"
+      ],
+      "specs": {
+        "芯片": "天璇 9200（虚构）",
+        "屏幕": "6.7英寸 AMOLED 120Hz 2K",
+        "主摄": "5000万像素 OIS f/1.6",
+        "超广角": "1200万像素 f/2.2",
+        "前置": "3200万像素",
+        "电池": "4800mAh",
+        "快充": "67W 有线 + 15W 无线",
+        "存储": "12GB+256GB / 12GB+512GB",
+        "重量": "192g",
+        "系统": "StarOS 4.0（基于安卓14）",
+        "防水": "IP65"
+      },
+      "variants": [
+        {
+          "variant_id": "XL-V20-GRN-256",
+          "name": "青峦绿 12+256GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20-WHT-256",
+          "name": "月光白 12+256GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20-GRN-512",
+          "name": "青峦绿 12+512GB",
+          "price_delta": 300,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20-WHT-512",
+          "name": "月光白 12+512GB",
+          "price_delta": 300,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "旗舰芯片下放，性能同价位领先",
+        "拍照素质优秀，OIS 加持夜景也能拍",
+        "2K AMOLED 屏幕显示细腻"
+      ],
+      "cons": [
+        "电池略小于 SE 版，重度使用一天需充电",
+        "无长焦镜头，远距离拍摄能力有限",
+        "机身稍重于竞品"
+      ],
+      "not_recommended_for": [
+        "对长焦有刚需的用户",
+        "极致续航需求的用户"
+      ],
+      "comparison_tags": [
+        "通勤优先",
+        "拍照好",
+        "旗舰芯片",
+        "中端全能"
+      ],
+      "rating": {
+        "score": 4.5,
+        "review_count": 3890,
+        "summary": "2500 元价位的全能手机，性能、拍照、屏幕三项无短板，是同价位最值得推荐的机型之一。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "碎屏险首年 149 元"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "星朗 V20 是 V20 系列的标准版，定价 2499 元起（12+256GB），于 2026 年 2 月发布。相比入门款 V20 SE，V20 在处理器、屏幕、拍照和快充方面都有大幅升级。搭载天璇 9200 旗舰处理器，4nm 工艺，安兔兔跑分超 120 万，无论是日常多任务还是主流游戏都非常流畅。屏幕升级为 6.7 英寸 2K 分辨率 AMOLED，峰值亮度 1600nit，户外强光下也能看清。主摄升级到 5000 万像素并加入 OIS 光学防抖，暗光拍照成片率大幅提升，还配备了 1200 万像素超广角镜头。67W 有线快充约 45 分钟即可充满，同时支持 15W 无线充电。4800mAh 电池虽不如 SE 版的 5000mAh，但配合系统级省电优化，中度使用一天问题不大。V20 主要面向 2000-3000 元预算的上班族和大学生，在性能、拍照、屏幕之间取得了极佳平衡。缺点是没有长焦镜头，远距离拍摄需要裁切放大，画质会损失。如果长焦是刚需，建议看 V20 Pro。对比 V20 SE，多花 1000 元能获得旗舰芯片、更好的屏幕和拍照，升级感非常明显，是大多数人的最佳选择。"
+    },
+    {
+      "product_id": "PROD-PHONE-003",
+      "sku": "SKU-XL-V20P-BLK",
+      "brand": "星朗 Stellaris",
+      "series": "V20 系列",
+      "name": "星朗 V20 Pro 5G 智能手机",
+      "model": "V20 Pro",
+      "category": "手机",
+      "subcategory": "5G智能手机",
+      "price": 3999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/stellaris-v20pro",
+      "image_url": "https://example.com/images/stellaris-v20pro.png",
+      "release_date": "2026-03-15",
+      "status": "available",
+      "target_users": [
+        "摄影爱好者",
+        "商务人士",
+        "科技发烧友"
+      ],
+      "use_cases": [
+        "旅行摄影",
+        "商务办公",
+        "重度游戏",
+        "视频创作"
+      ],
+      "highlights": [
+        "5000万像素三摄系统，3X 光学长焦远近皆宜",
+        "天璇 9200+ 超频版，性能天花板",
+        "100W 快充 + 5200mAh，27 分钟充满"
+      ],
+      "specs": {
+        "芯片": "天璇 9200+（超频版，虚构）",
+        "屏幕": "6.78英寸 LTPO AMOLED 2K 1-120Hz",
+        "主摄": "5000万像素 OIS 1/1.3英寸大底 f/1.4",
+        "超广角": "5000万像素 f/2.0",
+        "长焦": "5000万像素 3X OIS f/2.5",
+        "前置": "3200万像素 AF",
+        "电池": "5200mAh",
+        "快充": "100W 有线 + 50W 无线",
+        "存储": "16GB+256GB / 16GB+512GB / 16GB+1TB",
+        "重量": "208g",
+        "系统": "StarOS 4.0（基于安卓14）",
+        "防水": "IP68",
+        "特色": "卫星通信 / 红外遥控"
+      },
+      "variants": [
+        {
+          "variant_id": "XL-V20P-BLK-256",
+          "name": "曜石黑 16+256GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20P-GLD-256",
+          "name": "琉金 16+256GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20P-BLK-512",
+          "name": "曜石黑 16+512GB",
+          "price_delta": 400,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20P-BLK-1TB",
+          "name": "曜石黑 16+1TB",
+          "price_delta": 800,
+          "stock_status": "low_stock"
+        }
+      ],
+      "pros": [
+        "三摄系统素质均衡，长焦尤其出色",
+        "100W 快充速度极快，碎片时间即可补电",
+        "IP68 防水安心感强"
+      ],
+      "cons": [
+        "208g 重量偏重，长时间单手握持累",
+        "价格接近 4000 元，预算门槛较高",
+        "直板造型无特色设计"
+      ],
+      "not_recommended_for": [
+        "对重量和握持感极度敏感的用户",
+        "预算在 3000 元以下的学生用户"
+      ],
+      "comparison_tags": [
+        "旗舰全能",
+        "拍照旗舰",
+        "价格高体验好",
+        "长焦"
+      ],
+      "rating": {
+        "score": 4.7,
+        "review_count": 2760,
+        "summary": "V20 系列最强，摄影系统全面领先同价位，100W 快充解决续航焦虑，是 4000 元价位最值得买的旗舰。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "赠送一年碎屏险 + 半年延保"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "星朗 V20 Pro 是 V20 系列的旗舰版本，定价 3999 元起（16+256GB），于 2026 年 3 月发布。这是星朗品牌当前的影像旗舰，最大亮点是 5000 万像素三摄系统：主摄采用 1/1.3 英寸超大底传感器，f/1.4 光圈加 OIS 光学防抖，进光量大幅领先同级；超广角同为 5000 万像素高素质镜头；3X 光学长焦配备独立 OIS，拍远处风景和人像特写非常实用。对比 V20 标准版只有主摄+超广角双摄，Pro 版的长焦镜头是质的飞跃。处理器升级为天璇 9200+ 超频版，GPU 频率提升 15%，重度游戏帧率更稳定。5200mAh 大电池搭配 100W 有线快充，27 分钟即可充满，50W 无线充电也非常快速。屏幕是 6.78 英寸 LTPO AMOLED 2K 屏，支持 1-120Hz 自适应刷新率，显示效果顶级。IP68 防水防尘，支持卫星通信和红外遥控。该手机适合摄影爱好者、商务人士和追求顶级体验的科技发烧友。缺点是 208g 的重量比较沉，长时间使用手腕会有负担。如果不需要长焦和极致拍照性能，V20 标准版在日常体验上已经非常接近 Pro 版，可以省下 1500 元。V20 Pro 代表了 4000 元价位手机的最高水准。"
+    },
+    {
+      "product_id": "PROD-PHONE-004",
+      "sku": "SKU-YH-M9-WHT",
+      "brand": "云合 YunHe",
+      "series": "M9 系列",
+      "name": "云合 M9 轻薄 5G 手机",
+      "model": "M9",
+      "category": "手机",
+      "subcategory": "5G智能手机",
+      "price": 1999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟"
+      ],
+      "purchase_url": "https://example.com/products/yunhe-m9",
+      "image_url": "https://example.com/images/yunhe-m9.png",
+      "release_date": "2026-04-01",
+      "status": "available",
+      "target_users": [
+        "通勤上班族",
+        "女性用户",
+        "轻薄爱好者"
+      ],
+      "use_cases": [
+        "日常通勤",
+        "社交拍照",
+        "时尚搭配"
+      ],
+      "highlights": [
+        "7.49mm 超薄机身 + 168g 轻盈手感",
+        "6400万像素自拍镜头，美颜算法自然",
+        "多彩配色，时尚百搭"
+      ],
+      "specs": {
+        "芯片": "天璇 8100（虚构）",
+        "屏幕": "6.55英寸 OLED 120Hz",
+        "主摄": "5000万像素 OIS f/1.8",
+        "前置": "6400万像素 f/2.0",
+        "电池": "4500mAh",
+        "快充": "67W 有线",
+        "存储": "8GB+256GB / 12GB+256GB",
+        "重量": "168g",
+        "厚度": "7.49mm",
+        "系统": "YunOS 3.0（基于安卓14）",
+        "防水": "IP54"
+      },
+      "variants": [
+        {
+          "variant_id": "YH-M9-WHT-256",
+          "name": "月光白 8+256GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YH-M9-PNK-256",
+          "name": "樱花粉 8+256GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YH-M9-LAV-256",
+          "name": "薰衣紫 8+256GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YH-M9-WHT-256-12G",
+          "name": "月光白 12+256GB",
+          "price_delta": 200,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "超薄超轻，握持手感极佳",
+        "前置拍照素质优秀，自拍党福音",
+        "配色时尚，做工精致"
+      ],
+      "cons": [
+        "电池偏小，重度使用仅撑半天",
+        "性能中规中矩，大型游戏会掉帧",
+        "扬声器为单扬声器"
+      ],
+      "not_recommended_for": [
+        "重度游戏玩家",
+        "对续航有极高要求的用户",
+        "影音发烧友"
+      ],
+      "comparison_tags": [
+        "轻薄时尚",
+        "自拍优秀",
+        "通勤优先",
+        "颜值高"
+      ],
+      "rating": {
+        "score": 4.3,
+        "review_count": 2340,
+        "summary": "主打轻薄和颜值的手机，手感和自拍是亮点。适合不玩大型游戏、注重外观和便携的用户。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "碎屏险首年 129 元"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "云合 M9 是云合品牌于 2026 年 4 月推出的轻薄型 5G 手机，定价 1999 元起。该手机最大卖点是极致的轻薄手感——7.49mm 厚度、168g 重量，在同价位 5G 手机中名列前茅。搭载天璇 8100 处理器，性能满足日常使用和中度游戏，但面对大型 3D 游戏会有明显掉帧。6.55 英寸 OLED 屏幕支持 120Hz 刷新率，屏幕素质不错。拍照方面，前置 6400 万像素是最大亮点，配合 AI 美颜算法，自拍效果自然细腻；后置 5000 万像素主摄配 OIS，日常拍照够用。配色提供月光白、樱花粉、薰衣紫三种时尚选择，非常适合注重外观的年轻用户。不过，轻薄的代价是电池仅 4500mAh，重度使用半天就需要充电。单扬声器也是一个短板，外放看视频体验一般。67W 快充部分弥补了续航的不足。云合 M9 主要面向日常通勤的上班族、喜欢自拍的女性用户以及追求轻薄手感的消费者。如果你是重度游戏玩家或对续航要求很高，建议看星朗 V20 系列。M9 的定位非常清晰：不追求极致性能，而是把轻薄、颜值和自拍做到最好。"
+    },
+    {
+      "product_id": "PROD-LAPTOP-001",
+      "sku": "SKU-YS-AIR15-SLV",
+      "brand": "远山 YuanShan",
+      "series": "CloudBook 系列",
+      "name": "远山 CloudBook Air 15 轻薄本",
+      "model": "CloudBook Air 15",
+      "category": "笔记本电脑",
+      "subcategory": "轻薄笔记本",
+      "price": 3999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/yuanshan-cloudbook-air15",
+      "image_url": "https://example.com/images/yuanshan-cloudbook-air15.png",
+      "release_date": "2026-01-15",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "通勤上班族",
+        "文字工作者"
+      ],
+      "use_cases": [
+        "网课学习",
+        "文档办公",
+        "轻度修图",
+        "通勤携带"
+      ],
+      "highlights": [
+        "1.29kg 极致轻薄，通勤无负担",
+        "15.6英寸 2.5K IPS 高色域屏",
+        "续航长达 12 小时，一天不用带充电器"
+      ],
+      "specs": {
+        "CPU": "奔腾 i5-1340P（虚构）",
+        "GPU": "核显 锐炬 Xe",
+        "内存": "16GB LPDDR5",
+        "硬盘": "512GB PCIe 4.0 SSD",
+        "屏幕": "15.6英寸 2.5K IPS 100%sRGB 60Hz",
+        "重量": "1.29kg",
+        "接口": "2×USB-C(雷电4)/1×USB-A/HDMI/3.5mm/MicroSD",
+        "续航": "约12小时",
+        "快充": "65W PD",
+        "键盘": "全尺寸背光键盘"
+      },
+      "variants": [
+        {
+          "variant_id": "YS-CBA15-SLV-512",
+          "name": "星辉银 i5/16G/512G",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YS-CBA15-GRY-512",
+          "name": "深空灰 i5/16G/512G",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YS-CBA15-SLV-1TB",
+          "name": "星辉银 i5/16G/1TB",
+          "price_delta": 400,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "重量不到 1.3kg，15寸中最轻级别",
+        "屏幕色准好，修图办公都合适",
+        "12小时续航解决通勤焦虑"
+      ],
+      "cons": [
+        "核显不适合游戏和视频剪辑",
+        "内存不可扩展",
+        "扬声器效果一般"
+      ],
+      "not_recommended_for": [
+        "需要独显玩游戏的用户",
+        "专业视频剪辑用户"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "超轻薄",
+        "长续航",
+        "通勤优先"
+      ],
+      "rating": {
+        "score": 4.4,
+        "review_count": 2670,
+        "summary": "轻薄本标杆，重量和续航都出色。办公学习完美，但不适合游戏和重度创作。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "上门维修服务（一线城市）"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "远山 CloudBook Air 15 是远山品牌 2026 年初推出的超轻薄笔记本，定价 3999 元起。该笔记本最突出的卖点是仅 1.29kg 的重量，在 15.6 英寸笔记本中达到了最轻级别，非常适合每天背包通勤或频繁在校园内移动的用户。搭载奔腾 i5-1340P 处理器和 16GB LPDDR5 内存，日常办公、网课、文档处理和轻度修图完全流畅。15.6 英寸 2.5K 分辨率 IPS 屏幕覆盖 100% sRGB 色域，色彩准确度高，用于图片编辑和 PPT 展示效果不错。72Wh 大电池支撑约 12 小时续航，一整天的课程或办公不用带充电器，65W PD 快充也方便在咖啡馆快速补电。接口丰富含两个雷电4。不过该笔记本仅配核显，不适合玩 3D 游戏或进行视频剪辑等 GPU 密集型任务。内存焊死不可扩展。如果需要独显性能，建议看同品牌 CloudBook Pro 16。CloudBook Air 15 是 4000 元预算内的轻薄本首选。"
+    },
+    {
+      "product_id": "PROD-LAPTOP-002",
+      "sku": "SKU-YS-PRO16-GRY",
+      "brand": "远山 YuanShan",
+      "series": "CloudBook 系列",
+      "name": "远山 CloudBook Pro 16 全能本",
+      "model": "CloudBook Pro 16",
+      "category": "笔记本电脑",
+      "subcategory": "全能笔记本",
+      "price": 6499,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/yuanshan-cloudbook-pro16",
+      "image_url": "https://example.com/images/yuanshan-cloudbook-pro16.png",
+      "release_date": "2026-02-28",
+      "status": "available",
+      "target_users": [
+        "设计师",
+        "视频创作者",
+        "程序员"
+      ],
+      "use_cases": [
+        "视频剪辑",
+        "平面设计",
+        "软件开发",
+        "中度游戏"
+      ],
+      "highlights": [
+        "i7 + RTX 4060 独显，创作无压力",
+        "16英寸 3K OLED 广色域屏 ΔE<1",
+        "双风扇三热管稳定性能释放"
+      ],
+      "specs": {
+        "CPU": "奔腾 i7-14700H（虚构）",
+        "GPU": "RTX 4060 6GB（虚构对标）",
+        "内存": "32GB DDR5（可扩展至64GB）",
+        "硬盘": "1TB PCIe 4.0 SSD",
+        "屏幕": "16英寸 3K OLED 120Hz DCI-P3 99% ΔE<1",
+        "重量": "1.89kg",
+        "接口": "2×USB-C(雷电4)/2×USB-A/HDMI 2.1/SD卡槽/3.5mm",
+        "续航": "约8小时",
+        "快充": "140W PD"
+      },
+      "variants": [
+        {
+          "variant_id": "YS-CBP16-GRY-32-1T",
+          "name": "深空灰 i7/32G/1TB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YS-CBP16-SLV-32-1T",
+          "name": "星辉银 i7/32G/1TB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YS-CBP16-GRY-64-2T",
+          "name": "深空灰 i7/64G/2TB",
+          "price_delta": 1000,
+          "stock_status": "low_stock"
+        }
+      ],
+      "pros": [
+        "OLED 屏色准极高，设计创作首选",
+        "32GB+独显的性能组合生产力强",
+        "接口齐全无需扩展坞"
+      ],
+      "cons": [
+        "6499 起步价偏高",
+        "1.89kg 非轻薄",
+        "OLED 屏有轻微烧屏风险"
+      ],
+      "not_recommended_for": [
+        "只做文档办公的轻度用户",
+        "预算在5000以内的学生"
+      ],
+      "comparison_tags": [
+        "创作利器",
+        "OLED屏",
+        "价格高体验好",
+        "设计师首选"
+      ],
+      "rating": {
+        "score": 4.6,
+        "review_count": 1890,
+        "summary": "创作者的理想工具，OLED 屏和独显组合无可挑剔。价格偏高但物有所值。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "OLED屏两年内烧屏可免费更换"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "远山 CloudBook Pro 16 是远山品牌面向创作者推出的全能笔记本，定价 6499 元起。最大亮点是 16 英寸 3K OLED 120Hz 屏幕，覆盖 99% DCI-P3 广色域，色准 ΔE<1，出厂逐台校色，是设计师和视频剪辑师的理想工作屏。搭载奔腾 i7-14700H 和 RTX 4060 6GB 独显，32GB DDR5 可扩展至 64GB，1TB 高速固态，能流畅处理 4K 视频剪辑、3D 建模等专业任务。双风扇三热管散热保证长时间高负载稳定。接口非常齐全：两个雷电4、两个USB-A、HDMI 2.1和SD卡槽。四扬声器立体声系统在笔记本中属优秀水平。续航约8小时满足移动办公。如果只做文档办公，CloudBook Air 15 更合适且便宜 2500 元。Pro 16 代表了远山在专业生产力领域的最高水准。"
+    },
+    {
+      "product_id": "PROD-LAPTOP-003",
+      "sku": "SKU-TF-GAME7-BLK",
+      "brand": "铁风 TieFeng",
+      "series": "暴风 系列",
+      "name": "铁风 暴风 7 游戏本",
+      "model": "暴风 7",
+      "category": "笔记本电脑",
+      "subcategory": "游戏笔记本",
+      "price": 5499,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟"
+      ],
+      "purchase_url": "https://example.com/products/tiefeng-storm7",
+      "image_url": "https://example.com/images/tiefeng-storm7.png",
+      "release_date": "2026-03-20",
+      "status": "available",
+      "target_users": [
+        "学生党游戏玩家",
+        "预算有限的游戏用户"
+      ],
+      "use_cases": [
+        "�流网游",
+        "3A 游戏",
+        "直播推流"
+      ],
+      "highlights": [
+        "RTX 4060 满血140W，游戏帧率拉满",
+        "16英寸 2.5K 165Hz 电竞屏",
+        "三风扇散热系统"
+      ],
+      "specs": {
+        "CPU": "奔腾 i5-14500HX（虚构）",
+        "GPU": "RTX 4060 8GB 满血140W（虚构对标）",
+        "内存": "16GB DDR5（双通道，可扩展至32GB）",
+        "硬盘": "512GB PCIe 4.0 SSD（双M.2插槽）",
+        "屏幕": "16英寸 2.5K IPS 165Hz 100%sRGB",
+        "重量": "2.35kg",
+        "接口": "1×USB-C/3×USB-A/HDMI 2.1/RJ45/3.5mm",
+        "续航": "约4小时",
+        "充电器": "230W适配器"
+      },
+      "variants": [
+        {
+          "variant_id": "TF-S7-BLK-16-512",
+          "name": "暗夜黑 i5/16G/512G",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "TF-S7-BLK-32-1T",
+          "name": "暗夜黑 i5/32G/1TB",
+          "price_delta": 500,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "RTX 4060 满血释放游戏帧率同价位领先",
+        "165Hz高刷电竞屏体验流畅",
+        "三风扇散热长时间游戏不降频"
+      ],
+      "cons": [
+        "2.35kg偏重不适合频繁携带",
+        "续航仅4小时离不开电源",
+        "外观偏张扬商务场景不合适"
+      ],
+      "not_recommended_for": [
+        "经常需要携带外出的商务人士",
+        "追求轻薄便携的用户"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "游戏性能",
+        "高刷电竞",
+        "性价比游戏本"
+      ],
+      "rating": {
+        "score": 4.4,
+        "review_count": 3210,
+        "summary": "5500元价位性价比最高的游戏本，独显满血释放是核心竞争力。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "支持上门维修"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "铁风 暴风 7 是铁风品牌 2026 年主打性价比的游戏本，定价 5499 元起。最大卖点是 RTX 4060 8GB 独显的满血 140W 释放功率，在同价位游戏本中性能释放最激进。搭配奔腾 i5-14500HX 和 16GB DDR5 双通道内存，主流网游最高画质下保持 100 帧以上，3A 大作中画质也能流畅运行。16 英寸 2.5K 165Hz 高刷屏保证游戏流畅。三风扇散热系统长时间高负载不降频。RGB 全区域背光键盘有机械感。双 M.2 插槽方便扩展。代价是 2.35kg 重量和仅 4 小时续航。面向宿舍或家中为主、偶尔携带、以游戏为主要需求的学生玩家。如果需要移动办公加偶尔游戏，远山 CloudBook Pro 16 更适合。暴风 7 是 5500 元预算内能买到的最强游戏性能。"
+    },
+    {
+      "product_id": "PROD-TABLET-001",
+      "sku": "SKU-XL-PAD11-GRY",
+      "brand": "星朗 Stellaris",
+      "series": "StarPad 系列",
+      "name": "星朗 StarPad 11 平板电脑",
+      "model": "StarPad 11",
+      "category": "平板电脑",
+      "subcategory": "娱乐平板",
+      "price": 1599,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/stellaris-starpad11",
+      "image_url": "https://example.com/images/stellaris-starpad11.png",
+      "release_date": "2026-01-20",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "影音爱好者"
+      ],
+      "use_cases": [
+        "网课学习",
+        "追剧观影",
+        "阅读电子书",
+        "轻度笔记"
+      ],
+      "highlights": [
+        "11英寸 2K IPS 屏 + 四扬声器环绕声",
+        "天璇 7200 芯片学习娱乐够用",
+        "支持手写笔课堂笔记好帮手"
+      ],
+      "specs": {
+        "芯片": "天璇 7200（虚构）",
+        "屏幕": "11英寸 2K IPS 120Hz",
+        "手写笔": "支持（另购 StarPen）",
+        "电池": "8000mAh",
+        "快充": "22.5W",
+        "存储": "6GB+128GB / 8GB+128GB",
+        "重量": "480g",
+        "扬声器": "四扬声器"
+      },
+      "variants": [
+        {
+          "variant_id": "XL-SP11-GRY-128",
+          "name": "深空灰 6+128GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-SP11-SLV-128",
+          "name": "星光银 6+128GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-SP11-GRY-128-8G",
+          "name": "深空灰 8+128GB",
+          "price_delta": 200,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "1599元价位有四扬声器和2K 120Hz屏",
+        "支持手写笔学习笔记方便",
+        "重量轻躺着看视频不累"
+      ],
+      "cons": [
+        "6GB内存多任务切换略卡",
+        "手写笔需另购增加成本",
+        "不支持键盘配件生产力有限"
+      ],
+      "not_recommended_for": [
+        "需要平板替代笔记本办公的用户",
+        "专业绘画用户"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "影音娱乐",
+        "网课平板",
+        "高性价比"
+      ],
+      "rating": {
+        "score": 4.3,
+        "review_count": 5120,
+        "summary": "千元平板里的影音之王，四扬声器配2K屏看视频体验极好。学生网课和追剧的最佳搭档。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "碎屏险首年69元"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "星朗 StarPad 11 是星朗品牌 2026 年初推出的入门级平板电脑，定价 1599 元起。该平板主打影音娱乐和学习场景，最大亮点是在这个价位提供了四扬声器系统和 11 英寸 2K 120Hz IPS 屏幕，追剧观影体验远超同价位竞品。搭载天璇 7200 芯片，网课、在线文档、PDF 阅读完全没问题。支持 StarPen 手写笔（另购 299 元），可以课堂上做笔记和标注文档。8000mAh 电池续航约 10 小时。480g 重量拿在手里不累。不过 6GB 起步内存多任务时偶有卡顿，建议选 8GB 版本。不支持键盘配件，不适合当生产力工具。最适合需要上网课追剧看电子书的学生党。如果需要更强生产力，建议看 StarPad Pro 12.6。在 1600 元价位，StarPad 11 是影音体验最好的选择。"
+    },
+    {
+      "product_id": "PROD-TABLET-002",
+      "sku": "SKU-XL-PADP12-GRY",
+      "brand": "星朗 Stellaris",
+      "series": "StarPad 系列",
+      "name": "星朗 StarPad Pro 12.6 平板电脑",
+      "model": "StarPad Pro 12.6",
+      "category": "平板电脑",
+      "subcategory": "生产力平板",
+      "price": 3499,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/stellaris-starpad-pro126",
+      "image_url": "https://example.com/images/stellaris-starpad-pro126.png",
+      "release_date": "2026-03-05",
+      "status": "available",
+      "target_users": [
+        "大学生",
+        "设计师",
+        "商务人士"
+      ],
+      "use_cases": [
+        "课堂笔记",
+        "绘画创作",
+        "分屏办公",
+        "PPT演示"
+      ],
+      "highlights": [
+        "12.6英寸 OLED 2K 屏 色准ΔE<2",
+        "支持 StarPen 2 + 磁吸键盘",
+        "天璇 9200 芯片轻松多任务"
+      ],
+      "specs": {
+        "芯片": "天璇 9200（虚构）",
+        "屏幕": "12.6英寸 OLED 2K 120Hz DCI-P3 95%",
+        "手写笔": "StarPen 2（4096级压感 磁吸充电）",
+        "键盘": "磁吸键盘（另购）",
+        "电池": "10000mAh",
+        "快充": "45W",
+        "存储": "8GB+256GB / 12GB+256GB",
+        "重量": "565g",
+        "扬声器": "六扬声器+杜比全景声"
+      },
+      "variants": [
+        {
+          "variant_id": "XL-SPP12-GRY-256",
+          "name": "深空灰 8+256GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-SPP12-SLV-256",
+          "name": "星光银 8+256GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-SPP12-GRY-256-12G",
+          "name": "深空灰 12+256GB",
+          "price_delta": 400,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "OLED屏显示效果顶级绘画设计色彩精准",
+        "StarPen 2书写延迟极低接近纸笔体验",
+        "桌面模式配合键盘可替代轻度笔记本"
+      ],
+      "cons": [
+        "键盘和笔另购全套成本接近5000",
+        "安卓平板生态仍不及竞品",
+        "12.6寸外出携带不太方便"
+      ],
+      "not_recommended_for": [
+        "只需追剧的轻度用户",
+        "需要运行专业桌面级软件的用户"
+      ],
+      "comparison_tags": [
+        "生产力",
+        "OLED屏",
+        "手写笔",
+        "价格高体验好"
+      ],
+      "rating": {
+        "score": 4.6,
+        "review_count": 1640,
+        "summary": "安卓阵营的生产力标杆平板，OLED屏和手写笔体验出色。全套成本略高但物有所值。"
+      },
+      "after_sales": {
+        "warranty": "18个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "StarPen 2一年内免费更换笔尖"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "星朗 StarPad Pro 12.6 是星朗品牌 2026 年 3 月推出的旗舰生产力平板，定价 3499 元起。搭载 12.6 英寸 OLED 2K 120Hz 屏幕，覆盖 95% DCI-P3 广色域，色准 ΔE<2，非常适合绘画、设计和修图。天璇 9200 芯片配最高 12GB 内存，分屏多任务流畅。支持 StarPen 2（另购 399 元），4096 级压感磁吸充电，书写延迟极低。支持磁吸键盘（另购 599 元），配合桌面模式可替代轻度笔记本。六扬声器杜比全景声影音体验顶级。10000mAh 续航约 12 小时。不过全套成本接近 4500-5000 元。对于只需看视频和上网课的用户，1599 元的 StarPad 11 已够用。Pro 12.6 更适合需要做数字笔记、绘画创作或分屏办公的大学生、设计师和商务人士。"
+    },
+    {
+      "product_id": "PROD-TABLET-003",
+      "sku": "SKU-MK-PADM8-BLU",
+      "brand": "墨刻 MoKe",
+      "series": "ReadPad 系列",
+      "name": "墨刻 ReadPad M8 护眼平板",
+      "model": "ReadPad M8",
+      "category": "平板电脑",
+      "subcategory": "护眼平板",
+      "price": 999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟"
+      ],
+      "purchase_url": "https://example.com/products/moke-readpad-m8",
+      "image_url": "https://example.com/images/moke-readpad-m8.png",
+      "release_date": "2026-02-10",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "少儿用户家长",
+        "阅读爱好者"
+      ],
+      "use_cases": [
+        "电子阅读",
+        "网课学习",
+        "少儿教育应用"
+      ],
+      "highlights": [
+        "8.4英寸护眼墨水屏+彩色模式",
+        "仅310g单手握持轻松",
+        "内置护眼模式+家长控制"
+      ],
+      "specs": {
+        "芯片": "天璇 6100（虚构）",
+        "屏幕": "8.4英寸 彩色墨水屏+LCD双屏切换",
+        "电池": "5000mAh",
+        "快充": "18W",
+        "存储": "4GB+64GB / 4GB+128GB",
+        "重量": "310g",
+        "扬声器": "单扬声器"
+      },
+      "variants": [
+        {
+          "variant_id": "MK-RPM8-BLU-64",
+          "name": "宁静蓝 4+64GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "MK-RPM8-WHT-64",
+          "name": "纯白 4+64GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "MK-RPM8-BLU-128",
+          "name": "宁静蓝 4+128GB",
+          "price_delta": 150,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "墨水屏模式几乎不伤眼长时间阅读舒适",
+        "超轻重量通勤阅读首选",
+        "999元性价比极高"
+      ],
+      "cons": [
+        "性能弱不适合游戏和重度多任务",
+        "屏幕刷新率低看视频体验不佳",
+        "App 生态受限"
+      ],
+      "not_recommended_for": [
+        "需要追剧看视频的用户",
+        "需要玩游戏的用户",
+        "需要分屏多任务办公的用户"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "护眼",
+        "阅读专用",
+        "超轻便携"
+      ],
+      "rating": {
+        "score": 4.1,
+        "review_count": 1820,
+        "summary": "护眼阅读神器，墨水屏阅读体验极佳。功能单一但做到了极致。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "屏幕一年内残影可免费更换"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "墨刻 ReadPad M8 是墨刻品牌 2026 年推出的护眼阅读平板，定价 999 元起。最大特色是 8.4 英寸彩色墨水屏与 LCD 双屏切换设计，阅读模式下墨水屏几乎不产生蓝光，长时间阅读不疲劳；需要上网课时可切换 LCD 模式。310g 重量比大多数平板轻一半，通勤地铁上单手握持阅读毫无压力。天璇 6100 入门芯片和 4GB 内存足以运行阅读类 App 和网课软件。墨水屏模式续航可达数天。内置家长控制模式适合给小朋友使用。但性能不足以运行游戏，墨水屏刷新率低看视频效果差。如果需要全能平板请看星朗 StarPad 11。ReadPad M8 面向每天大量阅读的学生和阅读爱好者，以及希望给孩子护眼学习设备的家长。千元内最好的护眼阅读设备。"
+    },
+    {
+      "product_id": "PROD-WATCH-001",
+      "sku": "SKU-XL-GW5-BLK",
+      "brand": "星朗 Stellaris",
+      "series": "GalaxyFit 系列",
+      "name": "星朗 GalaxyFit 5 智能手表",
+      "model": "GalaxyFit 5",
+      "category": "智能手表",
+      "subcategory": "运动智能手表",
+      "price": 999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/stellaris-galaxyfit5",
+      "image_url": "https://example.com/images/stellaris-galaxyfit5.png",
+      "release_date": "2026-02-14",
+      "status": "available",
+      "target_users": [
+        "运动爱好者",
+        "通勤上班族",
+        "健康管理用户"
+      ],
+      "use_cases": [
+        "跑步健身",
+        "日常健康监测",
+        "通勤佩戴",
+        "游泳"
+      ],
+      "highlights": [
+        "1.43英寸 AMOLED 全面屏 AOD 常亮",
+        "120+运动模式 含独立GPS",
+        "14天超长续航 + 血氧/心率/睡眠全监测"
+      ],
+      "specs": {
+        "屏幕": "1.43英寸 AMOLED 466×466 AOD",
+        "续航": "典型使用14天/重度7天",
+        "运动模式": "120+（含跑步/游泳/骑行/瑜伽等）",
+        "定位": "双频GPS+北斗",
+        "健康传感器": "光学心率/血氧/压力/体温/睡眠",
+        "防水等级": "5ATM（50米防水）",
+        "连接": "蓝牙5.3/NFC",
+        "重量": "36g（不含表带）",
+        "系统": "StarWear OS 3.0"
+      },
+      "variants": [
+        {
+          "variant_id": "XL-GF5-BLK-46",
+          "name": "曜石黑 46mm",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-GF5-SLV-46",
+          "name": "月光银 46mm",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-GF5-BLK-42",
+          "name": "曜石黑 42mm",
+          "price_delta": -50,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "14天续航同价位最长",
+        "运动功能全面GPS精准",
+        "AOD常亮显示看时间方便"
+      ],
+      "cons": [
+        "第三方App生态不如竞品丰富",
+        "表盘圆形但选择较少",
+        "通话功能仅限蓝牙转接"
+      ],
+      "not_recommended_for": [
+        "需要手表独立接打电话的用户",
+        "追求丰富第三方App生态的用户"
+      ],
+      "comparison_tags": [
+        "运动全能",
+        "长续航",
+        "通勤优先",
+        "健康监测"
+      ],
+      "rating": {
+        "score": 4.5,
+        "review_count": 3450,
+        "summary": "千元价位最全面的运动手表，续航和运动功能是核心优势。健康监测准确度也不错。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "表带一年内免费更换一次"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "星朗 GalaxyFit 5 是星朗品牌 2026 年推出的运动智能手表，定价 999 元。该手表最突出的优势是 14 天超长续航和 120+ 运动模式。1.43 英寸 AMOLED 全面屏支持 AOD 常亮显示，户外强光下也清晰可见。内置双频 GPS+北斗定位，跑步和骑行轨迹记录精准。健康监测方面覆盖心率、血氧、压力、体温和睡眠，数据可同步到手机 App 长期追踪。5ATM 50米防水可以戴着游泳。NFC 支持公交卡和门禁。36g 重量日常佩戴几乎无感。适合运动爱好者、注重健康管理的上班族以及日常通勤佩戴。不足之处是第三方 App 生态有限，想在手表上装各种应用的用户可能不满足。独立通话需要搭配手机蓝牙，不支持 eSIM。如果需要更强的智能功能和 App 生态，建议看 GalaxyFit 5 Pro。千元价位运动手表的首选。"
+    },
+    {
+      "product_id": "PROD-WATCH-002",
+      "sku": "SKU-XL-GW5P-TIT",
+      "brand": "星朗 Stellaris",
+      "series": "GalaxyFit 系列",
+      "name": "星朗 GalaxyFit 5 Pro 智能手表",
+      "model": "GalaxyFit 5 Pro",
+      "category": "智能手表",
+      "subcategory": "旗舰智能手表",
+      "price": 1999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/stellaris-galaxyfit5pro",
+      "image_url": "https://example.com/images/stellaris-galaxyfit5pro.png",
+      "release_date": "2026-02-14",
+      "status": "available",
+      "target_users": [
+        "商务人士",
+        "科技爱好者",
+        "高端运动用户"
+      ],
+      "use_cases": [
+        "商务佩戴",
+        "户外运动",
+        "独立通话",
+        "移动支付"
+      ],
+      "highlights": [
+        "钛合金表壳+蓝宝石玻璃 质感高级",
+        "eSIM独立通话 离开手机也能联系",
+        "心电图ECG + 连续血糖趋势监测"
+      ],
+      "specs": {
+        "屏幕": "1.5英寸 LTPO AMOLED 480×480 AOD",
+        "续航": "典型使用10天/重度5天",
+        "运动模式": "150+（含高尔夫/潜水/铁人三项）",
+        "定位": "五星双频GPS",
+        "健康传感器": "心率/血氧/ECG心电/体温/血糖趋势/睡眠",
+        "防水等级": "10ATM+EN13319潜水认证",
+        "连接": "蓝牙5.3/Wi-Fi/NFC/eSIM",
+        "重量": "52g（不含表带）",
+        "材质": "钛合金表壳+蓝宝石玻璃",
+        "系统": "StarWear OS 3.0"
+      },
+      "variants": [
+        {
+          "variant_id": "XL-GF5P-TIT-47",
+          "name": "钛色 47mm",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-GF5P-BLK-47",
+          "name": "暗夜黑 47mm",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "钛合金+蓝宝石质感远超千元手表",
+        "eSIM独立通话跑步不用带手机",
+        "ECG心电和血糖趋势监测功能领先"
+      ],
+      "cons": [
+        "1999元价格翻倍",
+        "eSIM需额外开通月费",
+        "52g比标准版重日常感知明显"
+      ],
+      "not_recommended_for": [
+        "预算有限的学生用户",
+        "不需要eSIM独立通话的用户"
+      ],
+      "comparison_tags": [
+        "旗舰手表",
+        "eSIM通话",
+        "价格高体验好",
+        "商务佩戴"
+      ],
+      "rating": {
+        "score": 4.7,
+        "review_count": 1280,
+        "summary": "GalaxyFit系列顶配，材质、健康和通信功能全面升级。商务人士和科技爱好者的首选。"
+      },
+      "after_sales": {
+        "warranty": "18个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "蓝宝石玻璃碎裂两年内5折更换"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "星朗 GalaxyFit 5 Pro 是 GalaxyFit 系列的旗舰版本，定价 1999 元。相比标准版 GalaxyFit 5（999元），Pro 版在材质、健康监测和通信功能上进行了全面升级。钛合金表壳搭配蓝宝石玻璃表镜，质感和耐刮性远超普通版。1.5 英寸 LTPO AMOLED 屏幕更大更细腻。最重要的升级是 eSIM 独立通话功能，跑步或出门不带手机也能接打电话、收发信息。健康监测新增 ECG 心电图和血糖趋势监测，对有健康管理需求的用户非常有价值。150+ 运动模式涵盖高尔夫、潜水和铁人三项等专业运动。10ATM 防水+潜水认证，比标准版更适合水上运动。续航约 10 天，比标准版稍短。不过 1999 元的价格是标准版的两倍，如果不需要 eSIM 和高级健康监测，标准版已经非常好用。Pro 版更适合商务人士、科技爱好者和对健康数据有深度需求的用户。"
+    },
+    {
+      "product_id": "PROD-BAND-001",
+      "sku": "SKU-DL-B8-BLK",
+      "brand": "动力 DongLi",
+      "series": "FitBand 系列",
+      "name": "动力 FitBand 8 智能手环",
+      "model": "FitBand 8",
+      "category": "智能手表",
+      "subcategory": "智能手环",
+      "price": 199,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/dongli-fitband8",
+      "image_url": "https://example.com/images/dongli-fitband8.png",
+      "release_date": "2026-03-01",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "入门运动用户",
+        "预算敏感用户"
+      ],
+      "use_cases": [
+        "日常计步",
+        "睡眠监测",
+        "消息提醒",
+        "轻度运动"
+      ],
+      "highlights": [
+        "199元超高性价比",
+        "1.47英寸AMOLED大屏手环",
+        "续航21天无充电焦虑"
+      ],
+      "specs": {
+        "屏幕": "1.47英寸 AMOLED 194×368",
+        "续航": "典型使用21天",
+        "运动模式": "50+",
+        "健康传感器": "光学心率/血氧/睡眠",
+        "防水等级": "5ATM",
+        "连接": "蓝牙5.2/NFC",
+        "重量": "22g",
+        "系统": "DongLi Wear"
+      },
+      "variants": [
+        {
+          "variant_id": "DL-FB8-BLK",
+          "name": "墨黑",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "DL-FB8-GRN",
+          "name": "松绿",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "DL-FB8-ORG",
+          "name": "活力橙",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "199元不到两百块功能却很全",
+        "21天续航几乎不用管充电",
+        "22g重量佩戴无感"
+      ],
+      "cons": [
+        "屏幕小操作不便",
+        "无GPS需连接手机定位",
+        "不支持第三方App"
+      ],
+      "not_recommended_for": [
+        "需要独立GPS记录跑步轨迹的用户",
+        "需要大屏交互的用户"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "超长续航",
+        "入门手环",
+        "极致性价比"
+      ],
+      "rating": {
+        "score": 4.2,
+        "review_count": 8920,
+        "summary": "200元以内最值得买的智能手环，功能够用续航超长。不追求高级功能的用户闭眼入。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "表带免费更换"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "动力 FitBand 8 是动力品牌 2026 年推出的入门级智能手环，定价仅 199 元，是目前 200 元以内功能最全面的智能手环。1.47 英寸 AMOLED 大屏在手环中算是大尺寸，显示清晰色彩鲜艳。核心功能覆盖计步、心率监测、血氧检测、睡眠监测和 50+ 运动模式，日常健康管理完全够用。21 天超长续航是其最大亮点，普通使用情况下半个月才需充电一次。5ATM 防水可以戴着洗澡游泳。NFC 支持公交卡。22g 的重量戴在手上几乎无感。但作为手环也有局限：屏幕小复杂操作不方便，没有独立 GPS 记录跑步轨迹需要连接手机，不支持第三方 App 安装。如果需要更大屏幕、独立 GPS 和丰富功能，建议加预算看星朗 GalaxyFit 5 手表。FitBand 8 适合学生党、预算有限的用户以及只需要基础健康监测和消息提醒的轻度使用者。199 元的价格几乎没有犹豫成本。"
+    },
+    {
+      "product_id": "PROD-PROJECTOR-001",
+      "sku": "SKU-GY-L1-WHT",
+      "brand": "光映 GuangYing",
+      "series": "LumiBox 系列",
+      "name": "光映 LumiBox L1 家用投影仪",
+      "model": "LumiBox L1",
+      "category": "家用投影仪",
+      "subcategory": "LED投影仪",
+      "price": 1999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟"
+      ],
+      "purchase_url": "https://example.com/products/guangying-lumibox-l1",
+      "image_url": "https://example.com/images/guangying-lumibox-l1.png",
+      "release_date": "2026-01-25",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "租房用户",
+        "家庭影院入门"
+      ],
+      "use_cases": [
+        "卧室观影",
+        "宿舍追剧",
+        "游戏投屏"
+      ],
+      "highlights": [
+        "1080P 全高清 800ANSI流明",
+        "自动对焦+四角梯形校正",
+        "内置智能系统 资源丰富"
+      ],
+      "specs": {
+        "亮度": "800 ANSI流明",
+        "分辨率": "1920×1080（原生1080P）",
+        "投射比": "1.2:1",
+        "投射尺寸": "40-150英寸",
+        "系统": "LumiOS（安卓定制）",
+        "音响": "2×5W 全频扬声器",
+        "接口": "HDMI/USB/3.5mm/Wi-Fi 6/蓝牙5.1",
+        "重量": "2.1kg",
+        "光源寿命": "30000小时",
+        "特色": "自动对焦/自动避障/四角梯形校正"
+      },
+      "variants": [
+        {
+          "variant_id": "GY-L1-WHT",
+          "name": "珍珠白",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "GY-L1-GRY",
+          "name": "太空灰",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "2000元内最亮的1080P投影",
+        "自动对焦免去手动调节麻烦",
+        "内置系统开机即用"
+      ],
+      "cons": [
+        "白天拉窗帘才能看清",
+        "音响效果一般建议外接音箱",
+        "无激光光源色彩不如高端机"
+      ],
+      "not_recommended_for": [
+        "需要白天不拉窗帘观看的用户",
+        "对画质有极高要求的影音发烧友"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "卧室投影",
+        "入门家用",
+        "高性价比"
+      ],
+      "rating": {
+        "score": 4.2,
+        "review_count": 4580,
+        "summary": "2000元家用投影的标杆，画质和易用性在这个价位很难挑出毛病。晚上看电影幸福感满满。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "光源两年内亮度衰减超30%可免费维修"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "光映 LumiBox L1 是光映品牌 2026 年推出的入门级家用投影仪，定价 1999 元。该投影仪原生 1080P 分辨率，800 ANSI 流明亮度，在 2000 元价位内亮度领先。1.2:1 投射比，2.5 米距离可投射 100 英寸大画面，适合卧室和小客厅。支持自动对焦和四角梯形校正，开机几秒即可调好画面。内置 LumiOS 智能系统，预装主流视频应用，开机即可追剧。2×5W 扬声器日常够用但效果一般，建议搭配蓝牙音箱获得更好观影体验。2.1kg 重量方便移动到不同房间。不过 800 ANSI 在白天或开灯环境下画面会明显泛白，需要拉窗帘使用。色彩表现为 LED 光源水平，与激光投影有差距。适合学生宿舍追剧、租房用户卧室观影和家庭影院入门。如果需要白天也能使用或追求更好画质，建议看 LumiBox L3 激光版。"
+    },
+    {
+      "product_id": "PROD-PROJECTOR-002",
+      "sku": "SKU-GY-L3-WHT",
+      "brand": "光映 GuangYing",
+      "series": "LumiBox 系列",
+      "name": "光映 LumiBox L3 激光投影仪",
+      "model": "LumiBox L3",
+      "category": "家用投影仪",
+      "subcategory": "激光投影仪",
+      "price": 4299,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/guangying-lumibox-l3",
+      "image_url": "https://example.com/images/guangying-lumibox-l3.png",
+      "release_date": "2026-03-10",
+      "status": "available",
+      "target_users": [
+        "家庭影院爱好者",
+        "客厅用户",
+        "追求画质的用户"
+      ],
+      "use_cases": [
+        "客厅家庭影院",
+        "白天观影",
+        "游戏大屏",
+        "体育赛事"
+      ],
+      "highlights": [
+        "三色激光 2200 ANSI 白天也能看",
+        "4K解码+运动补偿MEMC",
+        "哈曼卡顿联名音响"
+      ],
+      "specs": {
+        "亮度": "2200 ANSI流明",
+        "分辨率": "1920×1080（支持4K解码）",
+        "光源": "三色激光 ALPD",
+        "投射比": "1.2:1",
+        "投射尺寸": "60-200英寸",
+        "系统": "LumiOS Pro",
+        "音响": "2×15W 哈曼联名音响",
+        "接口": "HDMI 2.1×2/USB 3.0/3.5mm/Wi-Fi 6/蓝牙5.2",
+        "重量": "4.8kg",
+        "光源寿命": "50000小时",
+        "特色": "自动对焦/自动避障/运动补偿MEMC/HDR10+"
+      },
+      "variants": [
+        {
+          "variant_id": "GY-L3-WHT",
+          "name": "月光白",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "GY-L3-BLK",
+          "name": "深空黑",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "2200ANSI亮度白天也可观看",
+        "三色激光色彩远超LED投影",
+        "内置音响效果好不用外接"
+      ],
+      "cons": [
+        "4299元价格较高",
+        "4.8kg不太方便移动",
+        "原生分辨率仍为1080P非真4K"
+      ],
+      "not_recommended_for": [
+        "预算在2000以内的用户",
+        "需要经常搬动使用的用户"
+      ],
+      "comparison_tags": [
+        "激光投影",
+        "客厅影院",
+        "价格高体验好",
+        "白天可用"
+      ],
+      "rating": {
+        "score": 4.6,
+        "review_count": 1920,
+        "summary": "4000元价位画质和音质最均衡的投影仪，激光光源色彩震撼，白天也能获得不错的观影效果。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "激光光源三年保修"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "光映 LumiBox L3 是光映品牌 2026 年推出的中高端激光投影仪，定价 4299 元。最大升级是采用三色激光 ALPD 光源，亮度达到 2200 ANSI 流明，是入门款 L1 的近 3 倍。这意味着白天不拉窗帘也能获得可接受的画面效果，客厅使用场景大大拓展。三色激光的色域覆盖远超 LED 光源，红色更鲜艳、绿色更通透，电影和体育赛事的色彩表现非常震撼。支持 4K 解码和 HDR10+，虽然原生分辨率为 1080P，但通过超分辨率算法提升了细节表现。运动补偿 MEMC 技术让体育赛事和游戏画面更流畅。内置 2×15W 哈曼联名音响，观影无需额外音箱。HDMI 2.1 接口支持游戏主机高帧率输入。4.8kg 重量适合固定位置使用。与 L1 相比，L3 在亮度、色彩和音响上是质的飞跃，但价格也翻倍。如果预算有限且主要晚上使用，L1 依然够用。L3 适合对画质有要求、客厅使用为主的家庭影院爱好者。"
+    },
+    {
+      "product_id": "PROD-PROJECTOR-003",
+      "sku": "SKU-GY-MINI-WHT",
+      "brand": "光映 GuangYing",
+      "series": "LumiBox 系列",
+      "name": "光映 LumiBox Mini 便携投影仪",
+      "model": "LumiBox Mini",
+      "category": "家用投影仪",
+      "subcategory": "便携投影仪",
+      "price": 1299,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟"
+      ],
+      "purchase_url": "https://example.com/products/guangying-lumibox-mini",
+      "image_url": "https://example.com/images/guangying-lumibox-mini.png",
+      "release_date": "2026-04-05",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "出差用户",
+        "露营爱好者"
+      ],
+      "use_cases": [
+        "宿舍追剧",
+        "出差酒店",
+        "户外露营",
+        "临时会议"
+      ],
+      "highlights": [
+        "550g巴掌大小一手可握",
+        "内置电池续航2.5小时",
+        "720P原生 支持1080P解码"
+      ],
+      "specs": {
+        "亮度": "350 ANSI流明",
+        "分辨率": "1280×720（支持1080P解码）",
+        "投射比": "1.2:1",
+        "投射尺寸": "30-80英寸",
+        "系统": "LumiOS Lite",
+        "音响": "1×3W 扬声器",
+        "接口": "USB-C/HDMI/3.5mm/Wi-Fi 5/蓝牙5.0",
+        "重量": "550g",
+        "电池": "内置9000mAh 续航约2.5小时",
+        "光源寿命": "25000小时"
+      },
+      "variants": [
+        {
+          "variant_id": "GY-MINI-WHT",
+          "name": "云白",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "GY-MINI-PNK",
+          "name": "樱粉",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "550g超便携装包里随走随投",
+        "内置电池无需电源线",
+        "自动对焦方便快捷"
+      ],
+      "cons": [
+        "350ANSI亮度必须全黑环境",
+        "720P分辨率近看有颗粒感",
+        "音响效果弱"
+      ],
+      "not_recommended_for": [
+        "追求高画质的影音用户",
+        "客厅大尺寸投影需求",
+        "白天使用场景"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "便携",
+        "露营投影",
+        "内置电池"
+      ],
+      "rating": {
+        "score": 4.0,
+        "review_count": 2340,
+        "summary": "便携投影里的性价比之选，小巧轻便是最大卖点。画质只能说够看，适合对便携性有刚需的用户。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "电池一年内容量衰减超20%可免费更换"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "光映 LumiBox Mini 是光映品牌 2026 年推出的便携投影仪，定价 1299 元。550g 的重量和巴掌大小的体积是其最大卖点，可以轻松放进背包甚至大衣口袋。内置 9000mAh 电池支持约 2.5 小时脱线使用，非常适合露营、出差酒店和宿舍等无固定电源的场景。720P 原生分辨率支持 1080P 解码，350 ANSI 流明亮度在便携投影中属于主流水平。自动对焦和梯形校正让投射设置非常简单。内置 LumiOS Lite 系统可直接联网追剧。不过需要明确的是，Mini 的画质定位是够看而非好看：350 ANSI 亮度必须在全黑或极暗环境下使用，720P 在大于 60 英寸时能看到颗粒感，3W 小扬声器音量和音质都有限。如果主要在家中固定使用，L1（1999元）在画质和音响上全面碾压 Mini。Mini 面向的是对便携性有刚需的学生党、经常出差的商旅用户和户外露营爱好者，用最小的体积获得一个可以随时随地投影的大屏体验。"
+    },
+    {
+      "product_id": "PROD-COFFEE-001",
+      "sku": "SKU-CW-E1-BLK",
+      "brand": "晨雾 ChenWu",
+      "series": "BrewGo 系列",
+      "name": "晨雾 BrewGo E1 便携意式咖啡机",
+      "model": "BrewGo E1",
+      "category": "便携咖啡机",
+      "subcategory": "胶囊咖啡机",
+      "price": 399,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟"
+      ],
+      "purchase_url": "https://example.com/products/chenwu-brewgo-e1",
+      "image_url": "https://example.com/images/chenwu-brewgo-e1.png",
+      "release_date": "2026-02-01",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "通勤上班族",
+        "咖啡入门用户"
+      ],
+      "use_cases": [
+        "办公室咖啡",
+        "宿舍使用",
+        "出差旅行"
+      ],
+      "highlights": [
+        "399元入门意式咖啡体验",
+        "兼容通用胶囊 一键萃取",
+        "15bar萃取压力 奶泡丰富"
+      ],
+      "specs": {
+        "萃取压力": "15bar",
+        "水箱容量": "600ml",
+        "加热方式": "热块加热 30秒预热",
+        "适用咖啡类型": "胶囊（兼容雀氏/通用胶囊）",
+        "功率": "1200W",
+        "重量": "2.5kg",
+        "尺寸": "12×33×24cm",
+        "杯量选择": "浓缩40ml/大杯110ml"
+      },
+      "variants": [
+        {
+          "variant_id": "CW-E1-BLK",
+          "name": "经典黑",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "CW-E1-RED",
+          "name": "复古红",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "399元入手门槛极低",
+        "30秒预热一键操作极简",
+        "15bar压力萃取效果不错"
+      ],
+      "cons": [
+        "只支持胶囊不支持咖啡粉",
+        "胶囊长期使用成本不低",
+        "无蒸汽棒不能手动打奶泡"
+      ],
+      "not_recommended_for": [
+        "追求手冲和精品咖啡的用户",
+        "注重长期使用成本的用户",
+        "需要自由调节参数的咖啡爱好者"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "入门咖啡机",
+        "通勤优先",
+        "一键操作"
+      ],
+      "rating": {
+        "score": 4.1,
+        "review_count": 3890,
+        "summary": "咖啡小白的最佳入门选择，一键操作零失误。胶囊口味稳定但选择有限。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "赠送10颗体验胶囊"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "晨雾 BrewGo E1 是晨雾品牌 2026 年推出的入门级胶囊咖啡机，定价 399 元。该咖啡机最大优势是极简的操作体验：放入胶囊、按下按钮，30 秒预热后即可萃取一杯意式浓缩或大杯美式。15bar 萃取压力保证了咖啡的油脂和香气。兼容市面上主流的通用胶囊，口味选择丰富。600ml 水箱足够做 5-6 杯浓缩。2.5kg 重量和紧凑尺寸适合放在办公桌或宿舍。适合咖啡入门用户、不想花时间学习手冲的上班族和学生党。不过胶囊咖啡的长期使用成本不低，每颗胶囊约 3-5 元，每天两杯一年花费近 3000 元。不支持咖啡粉萃取，也没有蒸汽棒，无法手动打奶泡做拿铁。如果想要更自由的咖啡体验和更低的长期成本，建议看 BrewGo P3 半自动咖啡机。E1 的价值在于以最低成本、最简操作获得一杯稳定的意式咖啡。"
+    },
+    {
+      "product_id": "PROD-COFFEE-002",
+      "sku": "SKU-CW-P3-SLV",
+      "brand": "晨雾 ChenWu",
+      "series": "BrewGo 系列",
+      "name": "晨雾 BrewGo P3 半自动意式咖啡机",
+      "model": "BrewGo P3",
+      "category": "便携咖啡机",
+      "subcategory": "半自动咖啡机",
+      "price": 1299,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/chenwu-brewgo-p3",
+      "image_url": "https://example.com/images/chenwu-brewgo-p3.png",
+      "release_date": "2026-03-15",
+      "status": "available",
+      "target_users": [
+        "咖啡爱好者",
+        "通勤上班族",
+        "居家用户"
+      ],
+      "use_cases": [
+        "家庭咖啡角",
+        "办公室",
+        "周末手作咖啡"
+      ],
+      "highlights": [
+        "20bar意式萃取+蒸汽打奶泡",
+        "同时兼容胶囊和咖啡粉",
+        "58mm专业级粉碗"
+      ],
+      "specs": {
+        "萃取压力": "20bar",
+        "水箱容量": "1200ml",
+        "加热方式": "意式锅炉 45秒预热",
+        "适用咖啡类型": "胶囊+咖啡粉（双模式）",
+        "蒸汽棒": "有（可打奶泡）",
+        "功率": "1350W",
+        "重量": "4.2kg",
+        "尺寸": "18×35×30cm",
+        "粉碗": "58mm 单份/双份"
+      },
+      "variants": [
+        {
+          "variant_id": "CW-P3-SLV",
+          "name": "银色",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "CW-P3-BLK",
+          "name": "磨砂黑",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "CW-P3-GRN",
+          "name": "复古绿",
+          "price_delta": 100,
+          "stock_status": "low_stock"
+        }
+      ],
+      "pros": [
+        "胶囊+咖啡粉双模式覆盖全场景",
+        "蒸汽棒可做拿铁卡布奇诺",
+        "58mm粉碗萃取品质接近专业水平"
+      ],
+      "cons": [
+        "需要额外购买磨豆机",
+        "蒸汽棒使用需要练习",
+        "4.2kg不太适合频繁搬动"
+      ],
+      "not_recommended_for": [
+        "完全不想学习咖啡制作的小白",
+        "经常出差需要随身携带的用户"
+      ],
+      "comparison_tags": [
+        "咖啡进阶",
+        "半自动",
+        "蒸汽奶泡",
+        "通勤优先"
+      ],
+      "rating": {
+        "score": 4.4,
+        "review_count": 2150,
+        "summary": "千元价位最全面的半自动咖啡机，胶囊+粉碗双模是独特优势。适合想进阶但不想完全放弃便捷的用户。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "蒸汽棒密封圈一年内免费更换"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "晨雾 BrewGo P3 是晨雾品牌 2026 年推出的半自动意式咖啡机，定价 1299 元。该咖啡机最大特色是胶囊和咖啡粉双模式设计：想图方便可以用胶囊一键萃取，想追求品质可以用 58mm 专业粉碗搭配现磨咖啡粉。20bar 萃取压力配合意式锅炉加热，浓缩咖啡的油脂丰富、口感醇厚。蒸汽棒可以打绵密的奶泡，在家就能做出拿铁和卡布奇诺。1200ml 大水箱适合家庭使用。相比入门款 E1，P3 在萃取品质和可玩性上有质的飞跃，但也需要额外购买磨豆机（推荐预算 200-500 元），并且蒸汽打奶泡需要一定练习。4.2kg 的重量适合固定在厨房或办公室使用，不适合频繁搬动。如果完全不想花时间学习咖啡制作，E1 胶囊机更合适。P3 面向想要进阶咖啡体验、享受制作过程的咖啡爱好者和居家用户。千元价位半自动咖啡机的最佳选择。"
+    },
+    {
+      "product_id": "PROD-COFFEE-003",
+      "sku": "SKU-CW-GO1-WHT",
+      "brand": "晨雾 ChenWu",
+      "series": "BrewGo 系列",
+      "name": "晨雾 BrewGo Go 便携手压咖啡�",
+      "model": "BrewGo Go",
+      "category": "便携咖啡机",
+      "subcategory": "手压咖啡机",
+      "price": 259,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟"
+      ],
+      "purchase_url": "https://example.com/products/chenwu-brewgo-go",
+      "image_url": "https://example.com/images/chenwu-brewgo-go.png",
+      "release_date": "2026-04-10",
+      "status": "available",
+      "target_users": [
+        "户外爱好者",
+        "出差商旅",
+        "学生党"
+      ],
+      "use_cases": [
+        "露营",
+        "出差酒店",
+        "旅行",
+        "办公室"
+      ],
+      "highlights": [
+        "460g超轻便携 放进背包随走",
+        "手压萃取无需电源",
+        "兼容咖啡粉和胶囊"
+      ],
+      "specs": {
+        "萃取压力": "8bar（手动加压）",
+        "水箱容量": "80ml",
+        "加热方式": "无（需提前烧热水）",
+        "适用咖啡类型": "咖啡粉/胶囊（适配器另购）",
+        "功率": "无需电源",
+        "重量": "460g",
+        "尺寸": "7×7×18cm",
+        "材质": "食品级不锈钢+Tritan"
+      },
+      "variants": [
+        {
+          "variant_id": "CW-GO1-WHT",
+          "name": "极地白",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "CW-GO1-BLK",
+          "name": "碳黑",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "460g超轻无需电源真正便携",
+        "手压8bar萃取有一定品质",
+        "不锈钢材质耐用好清洗"
+      ],
+      "cons": [
+        "需自己烧热水不够方便",
+        "8bar压力不如电动机萃取完全",
+        "每次只能做一小杯"
+      ],
+      "not_recommended_for": [
+        "追求高品质意式浓缩的用户",
+        "不想费力气手压的用户",
+        "需要大量制作的场景"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "户外便携",
+        "无需电源",
+        "极致便携"
+      ],
+      "rating": {
+        "score": 4.0,
+        "review_count": 2680,
+        "summary": "真正的随身咖啡机，户外露营和出差必备。萃取品质一般但便携性无可比拟。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "密封圈免费更换"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "晨雾 BrewGo Go 是晨雾品牌 2026 年推出的便携手压咖啡机，定价 259 元。这是一款不需要电源、完全靠手动加压萃取的便携咖啡设备，460g 重量和 7×7×18cm 的尺寸可以轻松放进背包侧袋。使用方法很简单：装入咖啡粉，倒入热水，手动按压活塞产生约 8bar 的萃取压力，即可获得一杯浓缩咖啡。另购胶囊适配器后也可使用胶囊。食品级不锈钢和 Tritan 材质耐用且易清洗。但需注意，8bar 手动压力不如电动咖啡机的 15-20bar，萃取出的浓缩油脂较薄，口感不如专业设备。每次只能制作约 80ml，需自行准备热水。对于追求高品质意式咖啡的用户，BrewGo P3 半自动机是更好的选择。Go 的核心价值是极致便携：露营山顶也能喝上一杯现萃咖啡，出差酒店不用找咖啡店。适合户外爱好者、频繁出差的商旅人士和预算有限的学生咖啡爱好者。259 元的价格买一个随时随地喝咖啡的自由。"
+    },
+    {
+      "product_id": "PROD-TOOTHBRUSH-001",
+      "sku": "SKU-JB-S3-WHT",
+      "brand": "洁贝 JieBei",
+      "series": "SonicPure 系列",
+      "name": "洁贝 SonicPure S3 声波电动牙刷",
+      "model": "SonicPure S3",
+      "category": "电动牙刷",
+      "subcategory": "声波电动牙刷",
+      "price": 149,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/jiebei-sonicpure-s3",
+      "image_url": "https://example.com/images/jiebei-sonicpure-s3.png",
+      "release_date": "2026-01-10",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "电动牙刷入门用户",
+        "预算敏感用户"
+      ],
+      "use_cases": [
+        "日常口腔清洁",
+        "旅行携带"
+      ],
+      "highlights": [
+        "149元声波电动牙刷性价比之王",
+        "31000次/分钟高频声波",
+        "IPX7全身防水 续航90天"
+      ],
+      "specs": {
+        "震动频率": "31000次/分钟",
+        "刷头": "杜邦软毛刷头（附赠2个）",
+        "清洁模式": "3种（清洁/敏感/美白）",
+        "续航": "约90天（每天2次 每次2分钟）",
+        "防水等级": "IPX7",
+        "充电方式": "Type-C",
+        "重量": "95g",
+        "定时": "2分钟自动停 30秒换区提醒"
+      },
+      "variants": [
+        {
+          "variant_id": "JB-S3-WHT",
+          "name": "云白",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "JB-S3-BLU",
+          "name": "天蓝",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "JB-S3-PNK",
+          "name": "樱粉",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "149元附赠2个刷头极具性价比",
+        "90天续航几乎不用管充电",
+        "IPX7防水放心冲洗"
+      ],
+      "cons": [
+        "震动力度偏弱重度清洁不够力",
+        "不支持压力感应",
+        "刷头替换成本需关注"
+      ],
+      "not_recommended_for": [
+        "牙齿问题较多需要强力清洁的用户",
+        "追求智能功能的科技爱好者"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "入门电动牙刷",
+        "长续航",
+        "极致性价比"
+      ],
+      "rating": {
+        "score": 4.2,
+        "review_count": 6780,
+        "summary": "百元电动牙刷天花板，续航和基础清洁力表现出色。从手动牙刷升级的最佳入门选择。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "购买后一年内可半价购买刷头套装"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "洁贝 SonicPure S3 是洁贝品牌 2026 年推出的入门级声波电动牙刷，定价 149 元，附赠两个杜邦软毛刷头。31000 次/分钟的声波震频在百元价位属于标准水平，能有效清除牙菌斑。提供清洁、敏感和美白三种模式，敏感模式适合初次使用电动牙刷的用户。内置 2 分钟计时器和 30 秒换区提醒，帮助养成科学刷牙习惯。最大亮点是约 90 天的超长续航，Type-C 充电口方便。IPX7 全身防水可以直接在水龙头下冲洗。95g 的重量握持舒适。不过震动力度相对温和，对于牙结石较多或需要深度清洁的用户可能力度不够。不支持压力感应功能，新手用力过猛可能伤害牙龈。替换刷头单价约 25-35 元，每三个月更换一次，长期使用成本需要考虑。如果追求更强清洁力和智能功能，建议看 SonicPure S7 或 S9 Pro。S3 最适合从手动牙刷升级的入门用户和预算有限的学生党。149 元就能获得科学的口腔清洁体验。"
+    },
+    {
+      "product_id": "PROD-TOOTHBRUSH-002",
+      "sku": "SKU-JB-S7-BLK",
+      "brand": "洁贝 JieBei",
+      "series": "SonicPure 系列",
+      "name": "洁贝 SonicPure S7 声波电动牙刷",
+      "model": "SonicPure S7",
+      "category": "电动牙刷",
+      "subcategory": "声波电动牙刷",
+      "price": 399,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/jiebei-sonicpure-s7",
+      "image_url": "https://example.com/images/jiebei-sonicpure-s7.png",
+      "release_date": "2026-02-20",
+      "status": "available",
+      "target_users": [
+        "通勤上班族",
+        "口腔健康关注者",
+        "品质生活用户"
+      ],
+      "use_cases": [
+        "日常口腔清洁",
+        "牙龈护理",
+        "出差旅行"
+      ],
+      "highlights": [
+        "42000次/分钟深度清洁",
+        "智能压力感应保护牙龈",
+        "App定制刷牙方案"
+      ],
+      "specs": {
+        "震动频率": "42000次/分钟",
+        "刷头": "3D立体剪裁刷头（附赠3个）",
+        "清洁模式": "5种（清洁/深度清洁/敏感/牙龈护理/美白）",
+        "续航": "约60天（每天2次 每次2分钟）",
+        "防水等级": "IPX7",
+        "充电方式": "Type-C + 无线充电底座",
+        "重量": "110g",
+        "智能功能": "压力感应/蓝牙App/刷牙报告"
+      },
+      "variants": [
+        {
+          "variant_id": "JB-S7-BLK",
+          "name": "钛空黑",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "JB-S7-WHT",
+          "name": "月光白",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "JB-S7-GLD",
+          "name": "香槟金",
+          "price_delta": 50,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "42000次震频清洁力显著提升",
+        "压力感应防止刷牙过度",
+        "App刷牙报告有助改善习惯"
+      ],
+      "cons": [
+        "399元价格是S3的近3倍",
+        "60天续航不如S3",
+        "App功能部分鸡肋"
+      ],
+      "not_recommended_for": [
+        "只需基础清洁的轻度用户",
+        "不关心智能功能的用户"
+      ],
+      "comparison_tags": [
+        "通勤优先",
+        "智能牙刷",
+        "压力感应",
+        "品质之选"
+      ],
+      "rating": {
+        "score": 4.5,
+        "review_count": 3450,
+        "summary": "400元价位最智能的电动牙刷，清洁力和牙龈保护都很到位。追求口腔健康的用户首选。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "购买后一年内可半价购买刷头套装"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "洁贝 SonicPure S7 是 SonicPure 系列的中端进阶款，定价 399 元。相比入门款 S3，S7 在清洁力、智能功能和使用体验上有全面提升。42000 次/分钟的高频声波比 S3 的 31000 次提升 35%，深度清洁模式对顽固牙菌斑效果显著。最重要的升级是智能压力感应：当刷牙力度过大时，牙刷会自动降低震频并亮红灯提醒，有效保护牙龈。5 种清洁模式涵盖日常到专业护理。蓝牙连接 App 可查看刷牙时长、覆盖率和压力分布报告，帮助改善刷牙习惯。3D 立体剪裁刷头贴合牙齿曲面。支持 Type-C 和无线充电底座两种充电方式，60 天续航虽不如 S3 但足够出差一两个月。附赠 3 个刷头。与 S3 相比，多花 250 元获得更强清洁力、压力感应和智能功能，升级感明显。如果只是想从手动牙刷简单升级，S3 够用。S7 适合关注口腔健康、有牙龈敏感问题或希望用数据改善刷牙习惯的用户。"
+    },
+    {
+      "product_id": "PROD-TOOTHBRUSH-003",
+      "sku": "SKU-JB-S9P-GLD",
+      "brand": "洁贝 JieBei",
+      "series": "SonicPure 系列",
+      "name": "洁贝 SonicPure S9 Pro 旗舰声波电动牙刷",
+      "model": "SonicPure S9 Pro",
+      "category": "电动牙刷",
+      "subcategory": "声波电动牙刷",
+      "price": 799,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/jiebei-sonicpure-s9pro",
+      "image_url": "https://example.com/images/jiebei-sonicpure-s9pro.png",
+      "release_date": "2026-03-25",
+      "status": "available",
+      "target_users": [
+        "口腔健康重度关注者",
+        "品质生活追求者",
+        "送礼用户"
+      ],
+      "use_cases": [
+        "全面口腔护理",
+        "牙龈修复期护理",
+        "礼品"
+      ],
+      "highlights": [
+        "48000次/分钟旗舰震频",
+        "AI自适应力度+3D压感地图",
+        "磁悬浮马达静音不扰人"
+      ],
+      "specs": {
+        "震动频率": "48000次/分钟（AI自适应）",
+        "刷头": "植物纤维抗菌刷头（附赠4个）",
+        "清洁模式": "8种（含舌苔清洁/牙龈按摩/夜间轻柔）",
+        "续航": "约45天（每天2次 每次2分钟）",
+        "防水等级": "IPX8",
+        "充电方式": "Type-C + 无线充电旅行盒",
+        "重量": "125g",
+        "智能功能": "AI自适应/3D压感地图/实时指导/云端刷牙档案"
+      },
+      "variants": [
+        {
+          "variant_id": "JB-S9P-GLD",
+          "name": "奢金",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "JB-S9P-SLV",
+          "name": "银钻",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "AI自适应震频根据区域自动调节",
+        "3D压感地图精准反馈每颗牙",
+        "磁悬浮马达震动均匀极安静"
+      ],
+      "cons": [
+        "799元价格门槛高",
+        "功能过于丰富日常可能用不到",
+        "45天续航不如低端型号"
+      ],
+      "not_recommended_for": [
+        "预算有限的学生用户",
+        "只需基础清洁不在意智能功能的用户"
+      ],
+      "comparison_tags": [
+        "旗舰牙刷",
+        "AI智能",
+        "价格高体验好",
+        "送礼佳品"
+      ],
+      "rating": {
+        "score": 4.7,
+        "review_count": 1120,
+        "summary": "电动牙刷的天花板体验，AI自适应和3D压感让刷牙变成精准护理。适合追求极致口腔健康的用户。"
+      },
+      "after_sales": {
+        "warranty": "36个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "三年保修含一次免费主体更换"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "洁贝 SonicPure S9 Pro 是 SonicPure 系列的旗舰款，定价 799 元，于 2026 年 3 月发布。这是洁贝品牌在电动牙刷领域的最高端产品。核心技术是 AI 自适应声波系统：牙刷内置传感器可实时感知刷头位置和接触压力，自动调节震频（最高 48000 次/分钟），在牙龈区域自动降低力度，在齿面区域加强清洁。3D 压感地图功能通过 App 展示每颗牙齿的清洁状态和压力分布，真正做到精准口腔护理。磁悬浮马达运行极为安静，早起刷牙不会打扰同住者。8 种清洁模式涵盖日常到专业场景，舌苔清洁和牙龈按摩模式是同系列独有。植物纤维抗菌刷头更温和也更卫生。附赠无线充电旅行盒方便出差。IPX8 防水等级支持完全浸泡。三年超长保修。与 S7（399元）相比，S9 Pro 的 AI 自适应和 3D 压感是核心差异化，但日常清洁效果差距不如价差那么大。S9 Pro 更适合对口腔健康有极高要求的用户、牙龈敏感需要精准力度控制的用户，以及作为高品质礼品。学生党和基础需求用户选 S3 或 S7 即可。"
+    },
+    {
+      "product_id": "PROD-EARBUDS-004",
+      "sku": "SKU-YT-X1-WHT",
+      "brand": "音拓 YinTuo",
+      "series": "OpenRun 系列",
+      "name": "音拓 OpenRun X1 开放式运动耳机",
+      "model": "OpenRun X1",
+      "category": "真无线降噪耳机",
+      "subcategory": "开放式运动耳机",
+      "price": 499,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟"
+      ],
+      "purchase_url": "https://example.com/products/yintuo-openrun-x1",
+      "image_url": "/product-images/earbuds.jpeg",
+      "release_date": "2026-04-20",
+      "status": "available",
+      "target_users": [
+        "运动爱好者",
+        "通勤跑步用户",
+        "户外运动者"
+      ],
+      "use_cases": [
+        "跑步",
+        "骑行",
+        "健身房",
+        "户外通勤"
+      ],
+      "highlights": [
+        "开放式不入耳 运动安全不闷耳",
+        "16.2mm大单元 开放不漏音",
+        "IPX5防汗 单次续航8小时"
+      ],
+      "specs": {
+        "佩戴方式": "开放式耳夹",
+        "降噪": "无（开放设计）",
+        "单次续航": "8小时",
+        "总续航（含充电盒）": "32小时",
+        "蓝牙版本": "5.3",
+        "编解码": "AAC / SBC",
+        "单耳重量": "6.2g",
+        "防水等级": "IPX5",
+        "驱动单元": "16.2mm 大尺寸动圈",
+        "定向传音": "定向声场技术 减少漏音"
+      },
+      "variants": [
+        {
+          "variant_id": "YT-X1-WHT",
+          "name": "云白",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YT-X1-BLK",
+          "name": "暗夜黑",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YT-X1-ORG",
+          "name": "活力橙",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "开放式佩戴舒适无耳压",
+        "运动时能听到环境声更安全",
+        "大单元音质在开放式中表现出色"
+      ],
+      "cons": [
+        "无降噪地铁环境基本听不清",
+        "安静环境旁人能听到轻微漏音",
+        "不适合需要安静听音的场景"
+      ],
+      "not_recommended_for": [
+        "需要降噪隔绝环境声的通勤用户",
+        "在安静办公室使用怕打扰他人的用户",
+        "追求极致音质的发烧友"
+      ],
+      "comparison_tags": [
+        "运动专用",
+        "开放式",
+        "通勤优先",
+        "安全运动"
+      ],
+      "rating": {
+        "score": 4.4,
+        "review_count": 1860,
+        "summary": "运动场景最佳耳机，开放式佩戴兼顾舒适和安全。音质出乎意料的好。但不适合通勤降噪。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "运动导致的外壳磨损不在保修范围内"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "音拓 OpenRun X1 是音拓品牌 2026 年推出的开放式运动耳机，定价 499 元。与声微 AirNova 系列的入耳式降噪耳机不同，OpenRun X1 采用开放式耳夹佩戴方式，不塞入耳道，运动时更舒适且不会产生闷热感。更重要的是，开放式设计让用户能够始终听到周围环境声——跑步时能听到车辆鸣笛，骑行时能感知周围状况，安全性大幅提升。16.2mm 大尺寸动圈单元配合定向声场技术，音质在开放式耳机中属于上乘，且漏音控制做得不错。单次续航 8 小时，IPX5 防汗防水。不过开放式设计意味着完全没有降噪能力，在地铁或嘈杂环境中基本听不清音乐。安静的办公室或图书馆中旁人也能听到轻微漏音。如果你主要在通勤场景使用需要降噪，声微 AirNova 50（599元）是更好的选择。OpenRun X1 专门为运动场景优化，是跑步、骑行和健身房训练的理想伴侣。如果你每周有 3 次以上户外运动，一副好的开放式运动耳机比入耳式降噪耳机更实用。"
+    },
+    {
+      "product_id": "PROD-PHONE-005",
+      "sku": "SKU-ZQ-F1-BLK",
+      "brand": "致轻 ZhiQing",
+      "series": "FoldX 系列",
+      "name": "致轻 FoldX F1 折叠屏手机",
+      "model": "FoldX F1",
+      "category": "手机",
+      "subcategory": "折叠屏手机",
+      "price": 5999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟"
+      ],
+      "purchase_url": "https://example.com/products/zhiqing-foldx-f1",
+      "image_url": "https://example.com/images/zhiqing-foldx-f1.png",
+      "release_date": "2026-04-25",
+      "status": "available",
+      "target_users": [
+        "科技发烧友",
+        "商务人士",
+        "追求新鲜感的用户"
+      ],
+      "use_cases": [
+        "商务办公",
+        "多任务分屏",
+        "影音娱乐",
+        "社交展示"
+      ],
+      "highlights": [
+        "7.6英寸大折叠屏 展开即平板",
+        "折叠态6.2英寸 轻薄单手可握",
+        "天璇 9200 旗舰芯 + 4800mAh"
+      ],
+      "specs": {
+        "芯片": "天璇 9200（虚构）",
+        "内屏": "7.6英寸 AMOLED 2K 120Hz LTPO",
+        "外屏": "6.2英寸 AMOLED 120Hz",
+        "主摄": "5000万像素 OIS f/1.8",
+        "超广角": "1200万像素",
+        "电池": "4800mAh",
+        "快充": "67W有线 + 15W无线",
+        "存储": "12GB+256GB / 12GB+512GB",
+        "重量": "236g",
+        "折叠厚度": "11.5mm / 展开5.3mm",
+        "系统": "QingOS 2.0（折叠优化）",
+        "防水": "IPX8"
+      },
+      "variants": [
+        {
+          "variant_id": "ZQ-F1-BLK-256",
+          "name": "墨韵黑 12+256GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "ZQ-F1-GLD-256",
+          "name": "锦缎金 12+256GB",
+          "price_delta": 0,
+          "stock_status": "low_stock"
+        },
+        {
+          "variant_id": "ZQ-F1-BLK-512",
+          "name": "墨韵黑 12+512GB",
+          "price_delta": 500,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "展开7.6寸大屏体验远超直板机",
+        "折叠态轻薄日常使用无负担",
+        "分屏多任务效率极高"
+      ],
+      "cons": [
+        "5999元价格较高",
+        "折痕在强光下可见",
+        "236g重量略沉"
+      ],
+      "not_recommended_for": [
+        "预算在4000以下的用户",
+        "对折痕有洁癖的用户",
+        "需要极致拍照旗舰的用户"
+      ],
+      "comparison_tags": [
+        "折叠屏",
+        "大屏体验",
+        "价格高体验好",
+        "商务旗舰"
+      ],
+      "rating": {
+        "score": 4.5,
+        "review_count": 980,
+        "summary": "最具性价比的折叠屏手机，大屏体验和便携性的完美平衡。折叠屏入门首选。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "铰链两年保修 屏幕折痕加深可半价更换"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "致轻 FoldX F1 是致轻品牌 2026 年推出的大折叠屏手机，定价 5999 元起，是目前最具性价比的折叠屏手机之一。展开后 7.6 英寸 2K AMOLED 大屏可以当做小平板使用，看视频、浏览网页和分屏办公体验远超任何直板手机。折叠后 6.2 英寸外屏与普通手机无异，日常使用轻松单手操作。折叠态厚度 11.5mm，展开仅 5.3mm，便携性控制得不错。天璇 9200 旗舰芯片保证性能流畅。QingOS 2.0 针对折叠屏做了深度优化，拖拽分屏和应用连续性体验顺滑。拍照方面 5000 万像素 OIS 主摄日常够用，但与同价位直板旗舰星朗 V20 Pro 的三摄系统还有差距。4800mAh 电池配 67W 快充，续航中规中矩。折痕在正常使用角度几乎看不到，但在强光侧面反射时可见。236g 重量比直板手机重但在折叠屏中算轻的。如果你预算在 4000 元以内或对拍照要求极高，V20 Pro 更合适。FoldX F1 面向对大屏体验有需求、追求科技新鲜感的用户和需要移动办公分屏的商务人士。"
+    },
+    {
+      "product_id": "PROD-LAPTOP-004",
+      "sku": "SKU-YS-AIR14-SLV",
+      "brand": "远山 YuanShan",
+      "series": "CloudBook 系列",
+      "name": "远山 CloudBook Air 14 学生本",
+      "model": "CloudBook Air 14",
+      "category": "笔记本电脑",
+      "subcategory": "轻薄笔记本",
+      "price": 2999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/yuanshan-cloudbook-air14",
+      "image_url": "https://example.com/images/yuanshan-cloudbook-air14.png",
+      "release_date": "2026-02-15",
+      "status": "available",
+      "target_users": [
+        "学生党",
+        "预算有限的办公用户"
+      ],
+      "use_cases": [
+        "网课学习",
+        "写论文",
+        "日常办公",
+        "追剧"
+      ],
+      "highlights": [
+        "2999元学生党轻薄本首选",
+        "14英寸 1080P IPS 窄边框",
+        "10小时续航 + 金属机身"
+      ],
+      "specs": {
+        "CPU": "奔腾 i5-1235U（虚构）",
+        "GPU": "核显 锐炬 Xe",
+        "内存": "16GB LPDDR4X",
+        "硬盘": "512GB PCIe 3.0 SSD",
+        "屏幕": "14英寸 1080P IPS 100%sRGB 60Hz",
+        "重量": "1.38kg",
+        "接口": "1×USB-C/2×USB-A/HDMI/3.5mm",
+        "续航": "约10小时",
+        "快充": "65W PD",
+        "键盘": "背光键盘"
+      },
+      "variants": [
+        {
+          "variant_id": "YS-CBA14-SLV-512",
+          "name": "星辉银 i5/16G/512G",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YS-CBA14-GRY-512",
+          "name": "深空灰 i5/16G/512G",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "2999元价位金属机身质感好",
+        "16GB内存配置不缩水",
+        "10小时续航满足一天课程"
+      ],
+      "cons": [
+        "屏幕只有1080P不如Air 15的2.5K",
+        "PCIe 3.0 SSD速度一般",
+        "无雷电接口"
+      ],
+      "not_recommended_for": [
+        "对屏幕素质要求高的用户",
+        "需要高性能运行专业软件的用户"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "入门轻薄",
+        "高性价比",
+        "金属机身"
+      ],
+      "rating": {
+        "score": 4.3,
+        "review_count": 4120,
+        "summary": "3000元学生本的标杆，配置不缩水做工不廉价。预算有限的学生党闭眼入。"
+      },
+      "after_sales": {
+        "warranty": "24个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "学生凭证延保至36个月"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "远山 CloudBook Air 14 是远山品牌 2026 年推出的入门级学生笔记本，定价 2999 元。作为 CloudBook 系列的入门成员，Air 14 在 3000 元价位提供了不缩水的配置：奔腾 i5 处理器、16GB 内存和 512GB SSD，日常办公和学习完全流畅。金属机身质感在这个价位非常难得，不会有廉价塑料感。14 英寸 1080P IPS 屏幕覆盖 100% sRGB 色域，虽不如同系列 Air 15 的 2.5K 屏精细，但日常使用完全够用。1.38kg 的重量便于携带，10 小时续航满足一天课程。65W PD 快充。接口配置包含 USB-C、USB-A 和 HDMI，满足基本需求。与 Air 15 相比，Air 14 在屏幕分辨率、SSD 速度和接口规格上有所缩减，但便宜了 1000 元。如果预算只有 3000 元，Air 14 是最稳妥的选择。如果能加到 4000，Air 15 的屏幕和接口体验更好。Air 14 特别适合预算有限、只需要一台可靠学习和办公笔记本的大学生。凭学生证还可享受延保至 36 个月。"
+    },
+    {
+      "product_id": "PROD-WATCH-003",
+      "sku": "SKU-YH-WR1-BLK",
+      "brand": "云合 YunHe",
+      "series": "RunMate 系列",
+      "name": "云合 RunMate R1 专业跑步手表",
+      "model": "RunMate R1",
+      "category": "智能手表",
+      "subcategory": "专业运动手表",
+      "price": 1499,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟"
+      ],
+      "purchase_url": "https://example.com/products/yunhe-runmate-r1",
+      "image_url": "https://example.com/images/yunhe-runmate-r1.png",
+      "release_date": "2026-03-18",
+      "status": "available",
+      "target_users": [
+        "跑步爱好者",
+        "马拉松跑者",
+        "铁人三项运动员"
+      ],
+      "use_cases": [
+        "日常跑步训练",
+        "马拉松比赛",
+        "越野跑",
+        "铁人三项"
+      ],
+      "highlights": [
+        "双频五星GPS 定位精度1米",
+        "跑步功率/步频/触地时间全指标",
+        "MIP常亮屏阳光下清晰可见"
+      ],
+      "specs": {
+        "屏幕": "1.3英寸 MIP反射屏 常亮",
+        "续航": "GPS模式40小时/日常使用25天",
+        "运动模式": "80+（跑步细分15种）",
+        "定位": "双频五星GPS+北斗+GLONASS",
+        "健康传感器": "心率/血氧/HRV",
+        "防水等级": "10ATM",
+        "连接": "蓝牙5.2/ANT+",
+        "重量": "47g（不含表带）",
+        "特色功能": "跑步功率/步频/垂直振幅/触地时间/训练负荷/体能恢复"
+      },
+      "variants": [
+        {
+          "variant_id": "YH-WR1-BLK-47",
+          "name": "竞速黑 47mm",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "YH-WR1-GRN-47",
+          "name": "森林绿 47mm",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "GPS精度和续航在这个价位无敌",
+        "跑步数据全面不亚于专业品牌",
+        "MIP屏阳光下比AMOLED清晰"
+      ],
+      "cons": [
+        "MIP屏室内显示效果不如AMOLED",
+        "智能功能较弱无第三方App",
+        "外观偏运动风不适合商务"
+      ],
+      "not_recommended_for": [
+        "需要丰富智能功能和App生态的用户",
+        "商务场景佩戴需求为主的用户",
+        "不经常运动的用户"
+      ],
+      "comparison_tags": [
+        "跑步专业",
+        "GPS精准",
+        "超长续航",
+        "运动数据"
+      ],
+      "rating": {
+        "score": 4.6,
+        "review_count": 1450,
+        "summary": "跑步爱好者的专业装备，GPS和跑步数据同价位最强。如果你认真对待跑步这件事，这是你需要的表。"
+      },
+      "after_sales": {
+        "warranty": "18个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "表带和充电线免费更换"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "云合 RunMate R1 是云合品牌 2026 年推出的专业跑步手表，定价 1499 元。与星朗 GalaxyFit 系列的全能智能手表不同，RunMate R1 专注于跑步和铁人三项等耐力运动。核心优势是双频五星 GPS 定位系统，精度可达 1 米，在城市楼宇间和树林中也能保持稳定。GPS 模式续航长达 40 小时，足以覆盖超级马拉松。跑步数据指标极其丰富：功率、步频、垂直振幅、触地时间、左右平衡、训练负荷和体能恢复建议，不输专业品牌。1.3 英寸 MIP 反射屏在阳光下越亮越清晰，跑步时抬手即可看清配速。支持 ANT+ 协议连接心率带和踏频器。10ATM 防水适合铁人三项和开放水域游泳。不过 MIP 屏在室内显示效果远不如 AMOLED，日常看通知体验一般。智能功能也相对简单，没有第三方 App 安装、没有 NFC 支付。外观偏运动硬朗，商务场合佩戴不太合适。如果你需要一款日常佩戴+轻度运动的全能手表，GalaxyFit 5 更合适。RunMate R1 面向认真对待跑步训练、需要专业数据支持的跑者。"
+    },
+    {
+      "product_id": "PROD-PHONE-006",
+      "sku": "SKU-XL-V20L-WHT",
+      "brand": "星朗 Stellaris",
+      "series": "V20 系列",
+      "name": "星朗 V20 Lite 5G 手机",
+      "model": "V20 Lite",
+      "category": "手机",
+      "subcategory": "5G智能手机",
+      "price": 999,
+      "currency": "CNY",
+      "available_channels": [
+        "官方商城",
+        "京东自营模拟",
+        "天猫旗舰店模拟"
+      ],
+      "purchase_url": "https://example.com/products/stellaris-v20lite",
+      "image_url": "https://example.com/images/stellaris-v20lite.png",
+      "release_date": "2026-04-15",
+      "status": "available",
+      "target_users": [
+        "老年用户",
+        "学生党",
+        "备用机用户"
+      ],
+      "use_cases": [
+        "日常通话",
+        "微信社交",
+        "短视频",
+        "简单拍照"
+      ],
+      "highlights": [
+        "999元5G手机门槛最低",
+        "5000mAh超大电池续航两天",
+        "大字体/简易模式 老年友好"
+      ],
+      "specs": {
+        "芯片": "天璇 6200（虚构）",
+        "屏幕": "6.5英寸 IPS 90Hz",
+        "主摄": "1300万像素 f/2.2",
+        "前置": "500万像素",
+        "电池": "5000mAh",
+        "快充": "18W",
+        "存储": "4GB+64GB / 6GB+128GB",
+        "重量": "189g",
+        "系统": "StarOS 4.0 简易版",
+        "防水": "IP52"
+      },
+      "variants": [
+        {
+          "variant_id": "XL-V20L-WHT-64",
+          "name": "珍珠白 4+64GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20L-BLK-64",
+          "name": "星夜黑 4+64GB",
+          "price_delta": 0,
+          "stock_status": "in_stock"
+        },
+        {
+          "variant_id": "XL-V20L-WHT-128",
+          "name": "珍珠白 6+128GB",
+          "price_delta": 200,
+          "stock_status": "in_stock"
+        }
+      ],
+      "pros": [
+        "999元就能用上5G",
+        "电池大续航好两天一充",
+        "简易模式对老人非常友好"
+      ],
+      "cons": [
+        "拍照效果差夜景几乎不可用",
+        "4GB内存多开App会卡",
+        "IPS屏色彩和对比度一般"
+      ],
+      "not_recommended_for": [
+        "对拍照有任何要求的用户",
+        "需要流畅运行多个App的用户",
+        "游戏玩家"
+      ],
+      "comparison_tags": [
+        "学生预算",
+        "老年友好",
+        "超大电池",
+        "极致低价"
+      ],
+      "rating": {
+        "score": 3.9,
+        "review_count": 5680,
+        "summary": "千元以内最便宜的5G手机，够用就好的理念。适合老人、学生备用机和预算极低的用户。"
+      },
+      "after_sales": {
+        "warranty": "12个月",
+        "return_policy": "7天无理由退货，需保持配件完整",
+        "service_notes": "老年用户可预约线下教学服务"
+      },
+      "source": {
+        "type": "synthetic",
+        "generated_at": "2026-05-18",
+        "confidence": "high"
+      },
+      "knowledge_text": "星朗 V20 Lite 是 V20 系列的超入门款，定价 999 元起，是市面上最便宜的 5G 手机之一。该手机定位非常明确：以最低的价格提供能用的 5G 体验。天璇 6200 入门芯片足以流畅运行微信、抖音、支付宝等日常应用。5000mAh 大电池配合低功耗芯片和 90Hz IPS 屏幕，轻度使用续航可达两天。StarOS 4.0 简易版内置大字体模式、简化桌面和远程协助功能，对老年用户非常友好。但需要明确的是，V20 Lite 在拍照、屏幕和性能上都做了大幅缩减：1300 万像素主摄只能应付白天简单拍照，夜景几乎不可用；4GB 内存同时开三四个 App 就会卡顿；IPS 屏幕色彩寡淡。如果预算能加到 1499 元，V20 SE 在屏幕、拍照和内存上全面领先。V20 Lite 最适合给老人买手机、学生需要一个备用机、或者预算确实只有 1000 元的用户。不要用这个价位去要求拍照和性能。"
+    }
+  ]
+}
