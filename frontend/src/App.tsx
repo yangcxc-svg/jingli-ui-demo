@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { streamChat, type ProductCardData } from './api/chat';
-import { addGiftListItem, getGiftList } from './api/giftList';
+import { generateGiftPlan, type GiftPlanResponse } from './api/giftPlan';
+import {
+  addGiftListItem,
+  getGiftList,
+  removeGiftListItem,
+  updateGiftListItemQuantity,
+  type GiftListResponse,
+} from './api/giftList';
 
 const topTabs = ['特价', '首页', '秒送', '外卖', '新品'];
 const channels = ['关注', '推荐', '国家补贴', '手机', '电脑办公', '爱车', '分类'];
@@ -29,14 +36,14 @@ const promoItems = [
 ];
 const bottomTabs = ['首页', '极米', '消息', '购物车', '我的'];
 const giftScenes = [
-  { title: '生日礼物', icon: '🎂', desc: '朋友、同事、家人生日', active: true },
-  { title: '见家长', icon: '🏠', desc: '体面不出错' },
-  { title: '情侣纪念日', icon: '💝', desc: '浪漫、有心意' },
-  { title: '送领导/客户', icon: '🤝', desc: '稳重、有分寸' },
-  { title: '乔迁新居', icon: '🏡', desc: '实用、有品质' },
-  { title: '探望长辈', icon: '🍵', desc: '健康、实用' },
-  { title: '婚礼/订婚', icon: '💍', desc: '喜庆、有档次' },
-  { title: '节日送礼', icon: '🎁', desc: '春节、中秋、端午' },
+  { title: '生日礼物', icon: '🎂', desc: '朋友、同事、家人生日', active: true, budget: 500, target: '25岁女生/朋友/同事/家人', goal: '有心意、颜值高、不过度昂贵' },
+  { title: '见家长', icon: '🏠', desc: '体面不出错', budget: 3000, target: '对象父母/长辈', goal: '正式、体面、稳妥、不冒犯' },
+  { title: '情侣纪念日', icon: '💝', desc: '浪漫、有心意', budget: 1000, target: '恋人/伴侣', goal: '浪漫、有纪念意义、有惊喜感' },
+  { title: '送领导/客户', icon: '🤝', desc: '稳重、有分寸', budget: 2000, target: '领导/客户/合作伙伴', goal: '稳重、有分寸、商务感、不越界' },
+  { title: '乔迁新居', icon: '🏡', desc: '实用、有品质', budget: 1200, target: '乔迁新居的朋友/亲戚', goal: '实用、有品质、适合新家' },
+  { title: '探望长辈', icon: '🍵', desc: '健康、实用', budget: 1000, target: '父母/长辈', goal: '健康、实用、表达关心' },
+  { title: '婚礼/订婚', icon: '💍', desc: '喜庆、有档次', budget: 2000, target: '新婚/订婚朋友或亲人', goal: '喜庆、有档次、适合正式场合' },
+  { title: '节日送礼', icon: '🎁', desc: '春节、中秋、端午', budget: 1500, target: '亲友/长辈/客户', goal: '节日氛围、体面、可分享' },
 ];
 const giftProducts = [
   {
@@ -182,6 +189,17 @@ function formatProductPrice(price: ProductCardData['price']) {
   return typeof price === 'number' ? `¥${price}` : `¥${String(price).replace(/^¥/, '')}`;
 }
 
+function toAmount(value: number | string | null | undefined) {
+  if (value === null || value === undefined || value === '') return 0;
+  const parsed = Number(String(value).replace(/[^\d.]/g, ''));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function formatAmount(value: number | string | null | undefined) {
+  const amount = toAmount(value);
+  return `¥${amount.toFixed(amount % 1 === 0 ? 0 : 2)}`;
+}
+
 function mergeProducts(existing: ProductCardData[], incoming: ProductCardData[]) {
   const seen = new Set(existing.map((product) => product.product_id));
   return [
@@ -192,6 +210,20 @@ function mergeProducts(existing: ProductCardData[], incoming: ProductCardData[])
       return true;
     }),
   ];
+}
+
+function saveGiftPlan(plan: GiftPlanResponse) {
+  window.localStorage.setItem('jingli-current-gift-plan', JSON.stringify(plan));
+}
+
+function loadGiftPlan() {
+  const raw = window.localStorage.getItem('jingli-current-gift-plan');
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as GiftPlanResponse;
+  } catch {
+    return null;
+  }
 }
 
 function StatusBar() {
@@ -671,7 +703,8 @@ function JingliPage() {
   const [addingProductId, setAddingProductId] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  const recommendedProducts = messages.flatMap((message) => message.products ?? []);
+  // 固定的底部推荐区先保留代码入口，当前不渲染，避免每次 AI 回复后重复出现兜底商品。
+  // const recommendedProducts = messages.flatMap((message) => message.products ?? []);
 
   useEffect(() => {
     void getGiftList()
@@ -688,7 +721,7 @@ function JingliPage() {
     bottomRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
   }, [messages, isStreaming]);
 
-  async function handleSend(message: string) {
+  async function handleSend(message: string, displayMessage = message) {
     const trimmed = message.trim();
     if (!trimmed || isStreaming) return;
 
@@ -697,7 +730,7 @@ function JingliPage() {
     setInputValue('');
     setMessages((current) => [
       ...current,
-      { id: crypto.randomUUID(), role: 'user', content: trimmed },
+      { id: crypto.randomUUID(), role: 'user', content: displayMessage.trim() || trimmed },
       { id: assistantId, role: 'assistant', content: '', products: [] },
     ]);
     setIsStreaming(true);
@@ -766,6 +799,22 @@ function JingliPage() {
     }
   }
 
+  async function handleScenePlan(scene: (typeof giftScenes)[number]) {
+    if (isStreaming) return;
+
+    const prompt = [
+      `送礼场景：${scene.title}`,
+      `送礼对象：${scene.target}`,
+      `预算：${scene.budget}元左右`,
+      `推荐目标：${scene.goal}`,
+      `场景说明：${scene.desc}`,
+      '请先给出适合当前场景的送礼建议，再推荐商品；如果适合组合礼单，请说明组合思路。',
+    ].join('；');
+
+    const displayMessage = `${scene.title}送礼，预算${scene.budget}元左右，想要${scene.goal}。`;
+    await handleSend(prompt, displayMessage);
+  }
+
   return (
     <div className="flex h-full flex-col overflow-hidden bg-gradient-to-b from-[#fff5f5] via-[#f6f7fb] to-[#f1f2f4]">
       <StatusBar />
@@ -809,18 +858,23 @@ function JingliPage() {
           </div>
           <div className="mt-2 grid grid-cols-2 gap-2">
             {giftScenes.map((scene) => (
-              <article
+              <button
                 key={scene.title}
+                type="button"
+                onClick={() => void handleScenePlan(scene)}
+                disabled={isStreaming}
                 className={`flex gap-2 rounded-2xl p-2 shadow-sm ${
                   scene.active ? 'bg-red-50 ring-1 ring-red-300' : 'bg-white ring-1 ring-zinc-100'
-                }`}
+                } text-left transition active:scale-[0.98] disabled:opacity-70`}
               >
                 <span className="grid h-9 w-9 flex-none place-items-center rounded-xl bg-white text-xl shadow-sm">{scene.icon}</span>
                 <div className="min-w-0">
                   <h3 className={`text-[13px] font-black ${scene.active ? 'text-[#e93b3d]' : 'text-zinc-950'}`}>{scene.title}</h3>
-                  <p className="mt-0.5 truncate text-[10px] font-bold text-zinc-500">{scene.desc}</p>
+                  <p className="mt-0.5 truncate text-[10px] font-bold text-zinc-500">
+                    {isStreaming ? 'AI 正在生成推荐' : scene.desc}
+                  </p>
                 </div>
-              </article>
+              </button>
             ))}
           </div>
         </section>
@@ -867,6 +921,7 @@ function JingliPage() {
           <div ref={bottomRef} />
         </section>
 
+        {/*
         <section className="mt-3 rounded-[22px] bg-white/72 p-3 shadow-sm ring-1 ring-white backdrop-blur">
           <div className="flex items-center justify-between">
             <h2 className="text-[16px] font-black text-zinc-950">京礼为你推荐</h2>
@@ -894,6 +949,7 @@ function JingliPage() {
             试试复杂送礼组合
           </button>
         </section>
+        */}
 
         <section className="mt-3">
           <h2 className="text-[15px] font-black text-zinc-950">你还可以这样问</h2>
@@ -936,20 +992,51 @@ function JingliPage() {
   );
 }
 
-function ComboPreviewProduct({ product }: { product: (typeof comboProducts)[number] }) {
+function ComboPreviewProduct({ product }: { product: (typeof comboProducts)[number] | ProductCardData }) {
+  const icon = 'icon' in product ? product.icon : '🎁';
+  const tone = 'tone' in product ? product.tone : 'from-sky-50 via-violet-50 to-red-50';
+  const price = 'price' in product ? formatProductPrice(product.price) : '';
+
   return (
     <div className="rounded-2xl bg-zinc-50 p-2">
-      <div className={`grid h-12 place-items-center rounded-xl bg-gradient-to-br ${product.tone}`}>
-        <span className="text-2xl">{product.icon}</span>
+      <div className={`grid h-12 place-items-center rounded-xl bg-gradient-to-br ${tone}`}>
+        <span className="text-2xl">{icon}</span>
       </div>
       <h4 className="mt-1.5 truncate text-[11px] font-black text-zinc-900">{product.name}</h4>
-      <div className="mt-0.5 text-[13px] font-black text-[#e93b3d]">{product.price}</div>
+      <div className="mt-0.5 text-[13px] font-black text-[#e93b3d]">{price}</div>
     </div>
   );
 }
 
 function ComboChatPage() {
   const navigate = useNavigate();
+  const defaultMessage = '给老丈人送礼，预算3000元左右，想体面一点。';
+  const [inputValue, setInputValue] = useState('');
+  const [plan, setPlan] = useState<GiftPlanResponse | null>(() => loadGiftPlan());
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  async function handleGenerate(message = inputValue.trim() || defaultMessage) {
+    if (isGenerating) return;
+    setIsGenerating(true);
+    setErrorMessage(null);
+    try {
+      const nextPlan = await generateGiftPlan({ message });
+      saveGiftPlan(nextPlan);
+      setPlan(nextPlan);
+      setInputValue('');
+    } catch (error) {
+      console.error(error);
+      setErrorMessage('组合礼单生成失败，请确认后端 gift-plan 接口已启动。');
+    } finally {
+      setIsGenerating(false);
+    }
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void handleGenerate();
+  }
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-gradient-to-b from-[#fff5f5] via-[#f6f7fb] to-[#f1f2f4]">
@@ -975,36 +1062,41 @@ function ComboChatPage() {
             <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-sky-300 via-violet-400 to-pink-300 text-xl shadow-[0_8px_18px_rgba(124,58,237,0.22)]">✨</span>
             <div className="min-w-0">
               <h2 className="text-[15px] font-black text-zinc-950">已识别送礼条件</h2>
-              <p className="mt-1 text-[12px] font-bold leading-5 text-zinc-600">长辈关系｜预算3000｜正式送礼｜适合组合方案</p>
+              <p className="mt-1 text-[12px] font-bold leading-5 text-zinc-600">
+                {plan?.requirement ?? '长辈关系｜预算3000｜正式送礼｜适合组合方案'}
+              </p>
             </div>
           </div>
         </section>
 
         <section className="mt-3 space-y-3">
           <AiBubble>你好，我是京礼。复杂送礼场景我可以帮你生成组合方案。</AiBubble>
-          <UserBubble>给老丈人送礼，预算3000元左右，想体面一点。</UserBubble>
+          <UserBubble>{plan?.requirement ?? defaultMessage}</UserBubble>
           <AiBubble>
-            这个场景不建议只推荐单个商品。给长辈或老丈人送礼，更适合组合礼单，可以同时兼顾体面感、健康关怀、家庭共享和实用价值。
+            {plan?.answer ?? '这个场景不建议只推荐单个商品。给长辈或老丈人送礼，更适合组合礼单，可以同时兼顾体面感、健康关怀、家庭共享和实用价值。'}
           </AiBubble>
+          {errorMessage && <div className="rounded-2xl bg-red-50 px-3 py-2 text-[12px] font-bold text-[#e93b3d]">{errorMessage}</div>}
         </section>
 
         <section className="mt-3 overflow-hidden rounded-[24px] bg-white p-3 shadow-sm ring-1 ring-zinc-100">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h2 className="text-[18px] font-black text-zinc-950">老丈人见面礼组合</h2>
+              <h2 className="text-[18px] font-black text-zinc-950">{plan?.title ?? '老丈人见面礼组合'}</h2>
               <p className="mt-0.5 text-[12px] font-bold text-zinc-500">
-                预算 <span className="text-[#e93b3d]">¥3000</span>｜当前组合 <span className="text-[#e93b3d]">¥2986</span>｜剩余 ¥14
+                预算 <span className="text-[#e93b3d]">{formatAmount(plan?.budget ?? 3000)}</span>｜
+                当前组合 <span className="text-[#e93b3d]">{formatAmount(plan?.total_amount ?? 2986)}</span>｜
+                剩余 {formatAmount(plan?.remaining_amount ?? 14)}
               </p>
             </div>
             <span className="rounded-full bg-violet-50 px-2 py-1 text-[10px] font-black text-violet-700">AI 组合推荐</span>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
-            {comboProducts.map((product) => (
+            {(plan?.products.length ? plan.products : comboProducts).map((product) => (
               <ComboPreviewProduct key={product.name} product={product} />
             ))}
           </div>
           <div className="mt-3 grid gap-1.5">
-            {['体面感：正式拜访不显随意', '健康关怀：更适合长辈关系', '家庭共享：让礼物更自然'].map((item) => (
+            {(plan?.value_points.map((point) => `${point.title}：${point.desc}`) ?? ['体面感：正式拜访不显随意', '健康关怀：更适合长辈关系', '家庭共享：让礼物更自然']).map((item) => (
               <div key={item} className="rounded-full bg-red-50 px-3 py-1.5 text-[11px] font-black text-[#e93b3d]">
                 {item}
               </div>
@@ -1014,45 +1106,67 @@ function ComboChatPage() {
             onClick={() => navigate('/combo-plan')}
             className="mt-3 h-10 w-full rounded-full bg-gradient-to-r from-[#e93b3d] to-violet-500 text-[13px] font-black text-white shadow-[0_8px_18px_rgba(233,59,61,0.2)]"
           >
-            查看完整组合礼单
+            {plan ? '查看完整组合礼单' : '查看静态示例礼单'}
           </button>
+          {!plan && (
+            <button
+              onClick={() => void handleGenerate(defaultMessage)}
+              disabled={isGenerating}
+              className="mt-2 h-9 w-full rounded-full border border-violet-200 bg-violet-50 text-[12px] font-black text-violet-700 disabled:opacity-50"
+            >
+              {isGenerating ? '正在生成' : '让 AI 生成真实组合'}
+            </button>
+          )}
         </section>
       </div>
 
-      <div className="h-[76px] flex-none border-t border-zinc-200 bg-white px-3 pt-2 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
+      <form onSubmit={handleSubmit} className="h-[76px] flex-none border-t border-zinc-200 bg-white px-3 pt-2 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
         <div className="flex h-11 items-center gap-2">
-          <button className="grid h-9 w-9 place-items-center rounded-full bg-zinc-100 text-xl font-light text-zinc-700">＋</button>
-          <div className="flex h-10 flex-1 items-center rounded-full bg-zinc-100 px-3 text-[13px] font-medium text-zinc-400">
-            继续补充他的喜好或忌口
-          </div>
-          <button className="h-10 rounded-full bg-[#e93b3d] px-4 text-[13px] font-black text-white shadow-[0_8px_16px_rgba(233,59,61,0.18)]">
-            发送
+          <button type="button" className="grid h-9 w-9 place-items-center rounded-full bg-zinc-100 text-xl font-light text-zinc-700">＋</button>
+          <input
+            value={inputValue}
+            onChange={(event) => setInputValue(event.target.value)}
+            className="h-10 min-w-0 flex-1 rounded-full bg-zinc-100 px-3 text-[13px] font-medium text-zinc-800 outline-none placeholder:text-zinc-400"
+            placeholder="继续补充他的喜好或忌口"
+            disabled={isGenerating}
+          />
+          <button
+            type="submit"
+            disabled={isGenerating}
+            className="h-10 rounded-full bg-[#e93b3d] px-4 text-[13px] font-black text-white shadow-[0_8px_16px_rgba(233,59,61,0.18)] disabled:bg-zinc-300 disabled:shadow-none"
+          >
+            {isGenerating ? '生成中' : '发送'}
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
 
-function ComboProductRow({ product }: { product: (typeof comboProducts)[number] }) {
+function ComboProductRow({ product }: { product: (typeof comboProducts)[number] | ProductCardData }) {
+  const icon = 'icon' in product ? product.icon : '🎁';
+  const tone = 'tone' in product ? product.tone : 'from-sky-50 via-violet-50 to-red-50';
+  const tags = product.tags ?? [];
+  const reason = 'reason' in product ? product.reason : '';
+
   return (
     <article className="flex gap-3 border-b border-zinc-100 py-3 last:border-b-0">
-      <div className={`grid h-[68px] w-[68px] flex-none place-items-center rounded-2xl bg-gradient-to-br ${product.tone} shadow-sm`}>
-        <span className="text-3xl">{product.icon}</span>
+      <div className={`grid h-[68px] w-[68px] flex-none place-items-center rounded-2xl bg-gradient-to-br ${tone} shadow-sm`}>
+        <span className="text-3xl">{icon}</span>
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <h3 className="text-[14px] font-black leading-5 text-zinc-950">{product.name}</h3>
-          <span className="flex-none text-[16px] font-black text-[#e93b3d]">{product.price}</span>
+          <span className="flex-none text-[16px] font-black text-[#e93b3d]">{formatProductPrice(product.price)}</span>
         </div>
         <div className="mt-1 flex flex-wrap gap-1">
-          {product.tags.map((tag) => (
+          {tags.slice(0, 4).map((tag) => (
             <span key={tag} className="rounded-full bg-red-50 px-2 py-0.5 text-[9px] font-black text-[#e93b3d]">
               {tag}
             </span>
           ))}
         </div>
-        <p className="mt-1 text-[11px] font-medium leading-4 text-zinc-500">{product.reason}</p>
+        <p className="mt-1 text-[11px] font-medium leading-4 text-zinc-500">{reason}</p>
       </div>
     </article>
   );
@@ -1060,6 +1174,54 @@ function ComboProductRow({ product }: { product: (typeof comboProducts)[number] 
 
 function GiftComboPlanPage() {
   const navigate = useNavigate();
+  const [plan, setPlan] = useState<GiftPlanResponse | null>(() => loadGiftPlan());
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isAddingAll, setIsAddingAll] = useState(false);
+
+  async function handleRegenerate(preference?: string) {
+    const baseMessage = plan?.requirement ?? '给老丈人送礼，预算3000元左右，想体面一点。';
+    setIsGenerating(true);
+    try {
+      const nextPlan = await generateGiftPlan({
+        message: baseMessage,
+        budget: plan?.budget,
+        preference,
+      });
+      saveGiftPlan(nextPlan);
+      setPlan(nextPlan);
+      if (preference === '更高端') navigate('/combo-premium');
+    } finally {
+      setIsGenerating(false);
+    }
+  }
+
+  async function handleAddAll() {
+    const products = plan?.products ?? comboProducts.map((item, index) => ({
+      product_id: `STATIC-COMBO-${index}`,
+      name: item.name,
+      price: item.price.replace('¥', ''),
+      tags: item.tags,
+      highlights: [item.reason],
+      reason: item.reason,
+      image_url: null,
+      detail_url: null,
+    }));
+    setIsAddingAll(true);
+    try {
+      await Promise.all(products.map((product) => addGiftListItem(product)));
+      navigate('/cart');
+    } finally {
+      setIsAddingAll(false);
+    }
+  }
+
+  const shownProducts = plan?.products.length ? plan.products : comboProducts;
+  const shownValuePoints = plan?.value_points ?? valuePoints;
+  const shownChips = plan?.replacement_chips ?? comboChips;
+  const budget = plan?.budget ?? 3000;
+  const total = plan?.total_amount ?? 2986;
+  const remaining = plan?.remaining_amount ?? 14;
+  const usage = plan?.usage_percent ?? 99.5;
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-gradient-to-b from-[#fff5f3] via-[#f6f7fb] to-[#f1f2f4]">
@@ -1089,13 +1251,13 @@ function GiftComboPlanPage() {
             <span className="grid h-11 w-11 place-items-center rounded-2xl bg-red-50 text-2xl">🤝</span>
             <div>
               <h2 className="text-[17px] font-black text-zinc-950">送礼需求</h2>
-              <p className="text-[11px] font-bold text-zinc-500">给老丈人送礼，预算 3000 元左右，想体面一点</p>
+              <p className="text-[11px] font-bold text-zinc-500">{plan?.requirement ?? '给老丈人送礼，预算 3000 元左右，想体面一点'}</p>
             </div>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
             {[
               ['送礼对象', '老丈人'],
-              ['预算范围', '¥3000 左右'],
+              ['预算范围', `${formatAmount(budget)} 左右`],
               ['送礼目标', '体面、稳妥、有心意'],
               ['关系阶段', '正式拜访 / 建立好印象'],
             ].map(([label, value]) => (
@@ -1105,7 +1267,7 @@ function GiftComboPlanPage() {
               </div>
             ))}
           </div>
-          <div className="mt-2 rounded-2xl bg-red-50 px-3 py-2 text-[12px] font-black text-[#e93b3d]">推荐策略：组合礼单，而不是单一商品</div>
+          <div className="mt-2 rounded-2xl bg-red-50 px-3 py-2 text-[12px] font-black text-[#e93b3d]">{plan?.strategy ?? '推荐策略：组合礼单，而不是单一商品'}</div>
         </section>
 
         <section className="relative mt-3 overflow-hidden rounded-[22px] bg-gradient-to-br from-sky-50 via-violet-50 to-white p-3 shadow-sm ring-1 ring-white">
@@ -1115,7 +1277,7 @@ function GiftComboPlanPage() {
             <div>
               <h2 className="text-[16px] font-black text-zinc-950">为什么推荐组合礼单？</h2>
               <p className="mt-1 text-[12px] font-medium leading-5 text-zinc-600">
-                给长辈或老丈人送礼，单件商品容易显得单薄。组合礼单可以同时覆盖体面感、健康关怀、家庭共享和实用价值，更适合正式送礼场景。
+                {plan?.answer ?? '给长辈或老丈人送礼，单件商品容易显得单薄。组合礼单可以同时覆盖体面感、健康关怀、家庭共享和实用价值，更适合正式送礼场景。'}
               </p>
             </div>
           </div>
@@ -1131,28 +1293,28 @@ function GiftComboPlanPage() {
         <section className="mt-3 rounded-[24px] bg-white p-3 shadow-sm ring-1 ring-zinc-100">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h2 className="text-[18px] font-black text-zinc-950">老丈人见面礼组合</h2>
-              <p className="mt-0.5 text-[12px] font-bold text-zinc-500">预算 <span className="text-[#e93b3d]">¥3000</span>｜当前组合 <span className="text-[#e93b3d]">¥2986</span>｜剩余 ¥14</p>
+              <h2 className="text-[18px] font-black text-zinc-950">{plan?.title ?? '老丈人见面礼组合'}</h2>
+              <p className="mt-0.5 text-[12px] font-bold text-zinc-500">预算 <span className="text-[#e93b3d]">{formatAmount(budget)}</span>｜当前组合 <span className="text-[#e93b3d]">{formatAmount(total)}</span>｜剩余 {formatAmount(remaining)}</p>
             </div>
             <span className="rounded-full bg-violet-50 px-2 py-1 text-[10px] font-black text-violet-700">AI 组合推荐</span>
           </div>
           <div className="mt-3 rounded-2xl bg-zinc-50 p-3">
             <div className="flex items-center justify-between text-[11px] font-black text-zinc-500">
-              <span>总预算 ¥3000</span>
-              <span className="text-[#e93b3d]">99.5%</span>
+              <span>总预算 {formatAmount(budget)}</span>
+              <span className="text-[#e93b3d]">{usage}%</span>
             </div>
             <div className="mt-2 h-3 overflow-hidden rounded-full bg-white">
-              <div className="h-full w-[99.5%] rounded-full bg-gradient-to-r from-[#e93b3d] via-red-500 to-violet-500" />
+              <div className="h-full rounded-full bg-gradient-to-r from-[#e93b3d] via-red-500 to-violet-500" style={{ width: `${Math.min(100, usage)}%` }} />
             </div>
             <div className="mt-2 flex justify-between text-[10px] font-bold text-zinc-500">
-              <span>已使用 ¥2986</span>
-              <span>剩余 ¥14</span>
+              <span>已使用 {formatAmount(total)}</span>
+              <span>剩余 {formatAmount(remaining)}</span>
             </div>
           </div>
         </section>
 
         <section className="mt-3 rounded-[22px] bg-white px-3 shadow-sm ring-1 ring-zinc-100">
-          {comboProducts.map((product) => (
+          {shownProducts.map((product) => (
             <ComboProductRow key={product.name} product={product} />
           ))}
         </section>
@@ -1160,8 +1322,8 @@ function GiftComboPlanPage() {
         <section className="mt-3">
           <h2 className="text-[16px] font-black text-zinc-950">为什么这样搭配？</h2>
           <div className="mt-2 grid grid-cols-3 gap-2">
-            {valuePoints.map((point) => (
-              <article key={point.title} className={`rounded-2xl p-2 ${point.tone}`}>
+            {shownValuePoints.map((point) => (
+              <article key={point.title} className={`rounded-2xl p-2 ${'tone' in point ? point.tone : 'bg-violet-50 text-violet-700'}`}>
                 <div className="text-xl">{point.icon}</div>
                 <h3 className="mt-1 text-[12px] font-black">{point.title}</h3>
                 <p className="mt-1 text-[10px] font-bold leading-4 opacity-80">{point.desc}</p>
@@ -1173,10 +1335,11 @@ function GiftComboPlanPage() {
         <section className="mt-3">
           <h2 className="text-[16px] font-black text-zinc-950">可替换方向</h2>
           <div className="mt-2 flex flex-wrap gap-2">
-            {comboChips.map((chip) => (
+            {shownChips.map((chip) => (
               <button
                 key={chip}
-                onClick={() => chip === '更高端' && navigate('/combo-premium')}
+                onClick={() => void handleRegenerate(chip)}
+                disabled={isGenerating}
                 className={`rounded-full px-3 py-2 text-[12px] font-black shadow-sm ring-1 ${
                   chip === '更高端' ? 'bg-violet-50 text-violet-700 ring-violet-100' : 'bg-white text-zinc-700 ring-zinc-100'
                 }`}
@@ -1190,8 +1353,8 @@ function GiftComboPlanPage() {
 
       <div className="h-[76px] flex-none border-t border-zinc-200 bg-white px-3 pt-2 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
         <div className="flex h-11 gap-2">
-          <button className="flex-1 rounded-full border border-[#e93b3d] bg-white text-[13px] font-black text-[#e93b3d]">换一套组合</button>
-          <button onClick={() => navigate('/cart')} className="flex-[1.35] rounded-full bg-[#e93b3d] text-[13px] font-black text-white shadow-[0_8px_18px_rgba(233,59,61,0.2)]">一键加入礼单</button>
+          <button onClick={() => void handleRegenerate()} disabled={isGenerating} className="flex-1 rounded-full border border-[#e93b3d] bg-white text-[13px] font-black text-[#e93b3d] disabled:opacity-60">{isGenerating ? '生成中' : '换一套组合'}</button>
+          <button onClick={() => void handleAddAll()} disabled={isAddingAll} className="flex-[1.35] rounded-full bg-[#e93b3d] text-[13px] font-black text-white shadow-[0_8px_18px_rgba(233,59,61,0.2)] disabled:bg-zinc-300">{isAddingAll ? '加入中' : '一键加入礼单'}</button>
         </div>
       </div>
     </div>
@@ -1200,6 +1363,47 @@ function GiftComboPlanPage() {
 
 function PremiumComboPlanPage() {
   const navigate = useNavigate();
+  const [plan, setPlan] = useState<GiftPlanResponse | null>(() => loadGiftPlan());
+  const [isAddingAll, setIsAddingAll] = useState(false);
+
+  async function handleAddAll() {
+    const products = plan?.products ?? premiumProducts.map((item, index) => ({
+      product_id: `STATIC-PREMIUM-${index}`,
+      name: item.name,
+      price: item.price.replace('¥', ''),
+      tags: item.tags,
+      highlights: [item.reason],
+      reason: item.reason,
+      image_url: null,
+      detail_url: null,
+    }));
+    setIsAddingAll(true);
+    try {
+      await Promise.all(products.map((product) => addGiftListItem(product)));
+      navigate('/cart');
+    } finally {
+      setIsAddingAll(false);
+    }
+  }
+
+  async function handleRegenerate(preference: string) {
+    const baseMessage = plan?.requirement ?? '给老丈人送礼，预算3000元左右，想体面一点。';
+    const nextPlan = await generateGiftPlan({
+      message: baseMessage,
+      budget: plan?.budget,
+      preference,
+    });
+    saveGiftPlan(nextPlan);
+    setPlan(nextPlan);
+  }
+
+  const shownProducts = plan?.products.length ? plan.products : premiumProducts;
+  const shownValuePoints = plan?.value_points ?? premiumValuePoints;
+  const shownChips = plan?.replacement_chips ?? premiumChips;
+  const budget = plan?.budget ?? 5000;
+  const total = plan?.total_amount ?? 4968;
+  const remaining = plan?.remaining_amount ?? 32;
+  const usage = plan?.usage_percent ?? 99.4;
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-gradient-to-b from-[#fff4ee] via-[#f7f2fb] to-[#f1f2f4]">
@@ -1215,7 +1419,7 @@ function PremiumComboPlanPage() {
 
       <div className="flex-1 overflow-y-auto px-3 pb-24 pt-3">
         <div className="mb-2 rounded-full bg-gradient-to-r from-violet-50 via-white to-amber-50 px-3 py-2 text-[12px] font-black text-violet-700 shadow-sm ring-1 ring-white">
-          ✨ 已根据“更高端”偏好重新生成方案
+          ✨ {plan?.strategy ?? '已根据“更高端”偏好重新生成方案'}
         </div>
 
         <section className="rounded-[22px] bg-white p-3 shadow-sm ring-1 ring-zinc-100">
@@ -1223,13 +1427,13 @@ function PremiumComboPlanPage() {
             <span className="grid h-11 w-11 place-items-center rounded-2xl bg-amber-50 text-2xl">🎁</span>
             <div>
               <h2 className="text-[17px] font-black text-zinc-950">升级需求</h2>
-              <p className="text-[11px] font-bold text-zinc-500">老丈人见面礼，从体面升级到更有分量</p>
+              <p className="text-[11px] font-bold text-zinc-500">{plan?.requirement ?? '老丈人见面礼，从体面升级到更有分量'}</p>
             </div>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
             {[
               ['送礼对象', '老丈人'],
-              ['原预算', '¥3000 左右'],
+              ['原预算', `${formatAmount(budget)} 左右`],
               ['新策略', '提高体面感与品质感'],
               ['方案类型', '高端组合礼单'],
             ].map(([label, value]) => (
@@ -1249,7 +1453,7 @@ function PremiumComboPlanPage() {
             <div>
               <h2 className="text-[16px] font-black text-zinc-950">为什么升级？</h2>
               <p className="mt-1 text-[12px] font-medium leading-5 text-zinc-600">
-                正式拜访长辈时，礼物不只要实用，也要体现诚意和分寸。高端版方案会提升主礼品质，同时保留健康关怀和家庭共享属性。
+                {plan?.answer ?? '正式拜访长辈时，礼物不只要实用，也要体现诚意和分寸。高端版方案会提升主礼品质，同时保留健康关怀和家庭共享属性。'}
               </p>
             </div>
           </div>
@@ -1263,38 +1467,38 @@ function PremiumComboPlanPage() {
         <section className="mt-3 rounded-[24px] bg-white p-3 shadow-sm ring-1 ring-zinc-100">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h2 className="text-[18px] font-black text-zinc-950">老丈人见面礼组合 · 高端版</h2>
-              <p className="mt-0.5 text-[12px] font-bold text-zinc-500">预算 <span className="text-[#e93b3d]">¥5000</span>｜当前组合 <span className="text-[#e93b3d]">¥4968</span>｜剩余 ¥32</p>
+              <h2 className="text-[18px] font-black text-zinc-950">{plan?.title ?? '老丈人见面礼组合 · 高端版'}</h2>
+              <p className="mt-0.5 text-[12px] font-bold text-zinc-500">预算 <span className="text-[#e93b3d]">{formatAmount(budget)}</span>｜当前组合 <span className="text-[#e93b3d]">{formatAmount(total)}</span>｜剩余 {formatAmount(remaining)}</p>
             </div>
             <span className="rounded-full bg-violet-50 px-2 py-1 text-[10px] font-black text-violet-700">AI 高端推荐</span>
           </div>
           <div className="mt-3 rounded-2xl bg-zinc-50 p-3">
             <div className="flex items-center justify-between text-[11px] font-black text-zinc-500">
-              <span>总预算 ¥5000</span>
-              <span className="text-[#e93b3d]">99.4%</span>
+              <span>总预算 {formatAmount(budget)}</span>
+              <span className="text-[#e93b3d]">{usage}%</span>
             </div>
             <div className="mt-2 h-3 overflow-hidden rounded-full bg-white">
-              <div className="h-full w-[99.4%] rounded-full bg-gradient-to-r from-[#e93b3d] via-amber-500 to-violet-500" />
+              <div className="h-full rounded-full bg-gradient-to-r from-[#e93b3d] via-amber-500 to-violet-500" style={{ width: `${Math.min(100, usage)}%` }} />
             </div>
             <div className="mt-2 flex justify-between text-[10px] font-bold text-zinc-500">
-              <span>已使用 ¥4968</span>
-              <span>剩余 ¥32</span>
+              <span>已使用 {formatAmount(total)}</span>
+              <span>剩余 {formatAmount(remaining)}</span>
             </div>
           </div>
         </section>
 
         <section className="mt-3 rounded-[22px] bg-white px-3 shadow-sm ring-1 ring-zinc-100">
-          {premiumProducts.map((product) => (
+          {shownProducts.map((product) => (
             <ComboProductRow key={product.name} product={product} />
           ))}
-          <div className="border-t border-zinc-100 py-3 text-right text-[15px] font-black text-[#e93b3d]">合计 ¥4968</div>
+          <div className="border-t border-zinc-100 py-3 text-right text-[15px] font-black text-[#e93b3d]">合计 {formatAmount(total)}</div>
         </section>
 
         <section className="mt-3">
           <h2 className="text-[16px] font-black text-zinc-950">为什么这样搭配？</h2>
           <div className="mt-2 grid grid-cols-3 gap-2">
-            {premiumValuePoints.map((point) => (
-              <article key={point.title} className={`rounded-2xl p-2 ${point.tone}`}>
+            {shownValuePoints.map((point) => (
+              <article key={point.title} className={`rounded-2xl p-2 ${'tone' in point ? point.tone : 'bg-violet-50 text-violet-700'}`}>
                 <div className="text-xl">{point.icon}</div>
                 <h3 className="mt-1 text-[12px] font-black">{point.title}</h3>
                 <p className="mt-1 text-[10px] font-bold leading-4 opacity-80">{point.desc}</p>
@@ -1306,8 +1510,8 @@ function PremiumComboPlanPage() {
         <section className="mt-3">
           <h2 className="text-[16px] font-black text-zinc-950">可替换方向</h2>
           <div className="mt-2 flex flex-wrap gap-2">
-            {premiumChips.map((chip) => (
-              <span key={chip} className="rounded-full bg-white px-3 py-2 text-[12px] font-black text-zinc-700 shadow-sm ring-1 ring-zinc-100">{chip}</span>
+            {shownChips.map((chip) => (
+              <button key={chip} onClick={() => void handleRegenerate(chip)} className="rounded-full bg-white px-3 py-2 text-[12px] font-black text-zinc-700 shadow-sm ring-1 ring-zinc-100">{chip}</button>
             ))}
           </div>
         </section>
@@ -1316,7 +1520,7 @@ function PremiumComboPlanPage() {
       <div className="h-[76px] flex-none border-t border-zinc-200 bg-white px-3 pt-2 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
         <div className="flex h-11 gap-2">
           <button onClick={() => navigate('/combo-plan')} className="flex-1 rounded-full border border-[#e93b3d] bg-white text-[13px] font-black text-[#e93b3d]">返回原方案</button>
-          <button onClick={() => navigate('/cart')} className="flex-[1.35] rounded-full bg-[#e93b3d] text-[13px] font-black text-white shadow-[0_8px_18px_rgba(233,59,61,0.2)]">一键加入礼单</button>
+          <button onClick={() => void handleAddAll()} disabled={isAddingAll} className="flex-[1.35] rounded-full bg-[#e93b3d] text-[13px] font-black text-white shadow-[0_8px_18px_rgba(233,59,61,0.2)] disabled:bg-zinc-300">{isAddingAll ? '加入中' : '一键加入礼单'}</button>
         </div>
       </div>
     </div>
@@ -1349,27 +1553,49 @@ function CartTabBar() {
   );
 }
 
-function CartProductRow({ product }: { product: (typeof cartProducts)[number] }) {
+function CartProductRow({
+  product,
+  quantity,
+  checked,
+  onToggle,
+  onDecrease,
+  onIncrease,
+}: {
+  product: ProductCardData;
+  quantity: number;
+  checked: boolean;
+  onToggle: (productId: string) => void;
+  onDecrease: (productId: string) => void;
+  onIncrease: (productId: string) => void;
+}) {
   return (
     <article className="flex gap-2 border-b border-zinc-100 py-3 last:border-b-0">
-      <span className="mt-6 h-4 w-4 flex-none rounded-full bg-[#e93b3d] text-center text-[10px] leading-4 text-white">✓</span>
-      <div className={`grid h-[72px] w-[72px] flex-none place-items-center rounded-2xl bg-gradient-to-br ${product.tone}`}>
-        <span className="text-3xl">{product.icon}</span>
+      <button
+        type="button"
+        onClick={() => onToggle(product.product_id)}
+        className={`mt-6 h-4 w-4 flex-none rounded-full border text-center text-[10px] leading-[14px] ${
+          checked ? 'border-[#e93b3d] bg-[#e93b3d] text-white' : 'border-zinc-300 bg-white text-transparent'
+        }`}
+      >
+        ✓
+      </button>
+      <div className="grid h-[72px] w-[72px] flex-none place-items-center rounded-2xl bg-gradient-to-br from-sky-50 via-violet-50 to-red-50">
+        <span className="text-3xl">🎁</span>
       </div>
       <div className="min-w-0 flex-1">
         <h3 className="truncate text-[13px] font-black text-zinc-950">{product.name}</h3>
-        <p className="mt-0.5 truncate text-[10px] font-bold text-zinc-500">{product.spec}</p>
+        <p className="mt-0.5 truncate text-[10px] font-bold text-zinc-500">{product.reason}</p>
         <div className="mt-1 flex flex-wrap gap-1">
-          {product.tags.map((tag) => (
+          {product.tags.slice(0, 3).map((tag) => (
             <span key={tag} className="rounded bg-red-50 px-1.5 py-0.5 text-[9px] font-black text-[#e93b3d]">{tag}</span>
           ))}
         </div>
         <div className="mt-1.5 flex items-end justify-between">
-          <span className="text-[16px] font-black text-[#e93b3d]">{product.price}</span>
+          <span className="text-[16px] font-black text-[#e93b3d]">{formatProductPrice(product.price)}</span>
           <div className="flex h-6 items-center overflow-hidden rounded-full border border-zinc-200 text-[11px] font-black">
-            <span className="px-2 text-zinc-400">-</span>
-            <span className="bg-zinc-50 px-2 text-zinc-800">1</span>
-            <span className="px-2 text-zinc-700">+</span>
+            <button type="button" onClick={() => onDecrease(product.product_id)} className="px-2 text-zinc-400">-</button>
+            <span className="bg-zinc-50 px-2 text-zinc-800">{quantity}</span>
+            <button type="button" onClick={() => onIncrease(product.product_id)} className="px-2 text-zinc-700">+</button>
           </div>
         </div>
       </div>
@@ -1379,13 +1605,103 @@ function CartProductRow({ product }: { product: (typeof cartProducts)[number] })
 
 function GiftCartPage() {
   const navigate = useNavigate();
+  const [giftList, setGiftList] = useState<GiftListResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+  const [localQuantities, setLocalQuantities] = useState<Record<string, number>>({});
+
+  function syncCartState(nextList: GiftListResponse) {
+    setGiftList(nextList);
+    setLocalQuantities(
+      Object.fromEntries(nextList.items.map((item) => [item.product.product_id, item.quantity])),
+    );
+    setSelectedIds((current) => {
+      const availableIds = new Set(nextList.items.map((item) => item.product.product_id));
+      const next = new Set([...current].filter((productId) => availableIds.has(productId)));
+      if (current.size === 0) {
+        nextList.items.forEach((item) => next.add(item.product.product_id));
+      }
+      return next;
+    });
+  }
+
+  useEffect(() => {
+    void getGiftList()
+      .then((nextList) => {
+        syncCartState(nextList);
+        setSelectedIds(new Set(nextList.items.map((item) => item.product.product_id)));
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  async function handleRemove(productId: string) {
+    const nextList = await removeGiftListItem(productId);
+    syncCartState(nextList);
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      next.delete(productId);
+      return next;
+    });
+    setLocalQuantities((current) => {
+      const next = { ...current };
+      delete next[productId];
+      return next;
+    });
+  }
+
+  function handleToggle(productId: string) {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (next.has(productId)) {
+        next.delete(productId);
+      } else {
+        next.add(productId);
+      }
+      return next;
+    });
+  }
+
+  function handleToggleAll() {
+    setSelectedIds((current) => {
+      if (current.size === items.length) return new Set();
+      return new Set(items.map((item) => item.product.product_id));
+    });
+  }
+
+  function handleIncrease(productId: string) {
+    const nextQuantity = Math.min(99, (localQuantities[productId] ?? 1) + 1);
+    setLocalQuantities((current) => ({ ...current, [productId]: nextQuantity }));
+    setSelectedIds((current) => new Set(current).add(productId));
+    void updateGiftListItemQuantity(productId, nextQuantity).then(syncCartState);
+  }
+
+  function handleDecrease(productId: string) {
+    const currentQuantity = localQuantities[productId] ?? 1;
+    if (currentQuantity <= 1) {
+      void handleRemove(productId);
+      return;
+    }
+    const nextQuantity = currentQuantity - 1;
+    setLocalQuantities((current) => ({ ...current, [productId]: nextQuantity }));
+    void updateGiftListItemQuantity(productId, nextQuantity).then(syncCartState);
+  }
+
+  const items = giftList?.items ?? [];
+  const totalCount = items.reduce((sum, item) => sum + (localQuantities[item.product.product_id] ?? item.quantity), 0);
+  const allChecked = items.length > 0 && selectedIds.size === items.length;
+  const selectedItems = items.filter((item) => selectedIds.has(item.product.product_id));
+  const selectedCount = selectedItems.reduce((sum, item) => sum + (localQuantities[item.product.product_id] ?? item.quantity), 0);
+  const selectedAmount = selectedItems.reduce(
+    (sum, item) => sum + toAmount(item.product.price) * (localQuantities[item.product.product_id] ?? item.quantity),
+    0,
+  );
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-[#f3f4f7]">
       <StatusBar />
       <header className="flex h-[52px] flex-none items-center bg-white px-3">
         <button onClick={() => navigate('/combo-plan')} className="grid h-9 w-9 place-items-center rounded-full bg-zinc-100 text-2xl font-light text-zinc-800">‹</button>
-        <h1 className="flex-1 text-center text-[18px] font-black text-zinc-950">购物车（4）</h1>
+        <h1 className="flex-1 text-center text-[18px] font-black text-zinc-950">购物车（{totalCount}）</h1>
         <div className="flex items-center gap-3 text-[13px] font-bold text-zinc-700">
           <span>管理</span>
           <span>•••</span>
@@ -1408,7 +1724,7 @@ function GiftCartPage() {
           ))}
         </div>
         <div className="mt-2 rounded-2xl bg-gradient-to-r from-violet-50 to-red-50 px-3 py-2 text-[12px] font-black text-violet-700 shadow-sm">
-          ✨ 京礼已为你加入 4 件商品，组成老丈人见面礼组合
+          ✨ 京礼已为你加入 {totalCount} 件商品，组成 AI 智能礼单
         </div>
 
         <section className="mt-2 rounded-[22px] bg-white px-3 shadow-sm">
@@ -1417,8 +1733,29 @@ function GiftCartPage() {
             <h2 className="flex-1 text-[14px] font-black text-zinc-950">京礼精选组合</h2>
             <span className="text-zinc-400">›</span>
           </div>
-          {cartProducts.map((product) => (
-            <CartProductRow key={product.name} product={product} />
+          {isLoading && <div className="py-6 text-center text-[12px] font-bold text-zinc-400">正在读取礼单...</div>}
+          {!isLoading && items.length === 0 && (
+            <div className="py-8 text-center">
+              <div className="text-3xl">🎁</div>
+              <p className="mt-2 text-[13px] font-black text-zinc-800">礼单还是空的</p>
+              <button
+                onClick={() => navigate('/jingli')}
+                className="mt-3 rounded-full bg-[#e93b3d] px-4 py-2 text-[12px] font-black text-white"
+              >
+                去问京礼
+              </button>
+            </div>
+          )}
+          {items.map((item) => (
+            <CartProductRow
+              key={item.product.product_id}
+              product={item.product}
+              quantity={localQuantities[item.product.product_id] ?? item.quantity}
+              checked={selectedIds.has(item.product.product_id)}
+              onToggle={handleToggle}
+              onDecrease={handleDecrease}
+              onIncrease={handleIncrease}
+            />
           ))}
         </section>
 
@@ -1443,15 +1780,26 @@ function GiftCartPage() {
 
       <div className="h-[62px] flex-none border-t border-zinc-200 bg-white px-3 pt-2">
         <div className="flex h-10 items-center gap-2">
-          <div className="flex items-center gap-1 text-[12px] font-black text-zinc-700">
-            <span className="h-4 w-4 rounded-full bg-[#e93b3d] text-center text-[10px] leading-4 text-white">✓</span>
+          <button type="button" onClick={handleToggleAll} className="flex items-center gap-1 text-[12px] font-black text-zinc-700">
+            <span
+              className={`h-4 w-4 rounded-full border text-center text-[10px] leading-[14px] ${
+                allChecked ? 'border-[#e93b3d] bg-[#e93b3d] text-white' : 'border-zinc-300 bg-white text-transparent'
+              }`}
+            >
+              ✓
+            </span>
             全选
-          </div>
+          </button>
           <div className="min-w-0 flex-1 text-right">
-            <div className="text-[12px] font-bold text-zinc-600">合计：<span className="text-[18px] font-black text-[#e93b3d]">¥2986</span></div>
-            <div className="text-[10px] font-bold text-zinc-400">共 4 件｜已优惠 ¥214</div>
+            <div className="text-[12px] font-bold text-zinc-600">合计：<span className="text-[18px] font-black text-[#e93b3d]">{formatAmount(selectedAmount)}</span></div>
+            <div className="text-[10px] font-bold text-zinc-400">已选 {selectedCount} 件｜礼单共 {totalCount} 件</div>
           </div>
-          <button className="h-10 rounded-full bg-[#e93b3d] px-4 text-[13px] font-black text-white shadow-[0_8px_16px_rgba(233,59,61,0.2)]">去结算（4）</button>
+          <button
+            disabled={selectedCount === 0}
+            className="h-10 rounded-full bg-[#e93b3d] px-4 text-[13px] font-black text-white shadow-[0_8px_16px_rgba(233,59,61,0.2)] disabled:bg-zinc-300 disabled:shadow-none"
+          >
+            去结算（{selectedCount}）
+          </button>
         </div>
       </div>
       <CartTabBar />

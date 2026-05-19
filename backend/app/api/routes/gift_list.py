@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.schemas.gift_list import GiftListAddRequest, GiftListResponse
+from app.schemas.gift_list import GiftListAddRequest, GiftListResponse, GiftListUpdateRequest
 from app.services.gift_list_service import GiftListService
 
 router = APIRouter()
@@ -19,3 +19,14 @@ async def add_gift_list_item(payload: GiftListAddRequest) -> GiftListResponse:
 @router.delete("/items/{product_id}", response_model=GiftListResponse)
 async def remove_gift_list_item(product_id: str, list_id: str = "default") -> GiftListResponse:
     return GiftListService().remove_item(product_id, list_id)
+
+
+@router.patch("/items/{product_id}", response_model=GiftListResponse)
+async def update_gift_list_item(
+    product_id: str, payload: GiftListUpdateRequest
+) -> GiftListResponse:
+    return GiftListService().update_quantity(
+        product_id=product_id,
+        quantity=payload.quantity,
+        list_id=payload.list_id,
+    )

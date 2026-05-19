@@ -12,6 +12,11 @@ class GiftListAddRequest(BaseModel):
     quantity: int = Field(default=1, ge=1, le=99)
 
 
+class GiftListUpdateRequest(BaseModel):
+    list_id: str = "default"
+    quantity: int = Field(ge=0, le=99)
+
+
 class GiftListItem(BaseModel):
     product: ProductCard
     quantity: int = 1
@@ -23,4 +28,3 @@ class GiftListResponse(BaseModel):
     items: list[GiftListItem]
     total_count: int
     total_amount: Decimal | None = None
-

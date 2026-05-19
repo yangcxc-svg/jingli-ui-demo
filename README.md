@@ -99,6 +99,7 @@ http://localhost:3000/jingli
 ## 当前已打通的接口
 
 - `POST /api/chat/stream`：流式返回 AI 回复和商品推荐卡片
+- `POST /api/gift-plan/generate`：生成结构化组合礼单
 - `GET /api/gift-list`：读取当前礼单
 - `POST /api/gift-list/items`：把推荐商品加入礼单
 - `DELETE /api/gift-list/items/{product_id}`：从礼单移除商品

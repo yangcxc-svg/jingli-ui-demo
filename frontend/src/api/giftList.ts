@@ -42,3 +42,42 @@ export async function getGiftList(listId = 'default') {
 
   return response.json() as Promise<GiftListResponse>;
 }
+
+export async function removeGiftListItem(productId: string, listId = 'default') {
+  const response = await fetch(
+    `${API_BASE}/gift-list/items/${encodeURIComponent(productId)}?list_id=${encodeURIComponent(listId)}`,
+    { method: 'DELETE' },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Remove gift list item failed: ${response.status}`);
+  }
+
+  return response.json() as Promise<GiftListResponse>;
+}
+
+export async function updateGiftListItemQuantity(
+  productId: string,
+  quantity: number,
+  listId = 'default',
+) {
+  const response = await fetch(
+    `${API_BASE}/gift-list/items/${encodeURIComponent(productId)}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        list_id: listId,
+        quantity,
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Update gift list item failed: ${response.status}`);
+  }
+
+  return response.json() as Promise<GiftListResponse>;
+}

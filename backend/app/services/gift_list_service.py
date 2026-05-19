@@ -53,6 +53,25 @@ class GiftListService:
             items.pop(product_id, None)
             return self._build_response(list_id, items)
 
+    def update_quantity(
+        self, product_id: str, quantity: int, list_id: str = "default"
+    ) -> GiftListResponse:
+        with self._lock:
+            items = self._lists.setdefault(list_id, {})
+            existing = items.get(product_id)
+            if not existing:
+                return self._build_response(list_id, items)
+
+            if quantity <= 0:
+                items.pop(product_id, None)
+            else:
+                items[product_id] = GiftListItem(
+                    product=existing.product,
+                    quantity=quantity,
+                    added_at=existing.added_at,
+                )
+            return self._build_response(list_id, items)
+
     def _build_response(
         self, list_id: str, items_by_product_id: dict[str, GiftListItem]
     ) -> GiftListResponse:
