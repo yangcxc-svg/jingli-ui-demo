@@ -29,6 +29,7 @@ import httpx
 from pydantic import BaseModel
 
 from app.core.config import settings
+from app.services.model_log_service import model_log_service
 
 logger = logging.getLogger(__name__)
 
@@ -131,6 +132,20 @@ class LLMClient:
         # Vision models 通常处理更慢，timeout 放宽
         self.timeout = httpx.Timeout(120.0, connect=10.0)
 
+    @property
+    def is_mock(self) -> bool:
+        return self.provider == "mock"
+
+    def status(self) -> dict[str, Any]:
+        """返回当前 LLM 配置摘要（用于 /health/ready），不暴露 API Key。"""
+        return {
+            "provider": self.provider,
+            "model": self.model,
+            "is_mock": self.is_mock,
+            "base_url_configured": bool(self.base_url),
+            "api_key_configured": bool(settings.llm_api_key),
+        }
+
     # ---------- public API ----------
 
     async def generate(
@@ -141,9 +156,23 @@ class LLMClient:
         temperature: float = 0.3,
         images: list[ImageRef] | None = None,
         history: list[ChatMessage] | None = None,
+        prompt_name: str = "generate",
+        prompt_version: str = "v1",
+        trace_id: str | None = None,
     ) -> LLMResult:
         if self.provider == "mock":
             tag = f" (+{len(images)} images)" if images else ""
+            model_log_service.record(
+                provider=self.provider,
+                model=self.model,
+                prompt_name=prompt_name,
+                prompt_version=prompt_version,
+                latency_ms=0,
+                status="success",
+                is_mock=True,
+                is_stream=False,
+                trace_id=trace_id,
+            )
             return LLMResult(text=f"Mock LLM response.{tag}")
 
         url = f"{self.base_url}/chat/completions"
@@ -161,15 +190,43 @@ class LLMClient:
                 data = resp.json()
         except httpx.HTTPError as exc:
             logger.exception("llm_generate_failed provider=%s err=%s", self.provider, exc)
+            model_log_service.record(
+                provider=self.provider,
+                model=self.model,
+                prompt_name=prompt_name,
+                prompt_version=prompt_version,
+                latency_ms=int((time.perf_counter() - started) * 1000),
+                status="error",
+                error=str(exc),
+                is_mock=False,
+                is_stream=False,
+                trace_id=trace_id,
+            )
             return LLMResult(text=f"[LLM 调用失败] {exc}")
 
         text = self._extract_text(data)
         usage = data.get("usage") or {}
+        latency_ms = int((time.perf_counter() - started) * 1000)
+        input_tokens = int(usage.get("prompt_tokens") or 0)
+        output_tokens = int(usage.get("completion_tokens") or 0)
+        model_log_service.record(
+            provider=self.provider,
+            model=self.model,
+            prompt_name=prompt_name,
+            prompt_version=prompt_version,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            latency_ms=latency_ms,
+            status="success",
+            is_mock=False,
+            is_stream=False,
+            trace_id=trace_id,
+        )
         return LLMResult(
             text=text,
-            input_tokens=int(usage.get("prompt_tokens") or 0),
-            output_tokens=int(usage.get("completion_tokens") or 0),
-            latency_ms=int((time.perf_counter() - started) * 1000),
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            latency_ms=latency_ms,
         )
 
     async def astream(
@@ -180,12 +237,26 @@ class LLMClient:
         temperature: float = 0.3,
         images: list[ImageRef] | None = None,
         history: list[ChatMessage] | None = None,
+        prompt_name: str = "stream",
+        prompt_version: str = "v1",
+        trace_id: str | None = None,
     ) -> AsyncIterator[str]:
         """异步流式 yield 每个 token/delta 文本。"""
         if self.provider == "mock":
             tag = f" (+{len(images)} images)" if images else ""
             for token in f"Mock LLM response.{tag}".split(" "):
                 yield token + " "
+            model_log_service.record(
+                provider=self.provider,
+                model=self.model,
+                prompt_name=prompt_name,
+                prompt_version=prompt_version,
+                latency_ms=0,
+                status="success",
+                is_mock=True,
+                is_stream=True,
+                trace_id=trace_id,
+            )
             return
 
         url = f"{self.base_url}/chat/completions"
@@ -195,6 +266,9 @@ class LLMClient:
             "temperature": temperature,
             "stream": True,
         }
+        started = time.perf_counter()
+        success = True
+        error_message: str | None = None
         try:
             async with httpx.AsyncClient(timeout=self.timeout) as client:
                 async with client.stream(
@@ -207,7 +281,7 @@ class LLMClient:
                         data_str = line[len("data:") :].strip()
                         if not data_str or data_str == "[DONE]":
                             if data_str == "[DONE]":
-                                return
+                                break
                             continue
                         try:
                             chunk = json.loads(data_str)
@@ -222,7 +296,22 @@ class LLMClient:
                             yield delta
         except httpx.HTTPError as exc:
             logger.exception("llm_stream_failed provider=%s err=%s", self.provider, exc)
+            success = False
+            error_message = str(exc)
             yield f"\n[LLM 流式调用失败] {exc}"
+        finally:
+            model_log_service.record(
+                provider=self.provider,
+                model=self.model,
+                prompt_name=prompt_name,
+                prompt_version=prompt_version,
+                latency_ms=int((time.perf_counter() - started) * 1000),
+                status="success" if success else "error",
+                error=error_message,
+                is_mock=False,
+                is_stream=True,
+                trace_id=trace_id,
+            )
 
     # ---------- internal ----------
 

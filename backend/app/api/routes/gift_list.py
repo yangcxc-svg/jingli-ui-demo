@@ -1,6 +1,12 @@
 from fastapi import APIRouter
 
-from app.schemas.gift_list import GiftListAddRequest, GiftListResponse, GiftListUpdateRequest
+from app.schemas.gift_list import (
+    GiftListAddRequest,
+    GiftListCheckoutPreviewRequest,
+    GiftListCheckoutPreviewResponse,
+    GiftListResponse,
+    GiftListUpdateRequest,
+)
 from app.services.gift_list_service import GiftListService
 
 router = APIRouter()
@@ -30,3 +36,10 @@ async def update_gift_list_item(
         quantity=payload.quantity,
         list_id=payload.list_id,
     )
+
+
+@router.post("/checkout-preview", response_model=GiftListCheckoutPreviewResponse)
+async def preview_gift_list_checkout(
+    payload: GiftListCheckoutPreviewRequest,
+) -> GiftListCheckoutPreviewResponse:
+    return GiftListService().checkout_preview(payload)

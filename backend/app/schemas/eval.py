@@ -22,3 +22,9 @@ class EvalSummaryResponse(BaseModel):
     status: str
     metrics: dict[str, Any]
     recent: list[dict[str, Any]] = []
+
+
+class ModelLogListResponse(BaseModel):
+    """模型调用日志列表（任务 6）。"""
+
+    items: list[dict[str, Any]] = []

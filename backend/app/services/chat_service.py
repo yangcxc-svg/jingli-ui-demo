@@ -8,8 +8,9 @@ from app.llm.client import ChatMessage
 from app.metrics.collector import MetricsCollector
 from app.schemas.chat import ChatRequest, ChatResponse, StreamEvent
 from app.schemas.product import ProductCard
+from app.schemas.recommendation import RecommendationRequest
 from app.services.conversation_memory import ConversationMemory
-from app.services.seed_product_loader import seed_product_catalog
+from app.services.recommendation_service import RecommendationService
 
 
 class ChatService:
@@ -17,6 +18,7 @@ class ChatService:
         self.agent = GuideAgent()
         self.metrics = MetricsCollector()
         self.memory = ConversationMemory()
+        self.recommendations = RecommendationService()
 
     async def chat(self, request: ChatRequest) -> ChatResponse:
         conversation_id = request.conversation_id or str(uuid4())
@@ -57,11 +59,34 @@ class ChatService:
         conversation_id = request.conversation_id or str(uuid4())
         message_id = str(uuid4())
         history = self._get_history(conversation_id)
-        # 为了能在 stream 结束时记录指标，我们累计 delta 并预取 citations
-        # 简化做法：仍调用 agent.astream 输出 token，但同时复用 graph 的检索逻辑统计 citations
-        chunks = await self.agent.tools.search_knowledge(request.message)
-        citations_n = len([c for c in chunks if c.get("text")])
-        product_cards = self._build_product_cards(chunks)
+        # 为了能在 stream 结束时记录指标，我们累计 delta 并预取推荐商品。
+        recommendation = await self.recommendations.recommend_products(
+            RecommendationRequest(
+                message=request.message,
+                conversation_id=conversation_id,
+                max_products=3,
+                include_fallback=False,
+            )
+        )
+        citations_n = len(recommendation.citations)
+        product_cards = recommendation.products
+        # 任务 6 续：将预取的候选商品作为白名单注入 prompt，避免模型编造不存在的商品。
+        scores_by_product_id = {score.product_id: score for score in recommendation.scores}
+        candidate_dicts = [
+            {
+                "product_id": p.product_id,
+                "name": p.name,
+                "price": p.price,
+                "reason": p.reason,
+                "evidence": scores_by_product_id.get(p.product_id).reasons
+                if scores_by_product_id.get(p.product_id)
+                else [p.reason],
+                "penalties": scores_by_product_id.get(p.product_id).penalties
+                if scores_by_product_id.get(p.product_id)
+                else [],
+            }
+            for p in product_cards
+        ]
         started = time.perf_counter()
         buffer: list[str] = []
         async for delta in self.agent.astream(
@@ -69,6 +94,7 @@ class ChatService:
             conversation_id=conversation_id,
             image_ids=request.image_ids,
             history=history,
+            candidate_products=candidate_dicts,
         ):
             if delta:
                 buffer.append(delta)
@@ -100,41 +126,6 @@ class ChatService:
             for item in self.memory.get_recent(conversation_id)
         ]
 
-    def _build_product_cards(self, chunks: list[dict[str, object]]) -> list[ProductCard]:
-        cards: list[ProductCard] = []
-        seen: set[str] = set()
-        for chunk in chunks:
-            product_id = str(chunk.get("document_id") or "")
-            if not product_id or product_id in seen:
-                continue
-            product = seed_product_catalog.get_by_id(product_id)
-            if not product:
-                continue
-            seen.add(product_id)
-            tags = product.get("comparison_tags")
-            if not isinstance(tags, list):
-                tags = product.get("use_cases")
-            if not isinstance(tags, list):
-                tags = []
-            highlights = product.get("highlights")
-            if not isinstance(highlights, list):
-                highlights = []
-            cards.append(
-                ProductCard(
-                    product_id=product_id,
-                    name=str(product.get("name") or ""),
-                    image_url=str(product.get("image_url") or "") or None,
-                    price=product.get("price"),
-                    tags=[str(tag) for tag in tags[:4]],
-                    highlights=[str(item) for item in highlights[:3]],
-                    reason=str(highlights[0]) if highlights else "匹配当前咨询需求",
-                    detail_url=str(product.get("purchase_url") or "") or None,
-                )
-            )
-            if len(cards) >= 3:
-                break
-        return cards
-
     async def _replay_answer_with_product_cards(
         self, answer: str, product_cards: list[ProductCard]
     ) -> AsyncIterator[StreamEvent]:
@@ -154,8 +145,11 @@ class ChatService:
                 emitted_product_ids.add(card.product_id)
                 yield StreamEvent(event="product_cards", products=[card])
 
-        for card in product_cards:
-            if card.product_id not in emitted_product_ids:
+        # 修复：只推送文本中真正被提及的商品卡片；
+        # 若一个商品都没匹配上（如模型没听话编了别的名称），才退回候选池兜底，
+        # 避免出现"AI 推荐 2 个、卡片区却出 3 个"的不一致体验。
+        if not emitted_product_ids:
+            for card in product_cards:
                 await asyncio.sleep(1)
                 emitted_product_ids.add(card.product_id)
                 yield StreamEvent(event="product_cards", products=[card])

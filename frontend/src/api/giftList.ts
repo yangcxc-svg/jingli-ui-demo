@@ -13,6 +13,20 @@ export interface GiftListResponse {
   total_amount?: string | number | null;
 }
 
+export interface GiftListCheckoutItem {
+  product: ProductCardData;
+  quantity: number;
+  subtotal?: string | number | null;
+}
+
+export interface GiftListCheckoutPreviewResponse {
+  list_id: string;
+  items: GiftListCheckoutItem[];
+  total_count: number;
+  total_amount?: string | number | null;
+  unavailable_product_ids: string[];
+}
+
 export async function addGiftListItem(product: ProductCardData, listId = 'default') {
   const response = await fetch(`${API_BASE}/gift-list/items`, {
     method: 'POST',
@@ -80,4 +94,26 @@ export async function updateGiftListItemQuantity(
   }
 
   return response.json() as Promise<GiftListResponse>;
+}
+
+export async function previewGiftListCheckout(
+  items: Array<{ product_id: string; quantity: number }>,
+  listId = 'default',
+) {
+  const response = await fetch(`${API_BASE}/gift-list/checkout-preview`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      list_id: listId,
+      items,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Preview gift list checkout failed: ${response.status}`);
+  }
+
+  return response.json() as Promise<GiftListCheckoutPreviewResponse>;
 }

@@ -33,6 +33,7 @@ storage/uploads/
 !storage/uploads/.gitkeep
 storage/tmp/
 backend/storage/uploads/
+*.sqlite3
 *.log
 
 # OS / IDE

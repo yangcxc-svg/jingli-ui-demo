@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from app.llm.client import LLMClient
 from app.schemas.health import HealthResponse
 
 router = APIRouter()
@@ -12,6 +13,7 @@ async def live() -> HealthResponse:
 
 @router.get("/ready", response_model=HealthResponse)
 async def ready() -> HealthResponse:
+    llm_status = LLMClient().status()
     return HealthResponse(
         status="ok",
         dependencies={
@@ -19,7 +21,6 @@ async def ready() -> HealthResponse:
             "database": "not_checked",
             "redis": "not_checked",
             "vector_db": "not_checked",
-            "llm": "not_checked",
+            "llm": llm_status,
         },
     )
-

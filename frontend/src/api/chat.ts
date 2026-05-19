@@ -1,5 +1,7 @@
 export const API_BASE = import.meta.env.VITE_API_BASE ?? '/api';
 
+export type BudgetLevel = 'low' | 'mid' | 'high' | 'luxury';
+
 export interface ProductCardData {
   product_id: string;
   name: string;
@@ -9,6 +11,10 @@ export interface ProductCardData {
   highlights: string[];
   reason: string;
   detail_url?: string | null;
+  scenarios?: string[];
+  target_people?: string[];
+  budget_level?: BudgetLevel | null;
+  avoid_for?: string[];
 }
 
 export interface ChatRequest {

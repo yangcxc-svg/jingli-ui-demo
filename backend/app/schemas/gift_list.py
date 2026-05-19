@@ -28,3 +28,27 @@ class GiftListResponse(BaseModel):
     items: list[GiftListItem]
     total_count: int
     total_amount: Decimal | None = None
+
+
+class GiftListCheckoutItemRequest(BaseModel):
+    product_id: str
+    quantity: int = Field(ge=1, le=99)
+
+
+class GiftListCheckoutPreviewRequest(BaseModel):
+    list_id: str = "default"
+    items: list[GiftListCheckoutItemRequest]
+
+
+class GiftListCheckoutItem(BaseModel):
+    product: ProductCard
+    quantity: int
+    subtotal: Decimal | None = None
+
+
+class GiftListCheckoutPreviewResponse(BaseModel):
+    list_id: str
+    items: list[GiftListCheckoutItem]
+    total_count: int
+    total_amount: Decimal | None = None
+    unavailable_product_ids: list[str] = []

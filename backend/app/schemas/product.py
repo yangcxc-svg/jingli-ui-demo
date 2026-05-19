@@ -1,6 +1,9 @@
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
+
+
+BudgetLevel = str  # "low" | "mid" | "high" | "luxury"
 
 
 class ProductCreate(BaseModel):
@@ -18,6 +21,12 @@ class ProductResponse(ProductCreate):
 
     product_id: str
     status: str = "active"
+    scenarios: list[str] = []
+    target_people: list[str] = []
+    budget_level: BudgetLevel | None = None
+    avoid_for: list[str] = []
+    highlights: list[str] = []
+    purchase_url: str | None = None
 
 
 class ProductCard(BaseModel):
@@ -29,4 +38,7 @@ class ProductCard(BaseModel):
     highlights: list[str] = []
     reason: str
     detail_url: str | None = None
-
+    scenarios: list[str] = Field(default_factory=list)
+    target_people: list[str] = Field(default_factory=list)
+    budget_level: BudgetLevel | None = None
+    avoid_for: list[str] = Field(default_factory=list)

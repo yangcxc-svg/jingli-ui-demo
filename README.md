@@ -51,6 +51,17 @@ CORS_ORIGINS=http://localhost:3000,http://localhost:5173
 
 如果不配置真实模型，后端会默认走 `mock`，前端会看到 `Mock LLM response.`。
 
+### 如何确认 LLM 是否走真实模型
+
+- 启动后访问 `http://localhost:8000/api/health/ready`，`dependencies.llm` 会返回当前 `provider`、`model`、`is_mock`、`base_url_configured`、`api_key_configured`。
+- `is_mock=true` 表示当前是占位模式，前端 AI 回复必然是 `Mock LLM response.`。
+- `is_mock=false` 但前端依然看到 mock 响应时，按以下顺序排查：
+  1. `cat backend/.env`，确认 `LLM_PROVIDER` 不是 `mock`；
+  2. 确认 `LLM_API_KEY` 已填写（Ollama 例外）；
+  3. 确认 `LLM_BASE_URL` 与所选 provider 匹配，或留空让后端使用 provider 默认值；
+  4. 访问 `http://localhost:8000/api/eval/model-logs?limit=5`，查看最近调用的 `status` 与 `error` 字段，定位是网络、鉴权还是模型名错误；
+  5. 修改完 `.env` 后重启 `uvicorn`，配置才会生效。
+
 前端默认通过 `/api` 代理到本地后端 `http://localhost:8000`，通常不需要额外配置。需要自定义时可复制：
 
 ```bash
@@ -105,6 +116,38 @@ http://localhost:3000/jingli
 - `DELETE /api/gift-list/items/{product_id}`：从礼单移除商品
 
 说明：当前礼单是内存版，重启后端后会清空。后续如果要做正式版本，可以接数据库持久化。
+
+## 如何更新商品数据
+
+商品知识库种子文件位于 `storage/sample_docs/seed_products.json`。后端启动时会按统一 schema 校验，字段不合法会以明确错误终止启动。
+
+商品字段约定（详见 `backend/app/schemas/seed_product.py`）：
+
+- 必填：`product_id`、`name`、`category`
+- 推荐填写：`price`（非负数）、`image_url`、`purchase_url`、`brand`、`highlights`
+- 推荐过滤字段（任务 5）：
+  - `scenarios`：适用送礼场景，如 `["见家长", "生日", "乔迁"]`
+  - `target_people`：目标人群，如 `["长辈", "女生", "客户"]`
+  - `budget_level`：`low` / `mid` / `high` / `luxury`，未填会按价格自动推导
+  - `avoid_for`：不建议送给的人群或情境
+  - `tags`：用于展示的标签
+- 兼容老字段：`use_cases / target_users / not_recommended_for / comparison_tags`，启动期会自动映射到新字段
+
+更新流程：
+
+1. 编辑 `storage/sample_docs/seed_products.json`，按上面字段补充或新增商品。
+2. 本地执行校验（推荐在提交前跑一次）：
+
+```bash
+cd backend
+python -m app.scripts.validate_products
+```
+
+   校验通过会输出 `[ok]` 与商品数量、`budget_level` 分布；任意字段不合法或 `product_id` 重复会以非零状态退出。
+
+3. 重启后端使 `SeedProductCatalog` 重新加载。
+
+如果商品图片不可达，前端 `BackendProductCard` 会自动回退到 🎁 占位图标，不会出现破图。
 
 ## 常见问题
 

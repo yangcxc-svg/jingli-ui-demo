@@ -14,7 +14,7 @@ from app.services.seed_product_loader import seed_product_catalog
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
-    seed_product_catalog.load()
+    seed_product_catalog.load(strict=True)
     yield
 
 

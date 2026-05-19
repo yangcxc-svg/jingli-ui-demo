@@ -1,15 +1,68 @@
+"""Prompt 注册表（按场景拆分）。
+
+历史上 `app.agent.prompts` 只有一份 `GUIDE_SYSTEM_PROMPT`。任务 6 将其按场景拆分，
+但为了保持向后兼容，**模块路径与名称不变**，内部按 section 注释组织：
+
+- guide_system 段：通用导购 system prompt
+- chat_recommendation 段：聊天推荐用户态拼接
+- gift_plan 段：组合礼单结构化输出 prompt + JSON schema
+- product_rerank 段：预留商品重排序 prompt
+
+场景化模板与拼接函数集中在 `app.agent.prompts_lib` 子包，本文件仅做 re-export，
+让 `from app.agent.prompts import GUIDE_SYSTEM_PROMPT` 等老调用方继续工作。
+"""
+
+from __future__ import annotations
+
+# ---- prompt 版本号（保持向后兼容） ----
+
 INTENT_PROMPT_VERSION = "intent-v1"
 RAG_PROMPT_VERSION = "rag-v1"
 RECOMMENDATION_PROMPT_VERSION = "recommendation-v1"
 
-# Shopping-guide system prompt（中文导购）
-GUIDE_SYSTEM_PROMPT = """你是一位专业、亲和的电商 AI 导购助手。
-请遵循以下原则回答：
-1. 直接面向用户给出结论和建议，不要输出“对用户需求的理解”“分析过程”“思考过程”等内部推理式标题。
-2. 可以自然地用一句话复述用户场景，但不要逐项拆解预算 / 品类 / 偏好 / 约束，除非用户明确要求分析。
-3. 给出 1-3 个具体推荐或购买建议，并说明关键理由、取舍和适用人群。
-4. 涉及参数对比时使用清晰的项目符号或简短表格描述。
-5. 回答要客观，不编造商品事实；如果知识库没有提供商品品类、参数或链接，请明确说明，不要根据名称臆测。
-6. 信息不足时先给出可执行建议，再用一个简短问题补充追问。
-7. 语气专业、友好、简洁，使用中文回复。
-"""
+# 任务 6 新增版本号
+GIFT_PLAN_PROMPT_VERSION = "gift-plan-v1"
+CHAT_RECOMMENDATION_PROMPT_VERSION = "chat-recommendation-v1"
+INTENT_EXTRACTION_PROMPT_VERSION = "intent-extraction-v1"
+
+# ---- 通用导购 system prompt ----
+
+# 沿用既有文案，老调用方 `from app.agent.prompts import GUIDE_SYSTEM_PROMPT` 不变。
+from app.agent.prompts_lib.guide_system import GUIDE_SYSTEM_PROMPT  # noqa: E402,F401
+
+# ---- 场景化模板与拼接函数 re-export ----
+
+from app.agent.prompts_lib.chat_recommendation import (  # noqa: E402,F401
+    CHAT_RECOMMENDATION_INSTRUCTION,
+    build_chat_recommendation_prompt,
+)
+from app.agent.prompts_lib.gift_plan import (  # noqa: E402,F401
+    GIFT_PLAN_STRUCTURED_INSTRUCTION,
+    GIFT_PLAN_JSON_SCHEMA_HINT,
+    build_gift_plan_prompt,
+)
+from app.agent.prompts_lib.intent_extraction import (  # noqa: E402,F401
+    INTENT_EXTRACTION_SYSTEM_PROMPT,
+    build_intent_extraction_prompt,
+)
+from app.agent.prompts_lib.product_rerank import (  # noqa: E402,F401
+    PRODUCT_RERANK_PROMPT,
+)
+
+__all__ = [
+    "INTENT_PROMPT_VERSION",
+    "RAG_PROMPT_VERSION",
+    "RECOMMENDATION_PROMPT_VERSION",
+    "GIFT_PLAN_PROMPT_VERSION",
+    "CHAT_RECOMMENDATION_PROMPT_VERSION",
+    "INTENT_EXTRACTION_PROMPT_VERSION",
+    "GUIDE_SYSTEM_PROMPT",
+    "CHAT_RECOMMENDATION_INSTRUCTION",
+    "build_chat_recommendation_prompt",
+    "GIFT_PLAN_STRUCTURED_INSTRUCTION",
+    "GIFT_PLAN_JSON_SCHEMA_HINT",
+    "build_gift_plan_prompt",
+    "INTENT_EXTRACTION_SYSTEM_PROMPT",
+    "build_intent_extraction_prompt",
+    "PRODUCT_RERANK_PROMPT",
+]

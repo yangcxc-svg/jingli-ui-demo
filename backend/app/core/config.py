@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     upload_dir: str = "storage/uploads"
     max_upload_mb: int = 50
     seed_products_path: str = "../storage/sample_docs/seed_products.json"
+    gift_list_db_path: str = "../storage/gift_list.sqlite3"
 
     @property
     def cors_origins(self) -> list[str]:
