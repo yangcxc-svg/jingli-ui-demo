@@ -24,7 +24,7 @@ class GiftShapeService:
                 confidence=0.92,
                 reason="用户明确表达希望简单或单件礼物，不应强行组合。",
                 signals=["用户明确要求单品"],
-                recommended_product_count=1,
+                recommended_product_count=3,
                 use_combo_optimizer=False,
             )
 
@@ -73,7 +73,7 @@ class GiftShapeService:
                 confidence=0.72,
                 reason="当前需求更适合选择一个清晰、克制的主礼。",
                 signals=signals or ["未出现组合强信号"],
-                recommended_product_count=1,
+                recommended_product_count=3,
                 use_combo_optimizer=False,
             )
         return GiftShapeDecision(
@@ -81,6 +81,6 @@ class GiftShapeService:
             confidence=0.62,
             reason="单品和组合都可行，默认按更稳妥的单品推荐，并保留切换组合空间。",
             signals=signals,
-            recommended_product_count=1,
+            recommended_product_count=3,
             use_combo_optimizer=False,
         )

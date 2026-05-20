@@ -103,7 +103,11 @@ class GiftSolutionService:
         if shape == "single_gift":
             if not products:
                 return []
-            return [products[0].model_copy(update={"gift_role": "main_gift"})]
+            normalized: list[ProductCard] = []
+            for index, product in enumerate(products[:3]):
+                role = "main_gift" if index == 0 else None
+                normalized.append(product.model_copy(update={"gift_role": role}))
+            return normalized
         if not products:
             return []
         has_main = any(item.gift_role == "main_gift" for item in products)

@@ -224,9 +224,14 @@ class BudgetOptimizerService:
         if len(items) == 1:
             return {items[0][0].product_id: "main_gift"}
 
-        def main_rank(item: RankedProduct) -> tuple[float, Decimal]:
+        best_score = max(score.score for _card, _product, score in items)
+        relevance_floor = best_score * 0.55
+
+        def main_rank(item: RankedProduct) -> tuple[bool, Decimal, float]:
             card, _product, score = item
-            return score.score, card.price or Decimal("0")
+            price = card.price or Decimal("0")
+            # 主礼承担分量感：优先选价格最高且相关度没有明显掉队的商品。
+            return score.score >= relevance_floor, price, score.score
 
         main = max(items, key=main_rank)
         roles: dict[str, str] = {}

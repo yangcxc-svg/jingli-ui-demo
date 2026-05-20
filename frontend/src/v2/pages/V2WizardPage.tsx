@@ -196,6 +196,8 @@ export default function V2WizardPage() {
         <section>
           <h2 className="mb-2.5 text-[13px] font-black text-slate-700">6. 特殊背景补充 (如需要):</h2>
           <textarea
+            value={wizard.background}
+            onChange={(e) => setWizard({ background: e.target.value })}
             className="min-h-[72px] w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-[11px] font-semibold leading-5 text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#ff3f63]"
             placeholder="如：Ta 最近睡眠质量较差，爱猫咪..."
           />

@@ -18,6 +18,7 @@ export interface V2WizardState {
   age: string;
   budget: number;
   tags: string[];
+  background: string;
 }
 
 export interface V2CartItem {
@@ -94,6 +95,7 @@ const DEFAULT_WIZARD: V2WizardState = {
   age: '20-30岁',
   budget: 600,
   tags: [],
+  background: '',
 };
 
 const DEFAULT_ADDRESS: V2Address = {

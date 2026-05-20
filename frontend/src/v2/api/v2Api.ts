@@ -1,10 +1,11 @@
 /**
  * v2 前端专用 API 客户端：
  * - getInstantProducts：取真实商品库（用于"现货尊享特区"展示）
- * - generateRecommendations：把 wizard 4 字段映射到后端 GiftPlanGenerateRequest，并把响应转成 v2 渲染所需的扁平结构
+ * - generateRecommendations：把 wizard 字段映射到后端 GiftSolutionGenerateRequest，并按单品/组合形态转成 v2 渲染结构
  */
 import { API_BASE, type ProductCardData } from '../../api/chat';
-import type { GiftPlanResponse, GiftPlanValuePoint } from '../../api/giftPlan';
+import type { GiftPlanValuePoint } from '../../api/giftPlan';
+import { generateGiftSolution, type GiftShapeDecisionData } from '../../api/giftSolution';
 
 export interface V2InstantProduct {
   id: string;
@@ -24,6 +25,7 @@ export interface V2Recommendation {
   imageUrl: string | null;
   scenarios: string[];
   targetPeople: string[];
+  giftRole?: string | null;
 }
 
 export interface V2RecommendationResult {
@@ -34,6 +36,19 @@ export interface V2RecommendationResult {
   totalAmount: number;
   valuePoints: GiftPlanValuePoint[];
   recommendations: V2Recommendation[];
+  shapeDecision?: GiftShapeDecisionData | null;
+  solution?: {
+    summary: string;
+    recommendationReason: string;
+    givingTiming: string;
+    givingPlace: string;
+    giftTalk: string;
+    recipientReactionReply: string;
+    packagingAdvice: string;
+    avoidTips: string[];
+    selectedPlanType?: string | null;
+    planJudgeReason?: string | null;
+  } | null;
 }
 
 export interface V2WizardInput {
@@ -41,6 +56,7 @@ export interface V2WizardInput {
   age: string;
   budget: number;
   tags: string[];
+  background?: string;
 }
 
 const toNumber = (value: number | string | null | undefined): number => {
@@ -50,9 +66,10 @@ const toNumber = (value: number | string | null | undefined): number => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
-const buildMessage = ({ relation, age, budget, tags }: V2WizardInput): string => {
+const buildMessage = ({ relation, age, budget, tags, background }: V2WizardInput): string => {
   const tagPart = tags.length > 0 ? `TA 的特质标签：${tags.join('、')}。` : '';
-  return `想给${relation}（${age}）挑选一份心意礼物，预算约 ${budget} 元。${tagPart}请推荐合适的方案。`;
+  const backgroundPart = background?.trim() ? `补充要求：${background.trim()}。` : '';
+  return `想给${relation}（${age}）挑选一份心意礼物，预算约 ${budget} 元。${tagPart}${backgroundPart}请推荐合适的方案。`;
 };
 
 const cardToRecommendation = (card: ProductCardData): V2Recommendation => ({
@@ -64,34 +81,37 @@ const cardToRecommendation = (card: ProductCardData): V2Recommendation => ({
   imageUrl: card.image_url || null,
   scenarios: card.scenarios ?? [],
   targetPeople: card.target_people ?? [],
+  giftRole: card.gift_role ?? null,
 });
 
 export async function generateRecommendations(input: V2WizardInput): Promise<V2RecommendationResult> {
-  const response = await fetch(`${API_BASE}/gift-plan/generate`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      message: buildMessage(input),
-      budget: input.budget,
-      preference: input.tags.join(','),
-      // wizard 没有显式收集"场景"，让后端走通用推荐而非反问澄清
-      allow_generic_recommendation: true,
-    }),
+  const data = await generateGiftSolution({
+    message: buildMessage(input),
+    recommendation_strategy: 'hybrid_algorithm',
+    allow_generic_recommendation: true,
+    use_profile: true,
   });
-
-  if (!response.ok) {
-    throw new Error(`Generate recommendations failed: ${response.status}`);
-  }
-
-  const data = (await response.json()) as GiftPlanResponse;
   return {
-    planId: data.plan_id,
+    planId: data.solution_id,
     title: data.title,
-    answer: data.answer,
-    budget: typeof data.budget === 'string' ? Number(data.budget) : data.budget ?? null,
+    answer: data.summary,
+    budget: input.budget,
     totalAmount: toNumber(data.total_amount),
-    valuePoints: data.value_points ?? [],
+    valuePoints: [],
     recommendations: (data.products ?? []).map(cardToRecommendation),
+    shapeDecision: data.shape_decision,
+    solution: {
+      summary: data.summary,
+      recommendationReason: data.recommendation_reason,
+      givingTiming: data.giving_timing,
+      givingPlace: data.giving_place,
+      giftTalk: data.gift_talk,
+      recipientReactionReply: data.recipient_reaction_reply,
+      packagingAdvice: data.packaging_advice,
+      avoidTips: data.avoid_tips ?? [],
+      selectedPlanType: data.selected_plan_type,
+      planJudgeReason: data.plan_judge_reason,
+    },
   };
 }
 

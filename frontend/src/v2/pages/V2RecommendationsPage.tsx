@@ -1,13 +1,13 @@
 /**
  * v2 推荐方案视图：渲染 RAG 召回 + LLM 重排后返回的真实商品 + 价值点 + 总结文案
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Icon } from '../components/Icon';
 import { useV2 } from '../state/V2Context';
 import type { V2Recommendation } from '../api/v2Api';
-import { addV2CartItem } from '../api/v2CartApi';
+import { addV2CartItem, removeV2CartItem } from '../api/v2CartApi';
 import type { ProductCardData } from '../../api/chat';
 
 const recToProductCard = (rec: V2Recommendation): ProductCardData => ({
@@ -55,6 +55,8 @@ function ProductImage({ rec }: { rec: V2Recommendation }) {
 export default function V2RecommendationsPage() {
   const navigate = useNavigate();
   const { recommendations, showToast, setCartItems, triggerIsland } = useV2();
+  const [addedIds, setAddedIds] = useState<Set<string>>(() => new Set());
+  const [isAddingAll, setIsAddingAll] = useState(false);
 
   // 直接刷新此页面没有数据时，引导用户回到 wizard
   useEffect(() => {
@@ -75,18 +77,73 @@ export default function V2RecommendationsPage() {
 
   async function handlePickToCart(rec: V2Recommendation) {
     try {
-      const next = await addV2CartItem(recToProductCard(rec));
+      const isAdded = addedIds.has(rec.productId);
+      const next = isAdded
+        ? await removeV2CartItem(rec.productId)
+        : await addV2CartItem(recToProductCard(rec));
       setCartItems(next);
-      triggerIsland('已加入礼单', `${rec.name} · 京礼礼单`, 3000);
-      navigate('/v2/cart');
+      setAddedIds((prev) => {
+        const nextIds = new Set(prev);
+        if (isAdded) {
+          nextIds.delete(rec.productId);
+        } else {
+          nextIds.add(rec.productId);
+        }
+        return nextIds;
+      });
+      triggerIsland(isAdded ? '已移出购物车' : '已加入礼单', `${rec.name} · 京礼礼单`, 3000);
     } catch (err) {
       console.error(err);
-      showToast('加入礼单失败，请确认后端礼单服务已启动');
+      showToast('更新购物车失败，请确认后端礼单服务已启动');
     }
   }
 
-  const { answer, recommendations: list } = recommendations;
+  async function handleAddAllToCart() {
+    if (isAddingAll || !recommendations) return;
+    const allAdded = recommendations.recommendations.every((gift) => addedIds.has(gift.productId));
+    const targets = allAdded
+      ? recommendations.recommendations
+      : recommendations.recommendations.filter((gift) => !addedIds.has(gift.productId));
+    setIsAddingAll(true);
+    try {
+      let nextItems = null;
+      for (const gift of targets) {
+        nextItems = allAdded
+          ? await removeV2CartItem(gift.productId)
+          : await addV2CartItem(recToProductCard(gift));
+      }
+      if (nextItems) setCartItems(nextItems);
+      setAddedIds((prev) => {
+        const next = new Set(prev);
+        targets.forEach((gift) => {
+          if (allAdded) {
+            next.delete(gift.productId);
+          } else {
+            next.add(gift.productId);
+          }
+        });
+        return next;
+      });
+      triggerIsland(
+        allAdded ? '已移出整套方案' : '已加入整套方案',
+        `${targets.length} 件礼物已${allAdded ? '移出' : '加入'}购物车`,
+        3000,
+      );
+    } catch (err) {
+      console.error(err);
+      showToast('更新整套方案失败，请确认后端礼单服务已启动');
+    } finally {
+      setIsAddingAll(false);
+    }
+  }
+
+  const { answer, recommendations: list, shapeDecision, solution } = recommendations;
+  const isCombo = shapeDecision?.shape === 'gift_combo';
   const introCount = Math.max(list.length, 1);
+  const introTitle = isCombo ? 'AI 已定制如下组合礼包' : 'AI 已精选如下单品礼物';
+  const introSubtitle = isCombo
+    ? '为您生成 1 套主礼与副礼搭配方案，并补齐送礼话术与行动建议。'
+    : `为您在商品库中筛选了 ${introCount} 个更适合单独赠送的候选礼物。`;
 
   return (
     <div className="min-h-full bg-[#f8f9fb] px-5 pb-7 pt-4 text-slate-950 animate-fadeIn">
@@ -107,17 +164,99 @@ export default function V2RecommendationsPage() {
           <Icon name="sparkles" className="mt-0.5 h-5 w-5 shrink-0 text-[#f59e0b]" />
           <div>
             <h1 className="text-[15px] font-black tracking-tight text-slate-950">
-              AI 已调遣如下定制礼包
+              {introTitle}
             </h1>
             <p className="mt-1 text-[11px] font-semibold leading-5 text-slate-500">
-              为您在高端供应链检索并绘制了如下 {introCount} 个专属方案：
+              {introSubtitle}
             </p>
           </div>
         </div>
       </section>
 
+      {isCombo && solution && (
+        <section className="mb-4 rounded-[18px] bg-white p-4 shadow-[0_8px_20px_rgba(15,23,42,0.06)] ring-1 ring-slate-100">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="text-[14px] font-black text-slate-950">完整送礼解决方案</h2>
+            <span className="rounded-full bg-[#fff0f2] px-2.5 py-1 text-[9px] font-black text-[#ff3f63]">
+              组合方案
+            </span>
+          </div>
+          <p className="text-[11px] font-semibold leading-5 text-slate-500">
+            {solution.recommendationReason || answer}
+          </p>
+          <div className="mt-3 grid gap-2">
+            {[
+              ['送礼话术', solution.giftTalk],
+              ['送礼时机', solution.givingTiming],
+              ['送礼地点', solution.givingPlace],
+              ['包装建议', solution.packagingAdvice],
+              ['对方推辞时', solution.recipientReactionReply],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-xl bg-slate-50 px-3 py-2">
+                <div className="text-[10px] font-black text-slate-700">{label}</div>
+                <div className="mt-1 text-[10px] font-semibold leading-4 text-slate-500">{value}</div>
+              </div>
+            ))}
+          </div>
+          {solution.avoidTips.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {solution.avoidTips.slice(0, 3).map((tip) => (
+                <span
+                  key={tip}
+                  className="rounded-full bg-amber-50 px-2.5 py-1 text-[9px] font-black text-amber-700"
+                >
+                  避坑：{tip}
+                </span>
+              ))}
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={handleAddAllToCart}
+            disabled={isAddingAll}
+            className={`mt-3 h-10 w-full rounded-2xl text-[11px] font-black text-white shadow-[0_8px_16px_rgba(2,7,25,0.14)] transition active:scale-[0.98] ${
+              list.every((gift) => addedIds.has(gift.productId)) ? 'bg-emerald-500' : 'bg-[#020719]'
+            }`}
+          >
+            {list.every((gift) => addedIds.has(gift.productId))
+              ? '取消加入整套方案'
+              : isAddingAll
+                ? '正在加入整套方案'
+                : '一键加入整套方案'}
+          </button>
+        </section>
+      )}
+
+      {!isCombo && solution && (
+        <section className="mb-4 rounded-[18px] bg-white p-4 shadow-[0_8px_20px_rgba(15,23,42,0.06)] ring-1 ring-slate-100">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <h2 className="text-[14px] font-black text-slate-950">单品送礼建议</h2>
+            <span className="rounded-full bg-[#fff0f2] px-2.5 py-1 text-[9px] font-black text-[#ff3f63]">
+              选 1 件即可
+            </span>
+          </div>
+          <p className="text-[11px] font-semibold leading-5 text-slate-500">
+            {solution.recommendationReason || solution.summary || answer}
+          </p>
+          <div className="mt-3 grid gap-2">
+            {[
+              ['怎么说', solution.giftTalk],
+              ['什么时候送', solution.givingTiming],
+              ['包装建议', solution.packagingAdvice],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-xl bg-slate-50 px-3 py-2">
+                <div className="text-[10px] font-black text-slate-700">{label}</div>
+                <div className="mt-1 text-[10px] font-semibold leading-4 text-slate-500">{value}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       <div className="space-y-4">
-        {list.map((gift, idx) => (
+        {list.map((gift, idx) => {
+          const isAdded = addedIds.has(gift.productId);
+          return (
           <article
             key={gift.productId}
             className="grid grid-cols-[108px_minmax(0,1fr)] gap-4 rounded-[18px] bg-white p-4 shadow-[0_8px_20px_rgba(15,23,42,0.06)] ring-1 ring-slate-100"
@@ -134,6 +273,10 @@ export default function V2RecommendationsPage() {
             <div className="min-w-0">
               <div className="mb-1.5 flex items-start justify-between gap-3">
                 <h2 className="min-w-0 flex-1 text-[14px] font-black leading-5 text-slate-950 line-clamp-2">
+                  {isCombo && gift.giftRole === 'main_gift' ? '主礼 · ' : ''}
+                  {isCombo && gift.giftRole === 'addon_gift' ? '副礼 · ' : ''}
+                  {!isCombo && idx === 0 ? '首推 · ' : ''}
+                  {!isCombo && idx > 0 ? `备选${idx} · ` : ''}
                   {gift.name}
                 </h2>
                 <span className="shrink-0 text-[14px] font-black text-[#ff3f63]">¥{gift.price}</span>
@@ -164,15 +307,54 @@ export default function V2RecommendationsPage() {
                 <button
                   type="button"
                   onClick={() => handlePickToCart(gift)}
-                  className="rounded-xl bg-[#020719] px-4 py-2 text-[10px] font-black text-white shadow-[0_8px_16px_rgba(2,7,25,0.14)] transition active:scale-95"
+                  className={`rounded-xl px-4 py-2 text-[10px] font-black shadow-[0_8px_16px_rgba(2,7,25,0.14)] transition active:scale-95 ${
+                    isAdded
+                      ? 'bg-emerald-500 text-white'
+                      : 'bg-[#020719] text-white'
+                  }`}
                 >
-                  选这个结算
+                  {isAdded ? '取消加入' : '加入购物车'}
                 </button>
               </div>
             </div>
           </article>
-        ))}
+          );
+        })}
       </div>
+
+      {list.length > 0 && (
+        <div className="sticky bottom-3 mt-5 rounded-[18px] bg-white/95 p-3 shadow-[0_10px_28px_rgba(15,23,42,0.12)] ring-1 ring-slate-100 backdrop-blur">
+          {isCombo ? (
+            <div className="grid grid-cols-[1fr_1.05fr] gap-2">
+              <button
+                type="button"
+                onClick={handleAddAllToCart}
+                disabled={isAddingAll}
+                className={`h-11 rounded-2xl text-[11px] font-black text-white shadow-[0_12px_24px_rgba(2,7,25,0.14)] transition active:scale-[0.98] ${
+                  list.every((gift) => addedIds.has(gift.productId)) ? 'bg-emerald-500' : 'bg-[#020719]'
+                }`}
+              >
+                {list.every((gift) => addedIds.has(gift.productId)) ? '取消整套' : '加入整套'}
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/v2/cart')}
+                className="h-11 rounded-2xl bg-gradient-to-r from-[#ff3f63] via-[#ff6b35] to-[#f59e0b] text-[11px] font-black text-white shadow-[0_12px_24px_rgba(255,63,99,0.18)] transition active:scale-[0.98]"
+              >
+                去购物车结算
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => navigate('/v2/cart')}
+              className="h-11 w-full rounded-2xl bg-gradient-to-r from-[#ff3f63] via-[#ff6b35] to-[#f59e0b] text-[12px] font-black text-white shadow-[0_12px_24px_rgba(255,63,99,0.18)] transition active:scale-[0.98]"
+            >
+              去购物车查看并结算
+            </button>
+          )}
+        </div>
+      )}
 
       {list.length === 0 && (
         <div className="rounded-2xl bg-white p-5 text-center text-[12px] font-bold text-slate-500 shadow-sm ring-1 ring-slate-100">

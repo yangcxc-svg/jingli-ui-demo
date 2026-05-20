@@ -46,6 +46,7 @@
 13. [预算约束语义化与主副礼组合建模](./13-budget-semantics-main-addon-plan.md)
 14. [主副礼方案解释与前端展示](./14-plan-explanation-ui.md)
 15. [礼物形态决策与完整送礼方案](./15-gift-shape-decision-solution.md)
+16. [单品 Top3 与组合方案双流程](./16-single-vs-combo-recommendation-flow.md)
 
 ## 推荐执行顺序
 
