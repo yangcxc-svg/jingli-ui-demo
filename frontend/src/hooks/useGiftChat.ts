@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { streamChat, type ProductCardData } from '../api/chat';
+import { streamChat, type ProductCardData, type RelaxationOptionData } from '../api/chat';
 import { mergeProducts } from '../utils/giftFormatting';
 
 export type GiftRequestSource = 'input' | 'scene' | 'quick_question';
@@ -16,6 +16,9 @@ export type JingliChatMessage = {
   role: 'user' | 'assistant';
   content: string;
   products?: ProductCardData[];
+  relaxationOptions?: RelaxationOptionData[];
+  relaxationReason?: string | null;
+  suggestedQuestions?: string[];
 };
 
 const initialJingliMessages: JingliChatMessage[] = [
@@ -56,6 +59,7 @@ export function useGiftChat() {
           conversation_id: conversationId,
           message: requestMessage,
           image_ids: [],
+          recommendation_strategy: 'hybrid_algorithm',
         },
         (event) => {
           if (event.event === 'message_delta' && event.text) {
@@ -68,6 +72,20 @@ export function useGiftChat() {
               current.map((item) =>
                 item.id === assistantId
                   ? { ...item, products: mergeProducts(item.products ?? [], event.products ?? []) }
+                  : item,
+              ),
+            );
+          }
+          if (event.event === 'relaxation_options') {
+            setMessages((current) =>
+              current.map((item) =>
+                item.id === assistantId
+                  ? {
+                      ...item,
+                      relaxationOptions: event.relaxation_options ?? [],
+                      relaxationReason: event.relaxation_reason ?? null,
+                      suggestedQuestions: event.suggested_questions ?? [],
+                    }
                   : item,
               ),
             );
@@ -113,4 +131,3 @@ export function useGiftChat() {
     sendGiftRequest,
   };
 }
-

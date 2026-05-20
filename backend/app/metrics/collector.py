@@ -39,6 +39,24 @@ class FeedbackRecord:
     created_at: datetime = field(default_factory=datetime.utcnow)
 
 
+@dataclass
+class RecommendationEvalRecord:
+    eval_run_id: str
+    case_id: str
+    query: str
+    strategy: str
+    returned_count: int
+    candidate_count: int
+    needs_clarification: bool
+    scenario_hit: bool
+    target_hit: bool
+    budget_hit: bool
+    avoid_violation: bool
+    duplicate_count: int
+    top_product_ids: list[str]
+    created_at: datetime = field(default_factory=datetime.utcnow)
+
+
 class MetricsCollector:
     """Singleton metrics collector. Keeps last `max_records` entries in memory."""
 
@@ -51,12 +69,14 @@ class MetricsCollector:
                 inst = super().__new__(cls)
                 inst._chats = deque(maxlen=500)  # type: ignore[attr-defined]
                 inst._feedbacks = deque(maxlen=500)  # type: ignore[attr-defined]
+                inst._recommendation_evals = deque(maxlen=500)  # type: ignore[attr-defined]
                 cls._instance = inst
         return cls._instance
 
     # mypy hints
     _chats: deque[ChatRecord]
     _feedbacks: deque[FeedbackRecord]
+    _recommendation_evals: deque[RecommendationEvalRecord]
 
     # ---------- write ----------
 
@@ -82,15 +102,52 @@ class MetricsCollector:
     def record_feedback(self, message_id: str, rating: Literal["up", "down"]) -> None:
         self._feedbacks.append(FeedbackRecord(message_id=message_id, rating=rating))
 
+    def record_recommendation_eval(
+        self,
+        *,
+        eval_run_id: str,
+        case_id: str,
+        query: str,
+        strategy: str,
+        returned_count: int,
+        candidate_count: int,
+        needs_clarification: bool,
+        scenario_hit: bool,
+        target_hit: bool,
+        budget_hit: bool,
+        avoid_violation: bool,
+        duplicate_count: int,
+        top_product_ids: list[str],
+    ) -> None:
+        self._recommendation_evals.append(
+            RecommendationEvalRecord(
+                eval_run_id=eval_run_id,
+                case_id=case_id,
+                query=query[:200],
+                strategy=strategy,
+                returned_count=returned_count,
+                candidate_count=candidate_count,
+                needs_clarification=needs_clarification,
+                scenario_hit=scenario_hit,
+                target_hit=target_hit,
+                budget_hit=budget_hit,
+                avoid_violation=avoid_violation,
+                duplicate_count=duplicate_count,
+                top_product_ids=top_product_ids[:10],
+            )
+        )
+
     def reset(self) -> None:
         self._chats.clear()
         self._feedbacks.clear()
+        self._recommendation_evals.clear()
 
     # ---------- read ----------
 
     def snapshot(self) -> dict[str, object]:
         chats = list(self._chats)
         feedbacks = list(self._feedbacks)
+        rec_evals = list(self._recommendation_evals)
 
         total_chats = len(chats)
         total_fb = len(feedbacks)
@@ -165,6 +222,8 @@ class MetricsCollector:
             "satisfaction_status": _status_sat(satisfaction_rate),
             "hallucination_rate": round(hallucination_rate, 4),
             "hallucination_status": _status_halluc(hallucination_rate),
+            "recommendation_eval_total": len(rec_evals),
+            "recommendation_eval_summary": self._summarize_recommendation_evals(rec_evals),
         }
 
     def recent_chats(self, n: int = 10) -> list[dict[str, object]]:
@@ -179,3 +238,64 @@ class MetricsCollector:
             }
             for c in list(self._chats)[-n:][::-1]
         ]
+
+    def recent_recommendation_evals(self, n: int = 10) -> list[dict[str, object]]:
+        return [
+            {
+                "eval_run_id": item.eval_run_id,
+                "case_id": item.case_id,
+                "query": item.query,
+                "strategy": item.strategy,
+                "returned_count": item.returned_count,
+                "candidate_count": item.candidate_count,
+                "needs_clarification": item.needs_clarification,
+                "scenario_hit": item.scenario_hit,
+                "target_hit": item.target_hit,
+                "budget_hit": item.budget_hit,
+                "avoid_violation": item.avoid_violation,
+                "duplicate_count": item.duplicate_count,
+                "top_product_ids": item.top_product_ids,
+                "created_at": item.created_at.isoformat() + "Z",
+            }
+            for item in list(self._recommendation_evals)[-n:][::-1]
+        ]
+
+    @staticmethod
+    def _summarize_recommendation_evals(
+        records: list[RecommendationEvalRecord],
+    ) -> dict[str, object]:
+        if not records:
+            return {
+                "case_count": 0,
+                "scenario_hit_rate": 0.0,
+                "target_hit_rate": 0.0,
+                "budget_hit_rate": 0.0,
+                "avoid_violation_rate": 0.0,
+                "clarification_rate": 0.0,
+                "avg_returned_count": 0.0,
+                "duplicate_rate": 0.0,
+            }
+
+        total = len(records)
+        return {
+            "case_count": total,
+            "scenario_hit_rate": round(sum(1 for item in records if item.scenario_hit) / total, 4),
+            "target_hit_rate": round(sum(1 for item in records if item.target_hit) / total, 4),
+            "budget_hit_rate": round(sum(1 for item in records if item.budget_hit) / total, 4),
+            "avoid_violation_rate": round(
+                sum(1 for item in records if item.avoid_violation) / total,
+                4,
+            ),
+            "clarification_rate": round(
+                sum(1 for item in records if item.needs_clarification) / total,
+                4,
+            ),
+            "avg_returned_count": round(
+                sum(item.returned_count for item in records) / total,
+                2,
+            ),
+            "duplicate_rate": round(
+                sum(1 for item in records if item.duplicate_count > 0) / total,
+                4,
+            ),
+        }

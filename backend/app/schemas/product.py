@@ -1,9 +1,11 @@
 from decimal import Decimal
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
 BudgetLevel = str  # "low" | "mid" | "high" | "luxury"
+GiftRole = Literal["main_gift", "addon_gift"]
 
 
 class ProductCreate(BaseModel):
@@ -45,3 +47,4 @@ class ProductCard(BaseModel):
     target_people: list[str] = Field(default_factory=list)
     budget_level: BudgetLevel | None = None
     avoid_for: list[str] = Field(default_factory=list)
+    gift_role: GiftRole | None = None

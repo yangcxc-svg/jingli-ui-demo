@@ -12,7 +12,7 @@ from app.agent.prompts_lib.intent_extraction import (
     build_intent_extraction_prompt,
 )
 from app.llm.client import LLMClient
-from app.schemas.gift_intent import GiftIntent, infer_budget_level
+from app.schemas.gift_intent import BudgetConstraintType, GiftIntent, infer_budget_level
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +48,8 @@ class IntentExtractor:
 
     def extract_with_rules(self, message: str) -> GiftIntent:
         budget = self._extract_budget(message)
+        budget_constraint_type = self._extract_budget_constraint_type(message, budget)
+        budget_flexibility = self._budget_flexibility(budget_constraint_type) if budget else None
         scenario = self._extract_scenario(message)
         recipient, relationship, target_people = self._extract_recipient(message, scenario)
         gift_style = self._extract_keywords(
@@ -66,6 +68,9 @@ class IntentExtractor:
             relationship=relationship,
             scenario=scenario,
             budget=budget,
+            budget_constraint_type=budget_constraint_type,
+            budget_flexibility=budget_flexibility,
+            budget_reason=self._budget_reason(message, budget, budget_constraint_type),
             preferences=preferences,
             avoid=avoid,
             gift_style=gift_style,
@@ -109,6 +114,61 @@ class IntentExtractor:
         if not matches:
             return None
         return Decimal(matches[-1])
+
+    @classmethod
+    def _extract_budget_constraint_type(
+        cls,
+        message: str,
+        budget: Decimal | None,
+    ) -> BudgetConstraintType:
+        if budget is None:
+            return "unknown"
+        hard_markers = ("以内", "不超过", "别超过", "最多", "上限", "封顶", "不能超")
+        negotiable_markers = (
+            "可以再加一点",
+            "可加一点",
+            "能加一点",
+            "预算可以加",
+            "预算可加",
+            "可以加",
+            "能加",
+            "放宽",
+        )
+        soft_markers = ("左右", "大概", "差不多", "上下", "附近", "约", "大约")
+        if any(marker in message for marker in hard_markers):
+            return "hard"
+        if any(marker in message for marker in negotiable_markers):
+            return "negotiable"
+        if any(marker in message for marker in soft_markers):
+            return "soft"
+        return "unknown"
+
+    @staticmethod
+    def _budget_flexibility(constraint_type: BudgetConstraintType) -> float:
+        if constraint_type == "hard":
+            return 0.0
+        if constraint_type == "soft":
+            return 0.15
+        if constraint_type == "negotiable":
+            return 0.30
+        return 0.15
+
+    @classmethod
+    def _budget_reason(
+        cls,
+        message: str,
+        budget: Decimal | None,
+        constraint_type: BudgetConstraintType,
+    ) -> str | None:
+        if budget is None:
+            return None
+        if constraint_type == "hard":
+            return "用户使用了以内/不超过/最多等表达，预算作为硬约束。"
+        if constraint_type == "soft":
+            return "用户使用了左右/大概/差不多等表达，预算允许小幅浮动。"
+        if constraint_type == "negotiable":
+            return "用户表达预算可以加一点或可放宽，预算允许更大浮动。"
+        return "用户只给出预算数字，默认作为可小幅浮动的参考预算。"
 
     @staticmethod
     def _extract_scenario(message: str) -> str | None:
@@ -168,9 +228,28 @@ class IntentExtractor:
     @staticmethod
     def _merge_with_fallback(intent: GiftIntent, fallback: GiftIntent) -> GiftIntent:
         data = intent.model_dump()
-        for key in ["recipient", "relationship", "scenario", "budget", "budget_min", "budget_max", "budget_level"]:
+        for key in [
+            "recipient",
+            "relationship",
+            "scenario",
+            "budget",
+            "budget_min",
+            "budget_max",
+            "budget_flexibility",
+            "budget_upper_bound",
+            "budget_reason",
+            "budget_level",
+        ]:
             if data.get(key) in (None, ""):
                 data[key] = getattr(fallback, key)
+        if (
+            data.get("budget_constraint_type") in (None, "", "unknown")
+            and fallback.budget_constraint_type != "unknown"
+        ):
+            data["budget_constraint_type"] = fallback.budget_constraint_type
+            data["budget_flexibility"] = fallback.budget_flexibility
+            data["budget_upper_bound"] = fallback.budget_upper_bound
+            data["budget_reason"] = fallback.budget_reason
         for key in ["preferences", "avoid", "gift_style", "target_people", "scenarios"]:
             merged = [*getattr(intent, key), *getattr(fallback, key)]
             data[key] = list(dict.fromkeys(item for item in merged if item))

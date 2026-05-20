@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { ProductCardData } from '../api/chat';
+import { chat, streamChat, type ProductCardData, type RelaxationOptionData } from '../api/chat';
 import { generateGiftPlan, type GiftPlanResponse } from '../api/giftPlan';
+import { generateGiftSolution, type GiftSolutionResponse } from '../api/giftSolution';
 import {
   addGiftListItem,
   getGiftList,
@@ -28,6 +29,7 @@ import {
   formatAmount,
   formatProductPrice,
   loadGiftPlan,
+  mergeProducts,
   saveGiftPlan,
   toAmount,
 } from '../utils/giftFormatting';
@@ -470,9 +472,19 @@ function BackendProductCard({
       ? '已加入·点击移除'
       : '加入礼单';
   const buttonClass = added ? 'bg-emerald-500' : 'bg-[#e93b3d]';
+  const roleLabel = product.gift_role === 'main_gift' ? '主礼' : product.gift_role === 'addon_gift' ? '副礼' : null;
+  const roleClass =
+    product.gift_role === 'main_gift'
+      ? 'bg-[#e93b3d] text-white'
+      : 'bg-violet-100 text-violet-700';
 
   return (
-    <article className="w-[148px] flex-none rounded-2xl bg-white p-2 shadow-sm ring-1 ring-zinc-100">
+    <article className="relative w-[148px] flex-none rounded-2xl bg-white p-2 shadow-sm ring-1 ring-zinc-100">
+      {roleLabel && (
+        <span className={`absolute left-3 top-3 z-10 rounded-full px-2 py-0.5 text-[9px] font-black shadow-sm ${roleClass}`}>
+          {roleLabel}
+        </span>
+      )}
       <div className="grid h-20 place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-sky-50 via-violet-50 to-red-50">
         {absoluteImage && !imageFailed ? (
           <img src={absoluteImage} alt={displayName} className="h-full w-full object-cover" onError={() => setImageFailed(true)} />
@@ -511,6 +523,33 @@ function AiBubble({ children }: { children: ReactNode }) {
       <div className="max-w-[285px] rounded-2xl rounded-tl-md bg-white px-3 py-2 text-[13px] font-medium leading-5 text-zinc-800 shadow-sm ring-1 ring-zinc-100">
         {typeof children === 'string' ? <MarkdownText text={children} /> : children}
       </div>
+    </div>
+  );
+}
+
+function RelaxationChips({
+  options,
+  questions,
+}: {
+  options?: RelaxationOptionData[];
+  questions?: string[];
+}) {
+  if (!options?.length && !questions?.length) return null;
+  return (
+    <div className="ml-9 rounded-[18px] bg-amber-50/90 p-2 shadow-sm ring-1 ring-amber-100">
+      <div className="text-[11px] font-black text-amber-800">可以这样调整</div>
+      {!!options?.length && (
+        <div className="mt-1 flex flex-wrap gap-1.5">
+          {options.slice(0, 4).map((option) => (
+            <span key={option.option_id} className="rounded-full bg-white px-2 py-1 text-[10px] font-black text-amber-700 shadow-sm ring-1 ring-amber-100">
+              {option.label}
+            </span>
+          ))}
+        </div>
+      )}
+      {!!questions?.length && (
+        <p className="mt-1 text-[10px] font-bold leading-4 text-amber-700">{questions[0]}</p>
+      )}
     </div>
   );
 }
@@ -661,6 +700,20 @@ export function JingliPage() {
               <p className="mt-1 text-[12px] font-medium leading-5 text-zinc-600">
                 告诉我送礼对象、场景和预算，我来帮你挑一份更合适的礼物。
               </p>
+              <button
+                type="button"
+                onClick={() => navigate('/compare')}
+                className="mt-2 rounded-full bg-white px-3 py-1.5 text-[11px] font-black text-violet-700 shadow-sm ring-1 ring-violet-100 transition active:scale-95"
+              >
+                对比大模型直出 / 推荐算法
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/gift-solution')}
+                className="ml-2 mt-2 rounded-full bg-[#e93b3d] px-3 py-1.5 text-[11px] font-black text-white shadow-sm transition active:scale-95"
+              >
+                完整送礼方案
+              </button>
             </div>
           </div>
         </section>
@@ -710,10 +763,16 @@ export function JingliPage() {
                     </span>
                   )}
                 </AiBubble>
+                <RelaxationChips options={message.relaxationOptions} questions={message.suggestedQuestions} />
                 {!!message.products?.length && (
                   <div className="ml-9 rounded-[22px] bg-white/72 p-2 shadow-sm ring-1 ring-white">
                     <div className="mb-2 flex items-center justify-between px-1">
-                      <h3 className="text-[13px] font-black text-zinc-950">AI 智能推荐</h3>
+                      <h3 className="text-[13px] font-black text-zinc-950">
+                        AI 智能推荐
+                        {message.products.some((product) => product.gift_role) && (
+                          <span className="ml-1 text-[10px] font-black text-violet-500">· 组合方案</span>
+                        )}
+                      </h3>
                       <button
                         type="button"
                         onClick={() => navigate('/cart')}
@@ -1712,6 +1771,292 @@ export function GiftCartPage() {
   );
 }
 
+type CompareResult = {
+  answer: string;
+  products: ProductCardData[];
+  relaxationOptions?: RelaxationOptionData[];
+  relaxationReason?: string | null;
+  suggestedQuestions?: string[];
+  loading: boolean;
+  error: string | null;
+  latencyMs?: number;
+};
+
+const emptyCompareResult: CompareResult = {
+  answer: '',
+  products: [],
+  loading: false,
+  error: null,
+};
+
+function CompareProductMini({ product }: { product: ProductCardData }) {
+  const roleLabel = product.gift_role === 'main_gift' ? '主礼' : product.gift_role === 'addon_gift' ? '副礼' : null;
+  return (
+    <article className="rounded-2xl bg-white p-2 shadow-sm ring-1 ring-zinc-100">
+      <div className="flex items-start justify-between gap-2">
+        <h4 className="min-w-0 flex-1 text-[12px] font-black leading-4 text-zinc-950">
+          {roleLabel && (
+            <span className="mr-1 rounded-full bg-violet-50 px-1.5 py-0.5 text-[9px] font-black text-violet-600">
+              {roleLabel}
+            </span>
+          )}
+          {product.name}
+        </h4>
+        <span className="flex-none text-[13px] font-black text-[#e93b3d]">{formatProductPrice(product.price)}</span>
+      </div>
+      <div className="mt-1 flex flex-wrap gap-1">
+        {(product.tags ?? []).slice(0, 3).map((tag) => (
+          <span key={tag} className="rounded-full bg-violet-50 px-1.5 py-0.5 text-[9px] font-black text-violet-600">
+            {tag}
+          </span>
+        ))}
+      </div>
+      <p className="mt-1 line-clamp-2 text-[10px] font-medium leading-4 text-zinc-500">
+        {product.display_reason || product.reason}
+      </p>
+    </article>
+  );
+}
+
+function ComparePanel({
+  title,
+  badge,
+  desc,
+  result,
+}: {
+  title: string;
+  badge: string;
+  desc: string;
+  result: CompareResult;
+}) {
+  return (
+    <section className="rounded-[22px] bg-white/85 p-3 shadow-sm ring-1 ring-white">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <h2 className="text-[15px] font-black text-zinc-950">{title}</h2>
+          <p className="mt-0.5 text-[10px] font-bold leading-4 text-zinc-500">{desc}</p>
+        </div>
+        <span className="rounded-full bg-zinc-100 px-2 py-1 text-[10px] font-black text-zinc-700">{badge}</span>
+      </div>
+      {typeof result.latencyMs === 'number' && (
+        <div className="mt-2 text-[10px] font-bold text-zinc-400">耗时 {result.latencyMs}ms</div>
+      )}
+      <div className="mt-2 min-h-[104px] rounded-2xl bg-zinc-50 px-3 py-2 text-[12px] font-medium leading-5 text-zinc-700">
+        {result.loading ? (
+          <span className="inline-flex items-center gap-1 font-bold text-violet-500">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-violet-400" />
+            正在生成
+          </span>
+        ) : result.error ? (
+          <span className="font-bold text-[#e93b3d]">{result.error}</span>
+        ) : result.answer ? (
+          <MarkdownText text={result.answer} />
+        ) : (
+          <span className="text-zinc-400">点击开始对比后显示结果</span>
+        )}
+      </div>
+      {!!result.products.length && (
+        <div className="mt-2 space-y-2">
+          {result.products.map((product) => (
+            <CompareProductMini key={product.product_id} product={product} />
+          ))}
+        </div>
+      )}
+      <RelaxationChips options={result.relaxationOptions} questions={result.suggestedQuestions} />
+    </section>
+  );
+}
+
+export function CompareRecommendationPage() {
+  const navigate = useNavigate();
+  const [message, setMessage] = useState('第一次见家长，预算3000元，想体面点但别太贵。');
+  const [direct, setDirect] = useState<CompareResult>(emptyCompareResult);
+  const [algorithm, setAlgorithm] = useState<CompareResult>(emptyCompareResult);
+  const [directConversationId, setDirectConversationId] = useState<string | null>(null);
+  const [algorithmConversationId, setAlgorithmConversationId] = useState<string | null>(null);
+
+  function resetCompareSession() {
+    setDirectConversationId(null);
+    setAlgorithmConversationId(null);
+    setDirect(emptyCompareResult);
+    setAlgorithm(emptyCompareResult);
+  }
+
+  async function runCompare() {
+    const query = message.trim();
+    if (!query || direct.loading || algorithm.loading) return;
+
+    setDirect({ ...emptyCompareResult, loading: true });
+    setAlgorithm({ ...emptyCompareResult, loading: true });
+
+    const directStarted = performance.now();
+    void chat({
+      conversation_id: directConversationId,
+      message: query,
+      image_ids: [],
+      allow_generic_recommendation: true,
+      use_profile: false,
+    })
+      .then((response) => {
+        setDirectConversationId(response.conversation_id);
+        setDirect({
+          answer: response.answer,
+          products: response.products ?? [],
+          relaxationOptions: response.relaxation_options ?? [],
+          relaxationReason: response.relaxation_reason ?? null,
+          suggestedQuestions: response.suggested_questions ?? [],
+          loading: false,
+          error: null,
+          latencyMs: Math.round(performance.now() - directStarted),
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        setDirect({
+          ...emptyCompareResult,
+          loading: false,
+          error: '直连大模型接口失败，请确认后端已启动。',
+        });
+      });
+
+    const algorithmStarted = performance.now();
+    let answer = '';
+    let products: ProductCardData[] = [];
+    let relaxationOptions: RelaxationOptionData[] = [];
+    let relaxationReason: string | null = null;
+    let suggestedQuestions: string[] = [];
+    try {
+      await streamChat(
+        {
+          conversation_id: algorithmConversationId,
+          message: query,
+          image_ids: [],
+          recommendation_strategy: 'hybrid_algorithm',
+          allow_generic_recommendation: false,
+          use_profile: true,
+        },
+        (event) => {
+          if (event.event === 'message_delta' && event.text) {
+            answer += event.text;
+            setAlgorithm((current) => ({ ...current, answer, loading: true }));
+          }
+          if (event.event === 'product_cards' && event.products?.length) {
+            products = mergeProducts(products, event.products);
+            setAlgorithm((current) => ({ ...current, products, loading: true }));
+          }
+          if (event.event === 'relaxation_options') {
+            relaxationOptions = event.relaxation_options ?? [];
+            relaxationReason = event.relaxation_reason ?? null;
+            suggestedQuestions = event.suggested_questions ?? [];
+            setAlgorithm((current) => ({
+              ...current,
+              relaxationOptions,
+              relaxationReason,
+              suggestedQuestions,
+              loading: true,
+            }));
+          }
+          if (event.event === 'error') {
+            setAlgorithm((current) => ({
+              ...current,
+              loading: false,
+              error: event.text || '算法推荐接口返回错误。',
+            }));
+          }
+          if (event.event === 'done' && event.conversation_id) {
+            setAlgorithmConversationId(event.conversation_id);
+          }
+        },
+      );
+      setAlgorithm({
+        answer,
+        products,
+        relaxationOptions,
+        relaxationReason,
+        suggestedQuestions,
+        loading: false,
+        error: null,
+        latencyMs: Math.round(performance.now() - algorithmStarted),
+      });
+    } catch (error) {
+      console.error(error);
+      setAlgorithm({
+        ...emptyCompareResult,
+        loading: false,
+        error: '算法推荐接口失败，请确认后端已启动。',
+      });
+    }
+  }
+
+  return (
+    <div className="flex h-full flex-col overflow-hidden bg-gradient-to-b from-[#fff5f3] via-[#f6f7fb] to-[#f1f2f4]">
+      <StatusBar />
+      <header className="flex h-[58px] flex-none items-center border-b border-zinc-200/70 bg-white/85 px-3 backdrop-blur">
+        <button onClick={() => navigate('/jingli')} className="grid h-9 w-9 place-items-center rounded-full bg-zinc-100 text-2xl font-light text-zinc-800">
+          ‹
+        </button>
+        <div className="min-w-0 flex-1 text-center">
+          <h1 className="text-[16px] font-black text-zinc-950">推荐策略对比</h1>
+          <p className="mt-0.5 text-[11px] font-bold text-zinc-500">直连大模型 vs 后端推荐算法</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => navigate('/cart')}
+          className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-black text-emerald-600"
+        >
+          礼单
+        </button>
+      </header>
+
+      <div className="flex-1 overflow-y-auto px-3 pb-5 pt-3">
+        <section className="rounded-[22px] bg-white p-3 shadow-sm ring-1 ring-zinc-100">
+          <label className="text-[12px] font-black text-zinc-700">测试需求</label>
+          <textarea
+            value={message}
+            onChange={(event) => setMessage(event.target.value)}
+            className="mt-2 h-24 w-full resize-none rounded-2xl bg-zinc-50 px-3 py-2 text-[13px] font-medium leading-5 text-zinc-800 outline-none ring-1 ring-zinc-100 focus:ring-red-200"
+            placeholder="输入同一条送礼需求，比较两种回复"
+          />
+          <button
+            type="button"
+            onClick={() => void runCompare()}
+            disabled={!message.trim() || direct.loading || algorithm.loading}
+            className="mt-2 h-10 w-full rounded-full bg-[#e93b3d] text-[13px] font-black text-white shadow-[0_8px_16px_rgba(233,59,61,0.18)] transition active:scale-95 disabled:bg-zinc-300 disabled:shadow-none"
+          >
+            {direct.loading || algorithm.loading ? '对比中' : '开始对比'}
+          </button>
+          <button
+            type="button"
+            onClick={resetCompareSession}
+            disabled={direct.loading || algorithm.loading}
+            className="mt-2 h-9 w-full rounded-full bg-white text-[12px] font-black text-zinc-600 shadow-sm ring-1 ring-zinc-100 transition active:scale-95 disabled:opacity-50"
+          >
+            重置对话记忆
+          </button>
+          <p className="mt-2 text-[10px] font-bold leading-4 text-zinc-400">
+            当前对比页会保留两边各自的会话。算法侧开启画像记忆，可测试“换一个”“不喜欢这些”等多轮反馈。
+          </p>
+        </section>
+
+        <div className="mt-3 grid gap-3">
+          <ComparePanel
+            title="直接调用大模型"
+            badge="/chat"
+            desc="不注入商品候选白名单，观察模型自然回复。"
+            result={direct}
+          />
+          <ComparePanel
+            title="调用推荐算法"
+            badge="hybrid_algorithm"
+            desc="先意图抽取、追问判断、召回打分，再让模型基于候选商品回复。"
+            result={algorithm}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function LegacyHomePage() {
   return (
     <div className="flex h-full flex-col overflow-hidden">
@@ -1769,6 +2114,143 @@ function ServiceCard({
       </span>
       <span className="text-lg font-light text-zinc-300">›</span>
     </button>
+  );
+}
+
+function SolutionInfoBlock({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section className="rounded-[20px] bg-white/85 p-3 shadow-sm ring-1 ring-white">
+      <h3 className="text-[13px] font-black text-zinc-950">{title}</h3>
+      <div className="mt-1 text-[12px] font-medium leading-5 text-zinc-600">{children}</div>
+    </section>
+  );
+}
+
+export function GiftSolutionPage() {
+  const navigate = useNavigate();
+  const [message, setMessage] = useState('第一次见家长，预算3000，体面点但别太贵。');
+  const [solution, setSolution] = useState<GiftSolutionResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleGenerate() {
+    const query = message.trim();
+    if (!query || loading) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await generateGiftSolution({
+        message: query,
+        recommendation_strategy: 'hybrid_algorithm',
+        allow_generic_recommendation: true,
+        use_profile: false,
+      });
+      setSolution(result);
+    } catch (err) {
+      console.error(err);
+      setError('完整送礼方案生成失败，请确认后端已启动。');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const shapeLabel =
+    solution?.shape_decision.shape === 'gift_combo'
+      ? '组合礼品'
+      : solution?.shape_decision.shape === 'single_gift'
+        ? '单一礼品'
+        : '单品/组合均可';
+
+  return (
+    <div className="flex h-full flex-col overflow-hidden bg-gradient-to-b from-[#fff5f3] via-[#f7f7fb] to-[#f1f2f4]">
+      <StatusBar />
+      <header className="flex h-[58px] flex-none items-center border-b border-zinc-200/70 bg-white/85 px-3 backdrop-blur">
+        <button onClick={() => navigate('/jingli')} className="grid h-9 w-9 place-items-center rounded-full bg-zinc-100 text-2xl font-light text-zinc-800">
+          ‹
+        </button>
+        <div className="min-w-0 flex-1 text-center">
+          <h1 className="text-[16px] font-black text-zinc-950">完整送礼方案</h1>
+          <p className="mt-0.5 text-[11px] font-bold text-zinc-500">先判断单品/组合，再生成送礼话术</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => navigate('/cart')}
+          className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-black text-emerald-600"
+        >
+          礼单
+        </button>
+      </header>
+
+      <div className="flex-1 overflow-y-auto px-3 pb-5 pt-3">
+        <section className="rounded-[22px] bg-white p-3 shadow-sm ring-1 ring-zinc-100">
+          <label className="text-[12px] font-black text-zinc-700">送礼需求</label>
+          <textarea
+            value={message}
+            onChange={(event) => setMessage(event.target.value)}
+            className="mt-2 h-24 w-full resize-none rounded-2xl bg-zinc-50 px-3 py-2 text-[13px] font-medium leading-5 text-zinc-800 outline-none ring-1 ring-zinc-100 focus:ring-red-200"
+            placeholder="例如：第一次见家长，预算3000，想体面点"
+          />
+          <button
+            type="button"
+            onClick={() => void handleGenerate()}
+            disabled={!message.trim() || loading}
+            className="mt-2 h-10 w-full rounded-full bg-[#e93b3d] text-[13px] font-black text-white shadow-[0_8px_16px_rgba(233,59,61,0.18)] transition active:scale-95 disabled:bg-zinc-300 disabled:shadow-none"
+          >
+            {loading ? '生成中' : '生成完整方案'}
+          </button>
+          {error && <p className="mt-2 text-[11px] font-bold text-[#e93b3d]">{error}</p>}
+        </section>
+
+        {solution && (
+          <div className="mt-3 space-y-3">
+            <section className="rounded-[24px] bg-white/90 p-4 shadow-sm ring-1 ring-white">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h2 className="text-[17px] font-black text-zinc-950">{solution.title}</h2>
+                  <p className="mt-1 text-[12px] font-medium leading-5 text-zinc-600">{solution.summary}</p>
+                </div>
+                <span className="flex-none rounded-full bg-violet-50 px-2 py-1 text-[10px] font-black text-violet-600">
+                  {shapeLabel}
+                </span>
+              </div>
+              <p className="mt-2 text-[11px] font-bold leading-4 text-zinc-500">{solution.shape_decision.reason}</p>
+              {solution.total_amount !== null && solution.total_amount !== undefined && (
+                <div className="mt-2 text-[13px] font-black text-[#e93b3d]">总价 {formatProductPrice(solution.total_amount)}</div>
+              )}
+            </section>
+
+            {!!solution.products.length && (
+              <section className="rounded-[22px] bg-white/72 p-2 shadow-sm ring-1 ring-white">
+                <div className="mb-2 px-1 text-[13px] font-black text-zinc-950">推荐礼物</div>
+                <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1">
+                  {solution.products.map((product) => (
+                    <BackendProductCard key={product.product_id} product={product} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <SolutionInfoBlock title="推荐理由">{solution.recommendation_reason}</SolutionInfoBlock>
+            <SolutionInfoBlock title="送礼话术">{solution.gift_talk}</SolutionInfoBlock>
+            <SolutionInfoBlock title="什么时候送">{solution.giving_timing}</SolutionInfoBlock>
+            <SolutionInfoBlock title="在哪里送">{solution.giving_place}</SolutionInfoBlock>
+            <SolutionInfoBlock title="包装建议">{solution.packaging_advice}</SolutionInfoBlock>
+            <SolutionInfoBlock title="对方推辞时">
+              {solution.recipient_reaction_reply}
+            </SolutionInfoBlock>
+            {!!solution.avoid_tips.length && (
+              <SolutionInfoBlock title="避坑提醒">
+                <ul className="space-y-1">
+                  {solution.avoid_tips.map((tip) => (
+                    <li key={tip}>· {tip}</li>
+                  ))}
+                </ul>
+              </SolutionInfoBlock>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

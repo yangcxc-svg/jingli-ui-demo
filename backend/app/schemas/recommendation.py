@@ -10,6 +10,7 @@ from app.schemas.recommendation_score import ProductScore, RecommendationEvidenc
 
 BudgetLevel = Literal["low", "mid", "high", "luxury"]
 RecommendationStrategy = Literal["llm_direct", "hybrid_algorithm", "llm_rerank"]
+RecommendationPlanType = Literal["ranked_topn", "budget_optimized"]
 
 
 class RecommendationRequest(BaseModel):
@@ -33,6 +34,34 @@ class RecommendationRequest(BaseModel):
     gift_intent: GiftIntent | None = None
 
 
+class RelaxationOption(BaseModel):
+    option_id: str
+    label: str
+    description: str
+    patch: dict[str, object] = Field(default_factory=dict)
+
+
+class RecommendationPlan(BaseModel):
+    plan_id: str
+    plan_type: RecommendationPlanType
+    products: list[ProductCard]
+    product_ids: list[str] = Field(default_factory=list)
+    total_price: Decimal = Decimal("0")
+    original_budget: Decimal | None = None
+    budget_upper_bound: Decimal | None = None
+    budget_constraint_type: str = "unknown"
+    budget_usage: float | None = None
+    upper_bound_usage: float | None = None
+    budget_overage: Decimal = Decimal("0")
+    budget_overage_ratio: float = 0.0
+    gift_roles: dict[str, str] = Field(default_factory=dict)
+    relevance_score: float = 0.0
+    diversity_score: float = 0.0
+    complement_score: float = 0.0
+    objective_score: float = 0.0
+    judge_reason: str = ""
+
+
 class RecommendationResult(BaseModel):
     products: list[ProductCard]
     citations: list[dict[str, object]] = []
@@ -42,5 +71,13 @@ class RecommendationResult(BaseModel):
     missing_slots: list[str] = Field(default_factory=list)
     scores: list[ProductScore] = Field(default_factory=list)
     evidence: list[RecommendationEvidence] = Field(default_factory=list)
+    needs_relaxation: bool = False
+    relaxation_reason: str | None = None
+    relaxation_options: list[RelaxationOption] = Field(default_factory=list)
+    suggested_questions: list[str] = Field(default_factory=list)
+    plans: list[RecommendationPlan] = Field(default_factory=list)
+    selected_plan_id: str | None = None
+    selected_plan_type: RecommendationPlanType | None = None
+    plan_judge_reason: str | None = None
     strategy: RecommendationStrategy = "llm_direct"
-    pipeline: dict[str, int | str | bool] = Field(default_factory=dict)
+    pipeline: dict[str, int | float | str | bool | None] = Field(default_factory=dict)

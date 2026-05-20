@@ -34,11 +34,13 @@ class GuideAgent:
         image_ids: list[str] | None = None,
         history: list[ChatMessage] | None = None,
         candidate_products: list[dict[str, object]] | None = None,
+        relaxation: dict[str, object] | None = None,
+        selected_plan: dict[str, object] | None = None,
     ) -> AgentResult:
         intent = IntentState(intent="product_consultation")
         chunks = await self.tools.search_knowledge(message)
         prompt = self._build_prompt(
-            message, chunks, image_ids or [], candidate_products or []
+            message, chunks, image_ids or [], candidate_products, relaxation, selected_plan
         )
         image_refs = self._build_image_refs(image_ids or [])
         result = await self.llm.generate(
@@ -59,10 +61,12 @@ class GuideAgent:
         image_ids: list[str] | None = None,
         history: list[ChatMessage] | None = None,
         candidate_products: list[dict[str, object]] | None = None,
+        relaxation: dict[str, object] | None = None,
+        selected_plan: dict[str, object] | None = None,
     ) -> AsyncIterator[str]:
         chunks = await self.tools.search_knowledge(message)
         prompt = self._build_prompt(
-            message, chunks, image_ids or [], candidate_products or []
+            message, chunks, image_ids or [], candidate_products, relaxation, selected_plan
         )
         image_refs = self._build_image_refs(image_ids or [])
         async for delta in self.llm.astream(
@@ -97,6 +101,8 @@ class GuideAgent:
         chunks: list[dict[str, object]],
         image_ids: list[str],
         candidate_products: list[dict[str, object]] | None = None,
+        relaxation: dict[str, object] | None = None,
+        selected_plan: dict[str, object] | None = None,
     ) -> str:
         from app.agent.prompts import build_chat_recommendation_prompt
 
@@ -124,6 +130,8 @@ class GuideAgent:
             chunks=chunks,
             image_hint=image_hint,
             candidate_products=candidate_products,
+            relaxation=relaxation,
+            selected_plan=selected_plan,
         )
 
     @staticmethod

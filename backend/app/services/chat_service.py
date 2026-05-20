@@ -57,12 +57,21 @@ class ChatService:
                 needs_clarification=True,
                 clarification_question=answer,
             )
+        relaxation = self._build_relaxation_payload(recommendation)
+        use_algorithm_context = recommendation.strategy in {"hybrid_algorithm", "llm_rerank"}
         started = time.perf_counter()
         result = await self.agent.run(
             request.message,
             conversation_id=conversation_id,
             image_ids=request.image_ids,
             history=history,
+            candidate_products=self._build_candidate_payload(recommendation)
+            if use_algorithm_context
+            else None,
+            relaxation=relaxation,
+            selected_plan=self._build_selected_plan_payload(recommendation)
+            if use_algorithm_context
+            else None,
         )
         latency_ms = int((time.perf_counter() - started) * 1000)
         message_id = str(uuid4())
@@ -85,8 +94,12 @@ class ChatService:
             message_id=message_id,
             answer=result.answer,
             intent=result.intent,
-            products=result.products,
+            products=recommendation.products if use_algorithm_context else result.products,
             citations=result.citations,
+            needs_relaxation=recommendation.needs_relaxation,
+            relaxation_reason=recommendation.relaxation_reason,
+            relaxation_options=recommendation.relaxation_options,
+            suggested_questions=recommendation.suggested_questions,
         )
 
     async def stream_chat(self, request: ChatRequest) -> AsyncIterator[StreamEvent]:
@@ -126,24 +139,19 @@ class ChatService:
             )
             return
         citations_n = len(recommendation.citations)
-        product_cards = recommendation.products
+        use_algorithm_context = recommendation.strategy in {"hybrid_algorithm", "llm_rerank"}
+        product_cards = recommendation.products if use_algorithm_context else []
+        if recommendation.needs_relaxation:
+            yield StreamEvent(
+                event="relaxation_options",
+                relaxation_options=recommendation.relaxation_options,
+                relaxation_reason=recommendation.relaxation_reason,
+                suggested_questions=recommendation.suggested_questions,
+            )
         # 任务 6 续：将预取的候选商品作为白名单注入 prompt，避免模型编造不存在的商品。
-        scores_by_product_id = {score.product_id: score for score in recommendation.scores}
-        candidate_dicts = [
-            {
-                "product_id": p.product_id,
-                "name": p.name,
-                "price": p.price,
-                "reason": p.reason,
-                "evidence": scores_by_product_id.get(p.product_id).reasons
-                if scores_by_product_id.get(p.product_id)
-                else [p.reason],
-                "penalties": scores_by_product_id.get(p.product_id).penalties
-                if scores_by_product_id.get(p.product_id)
-                else [],
-            }
-            for p in product_cards
-        ]
+        candidate_dicts = (
+            self._build_candidate_payload(recommendation) if use_algorithm_context else None
+        )
         started = time.perf_counter()
         buffer: list[str] = []
         async for delta in self.agent.astream(
@@ -152,6 +160,10 @@ class ChatService:
             image_ids=request.image_ids,
             history=history,
             candidate_products=candidate_dicts,
+            relaxation=self._build_relaxation_payload(recommendation),
+            selected_plan=self._build_selected_plan_payload(recommendation)
+            if use_algorithm_context
+            else None,
         ):
             if delta:
                 buffer.append(delta)
@@ -182,6 +194,64 @@ class ChatService:
             ChatMessage(role=item.role, content=item.content)
             for item in self.memory.get_recent(conversation_id)
         ]
+
+    @staticmethod
+    def _build_relaxation_payload(recommendation) -> dict[str, object] | None:
+        if not recommendation.needs_relaxation:
+            return None
+        return {
+            "needs_relaxation": True,
+            "reason": recommendation.relaxation_reason,
+            "options": [item.model_dump(mode="json") for item in recommendation.relaxation_options],
+            "suggested_questions": recommendation.suggested_questions,
+        }
+
+    @staticmethod
+    def _build_candidate_payload(recommendation) -> list[dict[str, object]]:
+        scores_by_product_id = {score.product_id: score for score in recommendation.scores}
+        return [
+            {
+                "product_id": p.product_id,
+                "name": p.name,
+                "price": p.price,
+                "reason": p.reason,
+                "gift_role": p.gift_role,
+                "evidence": scores_by_product_id.get(p.product_id).reasons
+                if scores_by_product_id.get(p.product_id)
+                else [p.reason],
+                "penalties": scores_by_product_id.get(p.product_id).penalties
+                if scores_by_product_id.get(p.product_id)
+                else [],
+            }
+            for p in recommendation.products
+        ]
+
+    @staticmethod
+    def _build_selected_plan_payload(recommendation) -> dict[str, object] | None:
+        selected_plan = next(
+            (plan for plan in recommendation.plans if plan.plan_id == recommendation.selected_plan_id),
+            None,
+        )
+        if selected_plan is None:
+            return None
+        return {
+            "selected_plan_type": recommendation.selected_plan_type,
+            "plan_judge_reason": recommendation.plan_judge_reason,
+            "total_price": str(selected_plan.total_price),
+            "original_budget": (
+                str(selected_plan.original_budget)
+                if selected_plan.original_budget is not None
+                else None
+            ),
+            "budget_upper_bound": (
+                str(selected_plan.budget_upper_bound)
+                if selected_plan.budget_upper_bound is not None
+                else None
+            ),
+            "budget_constraint_type": selected_plan.budget_constraint_type,
+            "budget_overage_ratio": selected_plan.budget_overage_ratio,
+            "gift_roles": selected_plan.gift_roles,
+        }
 
     def _build_recommendation_message(self, message: str, *, conversation_id: str) -> str:
         recent = self.memory.get_recent(conversation_id, max_messages=4)

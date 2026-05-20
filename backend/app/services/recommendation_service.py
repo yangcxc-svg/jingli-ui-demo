@@ -22,8 +22,11 @@ from app.schemas.recommendation import (
 )
 from app.schemas.recommendation_score import ProductScore
 from app.schemas.recommendation_score import RecommendationEvidence
+from app.services.budget_optimizer_service import BudgetOptimizerService
 from app.services.clarification_service import ClarificationService
+from app.services.constraint_relaxation_service import ConstraintRelaxationService
 from app.services.intent_extractor import IntentExtractor
+from app.services.plan_judge_service import PlanJudgeService
 from app.services.product_scorer import ProductScorer
 from app.services.retrieval_service import RetrievedProduct, RetrievalService
 from app.services.seed_product_loader import seed_product_catalog
@@ -38,6 +41,9 @@ class RecommendationService:
     def __init__(self) -> None:
         self.retrieval_service = RetrievalService()
         self.clarification_service = ClarificationService()
+        self.constraint_relaxation_service = ConstraintRelaxationService()
+        self.budget_optimizer_service = BudgetOptimizerService()
+        self.plan_judge_service = PlanJudgeService()
         self.intent_extractor = IntentExtractor()
         self.product_scorer = ProductScorer()
         self.user_profiles = UserProfileService()
@@ -56,6 +62,7 @@ class RecommendationService:
             profile = self.user_profiles.get(profile_key)
             intent = self.user_profiles.merge_intent(intent, profile)
         enriched = self._enrich_request(request, intent)
+        recall_budget = self._recall_budget(intent, enriched.budget)
         if self.clarification_service.should_ask(
             intent,
             allow_generic=enriched.allow_generic_recommendation,
@@ -86,7 +93,7 @@ class RecommendationService:
         )
         chunks = retrieval.keyword_chunks
         structured_candidates = self.structured_recall_candidates(
-            budget=enriched.budget,
+            budget=recall_budget,
             budget_level=enriched.budget_level,
             scenarios=enriched.scenarios,
             target_people=enriched.target_people,
@@ -94,7 +101,7 @@ class RecommendationService:
         )
         knowledge_candidates = self.build_product_candidates(
             chunks=chunks,
-            budget=enriched.budget,
+            budget=recall_budget,
             budget_level=enriched.budget_level,
             scenarios=enriched.scenarios,
             target_people=enriched.target_people,
@@ -102,7 +109,7 @@ class RecommendationService:
         )
         semantic_candidates = self.build_semantic_candidates(
             retrieved_products=retrieval.semantic_products,
-            budget=enriched.budget,
+            budget=recall_budget,
             max_products=enriched.max_candidates,
         )
         candidates = self._merge_candidates(
@@ -120,18 +127,18 @@ class RecommendationService:
         if not candidates and (enriched.scenarios or enriched.target_people):
             relaxed_knowledge = self.build_product_candidates(
                 chunks=chunks,
-                budget=enriched.budget,
+                budget=recall_budget,
                 budget_level=enriched.budget_level,
                 max_products=enriched.max_candidates,
             )
             relaxed_structured = self.structured_recall_candidates(
-                budget=enriched.budget,
+                budget=recall_budget,
                 budget_level=enriched.budget_level,
                 max_candidates=enriched.max_candidates,
             )
             relaxed_semantic = self.build_semantic_candidates(
                 retrieved_products=retrieval.semantic_products,
-                budget=enriched.budget,
+                budget=recall_budget,
                 max_products=enriched.max_candidates,
             )
             relaxed_candidates = self._merge_candidates(
@@ -148,7 +155,7 @@ class RecommendationService:
         fallback_candidates: list[tuple[ProductCard, dict[str, object]]] = []
         if not candidates and enriched.include_fallback:
             fallback_candidates = self.fallback_candidates(
-                budget=enriched.budget,
+                budget=recall_budget,
                 budget_level=enriched.budget_level,
                 scenarios=enriched.scenarios,
                 target_people=enriched.target_people,
@@ -156,13 +163,13 @@ class RecommendationService:
             )
             if not fallback_candidates and (enriched.scenarios or enriched.target_people):
                 fallback_candidates = self.fallback_candidates(
-                    budget=enriched.budget,
+                    budget=recall_budget,
                     budget_level=enriched.budget_level,
                     max_products=enriched.max_candidates,
                 )
             if not fallback_candidates and enriched.budget_level:
                 fallback_candidates = self.fallback_candidates(
-                    budget=enriched.budget,
+                    budget=recall_budget,
                     max_products=enriched.max_candidates,
                 )
             if profile is not None:
@@ -187,7 +194,21 @@ class RecommendationService:
                 ranked=ranked_all,
                 max_candidates=enriched.max_candidates,
             )
-        ranked = ranked_all[: enriched.max_products]
+        plans = self.budget_optimizer_service.build_plans(
+            ranked=ranked_all,
+            max_products=enriched.max_products,
+            intent=intent,
+        )
+        selected_plan = self.plan_judge_service.choose(
+            message=enriched.message,
+            plans=plans,
+        )
+        if selected_plan is not None:
+            selected_ids = set(selected_plan.product_ids)
+            ranked = [item for item in ranked_all if item[0].product_id in selected_ids]
+            ranked.sort(key=lambda item: selected_plan.product_ids.index(item[0].product_id))
+        else:
+            ranked = ranked_all[: enriched.max_products]
         products = [
             card.model_copy(
                 update={
@@ -195,12 +216,29 @@ class RecommendationService:
                     "display_reason": score.display_reason or card.reason,
                     "matched_features": score.matched_features,
                     "penalties": score.penalties,
+                    "gift_role": (
+                        selected_plan.gift_roles.get(card.product_id)
+                        if selected_plan is not None
+                        else card.gift_role
+                    ),
                 }
             )
             for card, _, score in ranked
         ]
         evidence = [self._score_to_evidence(score) for _, _, score in ranked]
         self._log_recommendation_evidence(strategy=strategy, evidence=evidence)
+        needs_relaxation, relaxation_reason, relaxation_options, suggested_questions = (
+            self.constraint_relaxation_service.analyze(
+                message=enriched.message,
+                intent=intent,
+                requested_count=enriched.max_products,
+                returned_count=len(ranked),
+                candidate_count=len(candidates),
+                profile_filtered_count=profile_filtered_count,
+                profile_disliked_added=disliked_added,
+                top_score=ranked[0][2].score if ranked else None,
+            )
+        )
         updated_profile = self.user_profiles.update_after_recommendation(
             profile_key if request.use_profile else None,
             intent=intent,
@@ -215,9 +253,18 @@ class RecommendationService:
             missing_slots=intent.missing_slots,
             scores=[score for _, _, score in ranked],
             evidence=evidence,
+            needs_relaxation=needs_relaxation,
+            relaxation_reason=relaxation_reason,
+            relaxation_options=relaxation_options,
+            suggested_questions=suggested_questions,
+            plans=plans,
+            selected_plan_id=selected_plan.plan_id if selected_plan else None,
+            selected_plan_type=selected_plan.plan_type if selected_plan else None,
+            plan_judge_reason=selected_plan.judge_reason if selected_plan else None,
             strategy=strategy,
             pipeline={
                 "strategy": strategy,
+                "needs_relaxation": needs_relaxation,
                 "profile_used": bool(profile or updated_profile),
                 "profile_filtered_count": profile_filtered_count,
                 "profile_disliked_added": disliked_added,
@@ -228,6 +275,21 @@ class RecommendationService:
                 "fallback_recall_count": len(fallback_candidates),
                 "candidate_count": len(candidates),
                 "returned_count": len(ranked),
+                "plan_count": len(plans),
+                "selected_plan_type": selected_plan.plan_type if selected_plan else None,
+                "selected_plan_budget_usage": selected_plan.budget_usage if selected_plan else None,
+                "selected_plan_budget_upper_bound": (
+                    str(selected_plan.budget_upper_bound) if selected_plan else None
+                ),
+                "selected_plan_budget_constraint_type": (
+                    selected_plan.budget_constraint_type if selected_plan else None
+                ),
+                "selected_plan_budget_overage_ratio": (
+                    selected_plan.budget_overage_ratio if selected_plan else None
+                ),
+                "selected_plan_objective_score": (
+                    selected_plan.objective_score if selected_plan else None
+                ),
                 **rerank_meta,
             },
         )
@@ -686,6 +748,15 @@ class RecommendationService:
                 "gift_intent": intent,
             }
         )
+
+    @staticmethod
+    def _recall_budget(intent: GiftIntent, fallback_budget: Decimal | None) -> Decimal | None:
+        upper_bound = intent.budget_upper_bound or fallback_budget
+        if upper_bound is None:
+            return None
+        # Candidate builders already allow 15% overflow for legacy "slightly over budget"
+        # behavior. Convert semantic upper bound back to their internal reference budget.
+        return (upper_bound / Decimal("1.15")).quantize(Decimal("0.01"))
 
     @staticmethod
     def _exceeds_budget(

@@ -8,6 +8,8 @@ class EvalRunResponse(BaseModel):
     status: str
     executed: int = 0
     failures: int = 0
+    metrics: dict[str, Any] = {}
+    cases: list[dict[str, Any]] = []
 
 
 class EvalSummaryResponse(BaseModel):

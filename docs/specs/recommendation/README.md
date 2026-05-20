@@ -41,6 +41,11 @@
 8. [多轮澄清与追问策略](./08-clarification-policy.md)
 9. [用户画像与会话记忆](./09-user-profile-memory.md)
 10. [推荐评测、观测与迭代闭环](./10-evaluation-observability.md)
+11. [约束放宽与候选不足协商策略](./11-constraint-relaxation-policy.md)
+12. [预算约束组合优化与方案裁判](./12-budget-optimized-plan-judge.md)
+13. [预算约束语义化与主副礼组合建模](./13-budget-semantics-main-addon-plan.md)
+14. [主副礼方案解释与前端展示](./14-plan-explanation-ui.md)
+15. [礼物形态决策与完整送礼方案](./15-gift-shape-decision-solution.md)
 
 ## 推荐执行顺序
 
@@ -56,4 +61,3 @@
 - 礼单和购物车已经有后端接口和 SQLite 持久化。
 
 因此下一步不应该继续让 LLM “直接推荐商品”，而应该建设可控推荐管线。
-

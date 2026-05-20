@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import {
   ComboChatPage,
+  CompareRecommendationPage,
   GiftCartPage,
   GiftComboPlanPage,
+  GiftSolutionPage,
   HomePage,
   JingliPage,
   PremiumComboPlanPage,
@@ -45,7 +47,9 @@ export default function App() {
             <Route path="/home" element={<HomePage />} />
             <Route path="/jingli" element={<JingliPage />} />
             <Route path="/combo-chat" element={<ComboChatPage />} />
+            <Route path="/compare" element={<CompareRecommendationPage />} />
             <Route path="/combo-plan" element={<GiftComboPlanPage />} />
+            <Route path="/gift-solution" element={<GiftSolutionPage />} />
             <Route path="/combo-premium" element={<PremiumComboPlanPage />} />
             <Route path="/cart" element={<GiftCartPage />} />
             <Route path="/combo" element={<Navigate to="/combo-plan" replace />} />

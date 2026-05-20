@@ -3,7 +3,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.schemas.product import ProductCard
-from app.schemas.recommendation import RecommendationStrategy
+from app.schemas.recommendation import RecommendationStrategy, RelaxationOption
 
 
 class ChatRequest(BaseModel):
@@ -42,12 +42,19 @@ class ChatResponse(BaseModel):
     citations: list[Citation] = []
     needs_clarification: bool = False
     clarification_question: str | None = None
+    needs_relaxation: bool = False
+    relaxation_reason: str | None = None
+    relaxation_options: list[RelaxationOption] = []
+    suggested_questions: list[str] = []
 
 
 class StreamEvent(BaseModel):
-    event: Literal["message_delta", "product_cards", "citation", "done", "error"]
+    event: Literal["message_delta", "product_cards", "relaxation_options", "citation", "done", "error"]
     text: str | None = None
     products: list[ProductCard] = []
+    relaxation_options: list[RelaxationOption] = []
+    relaxation_reason: str | None = None
+    suggested_questions: list[str] = []
     citations: list[Citation] = []
     conversation_id: str | None = None
     message_id: str | None = None
