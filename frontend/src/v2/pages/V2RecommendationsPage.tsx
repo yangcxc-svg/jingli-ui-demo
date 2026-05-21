@@ -30,7 +30,7 @@ function ProductImage({ rec }: { rec: V2Recommendation }) {
         <Icon name="image" className="mb-3 h-8 w-8 text-slate-400" />
         <button
           type="button"
-          className="rounded-md bg-[#f59e0b] px-3 py-1.5 text-[10px] font-black text-white shadow-sm"
+          className="rounded-md bg-[#e4393c] px-3 py-1.5 text-[11px] font-black text-white shadow-sm"
         >
           生成实物图
         </button>
@@ -69,8 +69,8 @@ function SolutionCard({ label, value, icon, accent }: SolutionCardProps) {
         <div style={{ color: accent }}>{icon}</div>
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-[11px] font-black text-slate-700">{label}</div>
-        <div className="mt-1 text-[11px] font-semibold leading-relaxed text-slate-500">{value}</div>
+        <div className="text-[12px] font-black text-slate-700">{label}</div>
+        <div className="mt-1 text-[12px] font-semibold leading-relaxed text-slate-500">{value}</div>
       </div>
     </div>
   );
@@ -166,8 +166,8 @@ export default function V2RecommendationsPage() {
   const introCount = Math.max(list.length, 1);
   const introTitle = isCombo ? 'AI 已定制如下组合礼包' : 'AI 已精选如下单品礼物';
   const introSubtitle = isCombo
-    ? '为您生成 1 套主礼与副礼搭配方案，并补齐送礼话术与行动建议。'
-    : `为您在商品库中筛选了 ${introCount} 个更适合单独赠送的候选礼物。`;
+    ? '已搭配主礼与副礼，含送礼话术与行动建议。'
+    : `精选 ${introCount} 件适合单独赠送的礼物。`;
 
   return (
     <div className="min-h-full bg-[#f8f9fb] px-5 pb-7 pt-4 text-slate-950 animate-fadeIn">
@@ -179,7 +179,7 @@ export default function V2RecommendationsPage() {
         >
           <Icon name="chevron-left" className="h-[18px] w-[18px]" />
         </button>
-        <span className="text-[13px] font-black text-slate-400">AI 推荐礼品清单</span>
+        <span className="text-[14px] font-black text-slate-400">AI 推荐礼品清单</span>
         <div className="w-8" />
       </div>
 
@@ -187,10 +187,10 @@ export default function V2RecommendationsPage() {
         <div className="flex items-start gap-2">
           <Icon name="sparkles" className="mt-0.5 h-5 w-5 shrink-0 text-[#f59e0b]" />
           <div>
-            <h1 className="text-[15px] font-black tracking-tight text-slate-950">
+            <h1 className="text-[16px] font-black tracking-tight text-slate-950">
               {introTitle}
             </h1>
-            <p className="mt-1 text-[11px] font-semibold leading-5 text-slate-500">
+            <p className="mt-1 text-[12px] font-semibold leading-5 text-slate-500">
               {introSubtitle}
             </p>
           </div>
@@ -210,7 +210,7 @@ export default function V2RecommendationsPage() {
                 <div className="h-[108px] w-[108px] overflow-hidden rounded-2xl bg-slate-50">
                   <ProductImage rec={gift} />
                 </div>
-                <p className="mt-2 truncate text-center text-[10px] font-black text-slate-400">
+                <p className="mt-2 truncate text-center text-[11px] font-black text-slate-400">
                   {gift.tags[0] || gift.scenarios[0] || `方案 ${idx + 1}`}
                 </p>
               </div>
@@ -224,18 +224,18 @@ export default function V2RecommendationsPage() {
                     {!isCombo && idx > 0 ? `备选${idx} · ` : ''}
                     {gift.name}
                   </h2>
-                  <span className="shrink-0 text-[14px] font-black text-[#ff3f63]">¥{gift.price}</span>
+                  <span className="shrink-0 text-[14px] font-black text-[#e4393c]">¥{gift.price}</span>
                 </div>
 
-                <p className="mb-3 text-[11px] font-semibold leading-5 text-slate-500 line-clamp-3">
-                  {gift.rationale || answer || '这份礼物匹配当前画像，适合作为专属送礼方案。'}
+                <p className="mb-3 text-[12px] font-semibold leading-5 text-slate-500 line-clamp-3">
+                  {gift.rationale || answer || '匹配当前画像，专属送礼之选。'}
                 </p>
 
                 <div className="mb-3 flex flex-wrap gap-1.5">
                   {(gift.tags.length > 0 ? gift.tags : gift.scenarios).slice(0, 2).map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-lg bg-[#fff0f2] px-2.5 py-1 text-[10px] font-black text-[#ff3f63]"
+                      className="rounded-lg bg-[#fff0f2] px-2.5 py-1 text-[11px] font-black text-[#e4393c]"
                     >
                       {tag}
                     </span>
@@ -245,17 +245,17 @@ export default function V2RecommendationsPage() {
                 <div className="flex items-center justify-between gap-2">
                   <button
                     type="button"
-                    className="rounded-lg bg-[#fff0f2] px-3 py-2 text-[10px] font-black text-[#ff3f63]"
+                    className="rounded-lg bg-[#fff0f2] px-3 py-2 text-[12px] font-black text-[#e4393c]"
                   >
-                    写专属语音卡
+                    写语音卡
                   </button>
                   <button
                     type="button"
                     onClick={() => handlePickToCart(gift)}
-                    className={`rounded-xl px-4 py-2 text-[10px] font-black shadow-[0_8px_16px_rgba(2,7,25,0.14)] transition active:scale-95 ${
+                    className={`rounded-xl px-4 py-2 text-[12px] font-black shadow-[0_8px_16px_rgba(228,57,60,0.14)] transition active:scale-95 ${
                       isAdded
-                        ? 'bg-emerald-500 text-white'
-                        : 'bg-[#020719] text-white'
+                        ? 'bg-[#fff0f2] text-[#e4393c] ring-1 ring-[#e4393c]/20'
+                        : 'bg-[#e4393c] text-white'
                     }`}
                   >
                     {isAdded ? '取消加入' : '加入购物车'}
@@ -273,16 +273,16 @@ export default function V2RecommendationsPage() {
           <div className="mb-4 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#fff0f2]">
-                <Icon name="gift" className="h-4 w-4 text-[#ff3f63]" />
+                <Icon name="gift" className="h-4 w-4 text-[#e4393c]" />
               </div>
               <h2 className="text-[14px] font-black text-slate-950">完整送礼解决方案</h2>
             </div>
-            <span className="rounded-full bg-[#fff0f2] px-2.5 py-1 text-[9px] font-black text-[#ff3f63]">
+            <span className="rounded-full bg-[#fff0f2] px-2.5 py-1 text-[11px] font-black text-[#e4393c]">
               组合方案
             </span>
           </div>
 
-          <p className="mb-4 text-[11px] font-semibold leading-relaxed text-slate-500">
+          <p className="mb-4 text-[12px] font-semibold leading-relaxed text-slate-500">
             {solution.recommendationReason || answer}
           </p>
 
@@ -324,7 +324,7 @@ export default function V2RecommendationsPage() {
               {solution.avoidTips.slice(0, 3).map((tip) => (
                 <span
                   key={tip}
-                  className="rounded-full bg-amber-50 px-3 py-1 text-[9px] font-black text-amber-700"
+                  className="rounded-full bg-amber-50 px-3 py-1 text-[11px] font-black text-amber-700"
                 >
                   避坑：{tip}
                 </span>
@@ -336,8 +336,10 @@ export default function V2RecommendationsPage() {
             type="button"
             onClick={handleAddAllToCart}
             disabled={isAddingAll}
-            className={`mt-5 h-10 w-full rounded-2xl text-[11px] font-black text-white shadow-[0_8px_16px_rgba(2,7,25,0.14)] transition active:scale-[0.98] ${
-              list.every((gift) => addedIds.has(gift.productId)) ? 'bg-emerald-500' : 'bg-[#020719]'
+            className={`mt-5 h-10 w-full rounded-2xl text-[13px] font-black shadow-[0_8px_16px_rgba(228,57,60,0.14)] transition active:scale-[0.98] ${
+              list.every((gift) => addedIds.has(gift.productId))
+                ? 'bg-[#fff0f2] text-[#e4393c] ring-1 ring-[#e4393c]/20'
+                : 'bg-[#e4393c] text-white'
             }`}
           >
             {list.every((gift) => addedIds.has(gift.productId))
@@ -354,11 +356,11 @@ export default function V2RecommendationsPage() {
           <div className="mb-4 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#fff0f2]">
-                <Icon name="gift" className="h-4 w-4 text-[#ff3f63]" />
+                <Icon name="gift" className="h-4 w-4 text-[#e4393c]" />
               </div>
               <h2 className="text-[14px] font-black text-slate-950">单品送礼建议</h2>
             </div>
-            <span className="rounded-full bg-[#fff0f2] px-2.5 py-1 text-[9px] font-black text-[#ff3f63]">
+            <span className="rounded-full bg-[#fff0f2] px-2.5 py-1 text-[11px] font-black text-[#e4393c]">
               选 1 件即可
             </span>
           </div>
@@ -398,8 +400,10 @@ export default function V2RecommendationsPage() {
                 type="button"
                 onClick={handleAddAllToCart}
                 disabled={isAddingAll}
-                className={`h-11 rounded-2xl text-[11px] font-black text-white shadow-[0_12px_24px_rgba(2,7,25,0.14)] transition active:scale-[0.98] ${
-                  list.every((gift) => addedIds.has(gift.productId)) ? 'bg-emerald-500' : 'bg-[#020719]'
+                className={`h-11 rounded-2xl text-[13px] font-black shadow-[0_12px_24px_rgba(228,57,60,0.14)] transition active:scale-[0.98] ${
+                  list.every((gift) => addedIds.has(gift.productId))
+                    ? 'bg-[#fff0f2] text-[#e4393c] ring-1 ring-[#e4393c]/20'
+                    : 'bg-[#e4393c] text-white'
                 }`}
               >
                 {list.every((gift) => addedIds.has(gift.productId)) ? '取消整套' : '加入整套'}
@@ -407,18 +411,18 @@ export default function V2RecommendationsPage() {
               <button
                 type="button"
                 onClick={() => navigate('/v2/cart')}
-                className="h-11 rounded-2xl bg-gradient-to-r from-[#ff3f63] via-[#ff6b35] to-[#f59e0b] text-[11px] font-black text-white shadow-[0_12px_24px_rgba(255,63,99,0.18)] transition active:scale-[0.98]"
+                className="h-11 rounded-2xl bg-[#e4393c] text-[13px] font-black text-white shadow-[0_12px_24px_rgba(228,57,60,0.18)] transition active:scale-[0.98]"
               >
-                去购物车结算
+                去结算
               </button>
             </div>
           ) : (
             <button
               type="button"
               onClick={() => navigate('/v2/cart')}
-              className="h-11 w-full rounded-2xl bg-gradient-to-r from-[#ff3f63] via-[#ff6b35] to-[#f59e0b] text-[12px] font-black text-white shadow-[0_12px_24px_rgba(255,63,99,0.18)] transition active:scale-[0.98]"
+              className="h-11 w-full rounded-2xl bg-[#e4393c] text-[12px] font-black text-white shadow-[0_12px_24px_rgba(228,57,60,0.18)] transition active:scale-[0.98]"
             >
-              去购物车查看并结算
+              去结算
             </button>
           )}
         </div>
@@ -426,7 +430,7 @@ export default function V2RecommendationsPage() {
 
       {list.length === 0 && (
         <div className="rounded-2xl bg-white p-5 text-center text-[12px] font-bold text-slate-500 shadow-sm ring-1 ring-slate-100">
-          暂时没有匹配到合适礼品，请返回修改画像条件。
+          暂无匹配礼品，请调整画像条件。
         </div>
       )}
     </div>

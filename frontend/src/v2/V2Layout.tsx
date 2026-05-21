@@ -43,7 +43,7 @@ function StatusBar() {
         {island ? (
           <div className="flex w-full items-center space-x-3">
             <div className="flex h-7 w-7 items-center justify-center rounded-full border border-rose-100 bg-rose-50 animate-pulse">
-              <Icon name="sparkles" className="h-3.5 w-3.5 text-[#ff3f63]" />
+              <Icon name="sparkles" className="h-3.5 w-3.5 text-[#e4393c]" />
             </div>
             <div className="flex-1 text-left">
               <p className="text-[11px] font-bold leading-tight text-slate-950">{island.title}</p>
@@ -105,7 +105,7 @@ function BottomTabs() {
             key={tab.to}
             onClick={() => navigate(tab.to)}
             className={`flex flex-col items-center space-y-1 transition-colors ${
-              matched ? 'text-[#ff3f63]' : 'text-slate-400'
+              matched ? 'text-[#e4393c]' : 'text-slate-400'
             }`}
           >
             <Icon name={tab.icon} className="h-[17px] w-[17px]" />

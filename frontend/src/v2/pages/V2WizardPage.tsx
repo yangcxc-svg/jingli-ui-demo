@@ -79,29 +79,30 @@ export default function V2WizardPage() {
         <div className="w-8" />
       </div>
 
-      <header className="mb-5 border-b border-slate-200 pb-4 text-center">
-        <h1 className="text-[20px] font-black tracking-tight text-slate-950">心意智能订制</h1>
-        <p className="mt-2 text-[10px] font-semibold leading-5 text-slate-400">
-          录入 Ta 的专属画像，我们为您调遣供应链与 AI 艺术设计
-        </p>
+      <header className="mb-6">
+        <img
+          src="/images/wizard-header.png"
+          alt="京礼AI智能助手"
+          className="w-full rounded-[24px] shadow-lg shadow-[#e4393c]/20"
+        />
       </header>
 
       <div className="space-y-4">
         <section>
-          <h2 className="mb-2.5 text-[13px] font-black text-slate-700">1. 送给谁?</h2>
+          <h2 className="mb-2.5 text-[14px] font-black text-slate-700">1. 送给谁?</h2>
           <div className="grid grid-cols-3 gap-2">
             {RELATIONS.map((rel) => (
               <button
                 type="button"
                 key={rel.value}
                 onClick={() => setWizard({ relation: rel.value })}
-                className={`h-9 rounded-xl border text-[10px] font-black transition-all ${
+                className={`h-9 rounded-xl border text-[12px] font-black transition-all ${
                   wizard.relation === rel.value
-                    ? 'border-[#ff3f63] bg-white text-[#ff3f63] shadow-sm'
+                    ? 'border-[#e4393c] bg-white text-[#e4393c] shadow-sm'
                     : 'border-slate-200 bg-white text-slate-600 shadow-sm hover:border-slate-300'
                 }`}
               >
-                {rel.label} <span className="text-[10px]">{rel.emoji}</span>
+                {rel.label} <span className="text-[12px]">{rel.emoji}</span>
               </button>
             ))}
           </div>
@@ -109,8 +110,8 @@ export default function V2WizardPage() {
 
         <section className="rounded-2xl border border-slate-100 bg-[#f5f8fb] py-3.5 shadow-sm">
           <div className="mb-2.5 flex items-center justify-between">
-            <h2 className="text-[13px] font-black text-slate-700">2. 对方年龄:</h2>
-            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-[#ff3f63] shadow-sm">
+            <h2 className="text-[14px] font-black text-slate-700">2. 对方年龄:</h2>
+            <span className="rounded-full bg-white px-3 py-1 text-[12px] font-black text-[#e4393c] shadow-sm">
               {selectedAge} 岁
             </span>
           </div>
@@ -121,18 +122,18 @@ export default function V2WizardPage() {
               max={70}
               value={selectedAge}
               onChange={(e) => setWizard({ age: `${e.target.value}岁` })}
-              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-bold text-slate-700 outline-none focus:border-[#ff3f63]"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-[13px] font-bold text-slate-700 outline-none focus:border-[#e4393c]"
             />
           </div>
         </section>
 
         <section>
-          <h2 className="mb-2.5 text-[13px] font-black text-slate-700">3. 赠送场合:</h2>
+          <h2 className="mb-2.5 text-[14px] font-black text-slate-700">3. 赠送场合:</h2>
           <div className="relative">
             <select
               value={wizard.occasion}
               onChange={(e) => setWizard({ occasion: e.target.value })}
-              className="h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 text-[12px] font-bold text-slate-700 shadow-sm outline-none focus:border-[#ff3f63]"
+              className="h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 text-[13px] font-bold text-slate-700 shadow-sm outline-none focus:border-[#e4393c]"
             >
               {OCCASIONS.map((occ) => (
                 <option key={occ} value={occ}>
@@ -148,8 +149,8 @@ export default function V2WizardPage() {
 
         <section className="rounded-2xl border border-slate-100 bg-[#f5f8fb] py-3.5 shadow-sm">
           <div className="mb-2.5 flex items-center justify-between">
-            <h2 className="text-[13px] font-black text-slate-700">4. 预算范围 (元):</h2>
-            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-[#ff3f63] shadow-sm">
+            <h2 className="text-[14px] font-black text-slate-700">4. 预算范围 (元):</h2>
+            <span className="rounded-full bg-white px-3 py-1 text-[12px] font-black text-[#e4393c] shadow-sm">
               ¥{wizard.budget}
             </span>
           </div>
@@ -161,13 +162,13 @@ export default function V2WizardPage() {
               step={100}
               value={wizard.budget}
               onChange={(e) => setWizard({ budget: Number(e.target.value) })}
-              className="w-full accent-[#ff3f63]"
+              className="w-full accent-[#e4393c]"
             />
           </div>
         </section>
 
         <section>
-          <h2 className="mb-2.5 text-[13px] font-black text-slate-700">5. 标签画像 (最多3个):</h2>
+          <h2 className="mb-2.5 text-[14px] font-black text-slate-700">5. 标签画像 (最多3个):</h2>
           <div className="flex flex-wrap gap-2">
             {ALL_TAGS.map((tag) => {
               const active = wizard.tags.includes(tag);
@@ -182,9 +183,9 @@ export default function V2WizardPage() {
                     }
                     toggleTag(tag);
                   }}
-                  className={`rounded-full px-3.5 py-1.5 text-[10px] font-bold transition-all ${
+                  className={`rounded-full px-3.5 py-1.5 text-[11px] font-bold transition-all ${
                     active
-                      ? 'bg-[#f59e0b] text-white shadow-sm'
+                      ? 'bg-[#e4393c] text-white shadow-sm'
                       : 'bg-[#edf2f7] text-slate-500 hover:bg-slate-200'
                   }`}
                 >
@@ -196,11 +197,11 @@ export default function V2WizardPage() {
         </section>
 
         <section>
-          <h2 className="mb-2.5 text-[13px] font-black text-slate-700">6. 特殊背景补充 (如需要):</h2>
+          <h2 className="mb-2.5 text-[14px] font-black text-slate-700">6. 特殊背景补充 (如需要):</h2>
           <textarea
             value={wizard.background}
             onChange={(e) => setWizard({ background: e.target.value })}
-            className="min-h-[72px] w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-[11px] font-semibold leading-5 text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#ff3f63]"
+            className="min-h-[72px] w-full resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-[13px] font-semibold leading-5 text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#e4393c]"
             placeholder="如：Ta 最近睡眠质量较差，爱猫咪..."
           />
         </section>
@@ -210,7 +211,7 @@ export default function V2WizardPage() {
             type="button"
             onClick={handleGenerate}
             disabled={isGenerating}
-            className="flex h-11 w-full items-center justify-center space-x-2 rounded-2xl bg-gradient-to-r from-[#ff3f63] via-[#ff6b35] to-[#f59e0b] text-[12px] font-black text-white shadow-[0_14px_28px_rgba(255,63,99,0.2)] transition-transform active:scale-95 hover:opacity-95"
+            className="flex h-11 w-full items-center justify-center space-x-2 rounded-2xl bg-[#e4393c] text-[12px] font-black text-white shadow-[0_14px_28px_rgba(228,57,60,0.2)] transition-transform active:scale-95 hover:opacity-95"
           >
             <Icon
               name="sparkles"

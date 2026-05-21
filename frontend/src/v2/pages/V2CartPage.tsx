@@ -77,27 +77,27 @@ export default function V2CartPage() {
         >
           <Icon name="chevron-left" className="h-5 w-5" />
         </button>
-        <span className="text-[15px] font-black text-slate-900">购物车 ({cartItems.length})</span>
+        <span className="text-[16px] font-black text-slate-900">购物车 ({cartItems.length})</span>
         <button
           onClick={handleClearAll}
           disabled={cartItems.length === 0 || busyId !== null}
-          className="text-[11px] text-slate-400 transition hover:text-[#ff3f63] disabled:opacity-40"
+          className="text-[11px] text-slate-400 transition hover:text-[#e4393c] disabled:opacity-40"
         >
           清空
         </button>
       </div>
 
       {isLoading ? (
-        <div className="py-20 text-center text-[11px] text-slate-400">正在读取礼单...</div>
+        <div className="py-20 text-center text-[12px] text-slate-400">正在读取礼单...</div>
       ) : cartItems.length === 0 ? (
         <div className="py-20 text-center">
           <Icon name="shopping-bag" className="mx-auto mb-3 h-12 w-12 text-slate-200" />
-          <p className="text-xs text-slate-400">购物车内没有任何商品</p>
+          <p className="text-[14px] text-slate-400">购物车内没有任何商品</p>
           <button
             onClick={() => navigate('/v2/home')}
-            className="mt-4 text-[11px] font-bold text-[#ff3f63] underline"
+            className="mt-4 text-[12px] font-bold text-[#e4393c] underline"
           >
-            返回尊享特区
+            返回首页
           </button>
         </div>
       ) : (
@@ -118,17 +118,17 @@ export default function V2CartPage() {
               </div>
               <div className="flex flex-1 flex-col justify-between">
                 <div>
-                  <h5 className="text-[13px] font-black leading-snug text-slate-950 line-clamp-2">{item.name}</h5>
-                  <p className="mt-1 line-clamp-1 text-[11px] text-slate-400">
+                  <h5 className="text-[14px] font-black leading-snug text-slate-950 line-clamp-2">{item.name}</h5>
+                  <p className="mt-1 line-clamp-1 text-[12px] text-slate-400">
                     {item.isAiCustom ? 'AI 专属高定配置' : item.desc || '京礼推荐心意之选'}
                   </p>
                 </div>
                 <div className="mt-2 flex items-center justify-between">
-                  <span className="text-[14px] font-black text-[#ff3f63]">{formatYuan(item.price)}</span>
+                  <span className="text-[14px] font-black text-[#e4393c]">{formatYuan(item.price)}</span>
                   <button
                     onClick={() => handleRemoveOne(item.productId)}
                     disabled={busyId !== null}
-                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-[10px] text-slate-400 transition hover:bg-[#fff0f2] hover:text-[#ff3f63] disabled:opacity-40"
+                    className="flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] text-slate-400 transition hover:bg-[#fff0f2] hover:text-[#e4393c] disabled:opacity-40"
                   >
                     <Icon name="x" className="h-3 w-3" />
                     <span>移除</span>
@@ -139,11 +139,11 @@ export default function V2CartPage() {
           ))}
 
           <div className="mt-6 space-y-2 rounded-[18px] bg-white p-4 shadow-sm ring-1 ring-slate-100">
-            <div className="flex justify-between text-[12px] text-slate-500">
+            <div className="flex justify-between text-[13px] text-slate-500">
               <span>小计</span>
               <span className="font-semibold text-slate-700">{formatYuan(subtotal)}</span>
             </div>
-            <div className="flex justify-between text-[13px] font-black text-slate-950">
+            <div className="flex justify-between text-[15px] font-black text-slate-950">
               <span>总额</span>
               <span>{formatYuan(subtotal)}</span>
             </div>
@@ -151,9 +151,9 @@ export default function V2CartPage() {
 
           <button
             onClick={() => navigate('/v2/checkout')}
-            className="w-full rounded-2xl bg-gradient-to-r from-[#ff3f63] to-[#ff6b35] py-3.5 text-center text-[13px] font-black text-white shadow-lg transition active:scale-95"
+            className="w-full rounded-2xl bg-gradient-to-r from-[#e4393c] to-[#e4393c] py-3.5 text-center text-[15px] font-black text-white shadow-lg transition active:scale-95"
           >
-            进入收银台
+            提交订单
           </button>
         </div>
       )}
