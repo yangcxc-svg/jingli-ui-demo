@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Icon } from '../components/Icon';
-import { getInstantProducts, type V2InstantProduct } from '../api/v2Api';
+import { getInstantProducts, searchInstantProducts, type V2InstantProduct } from '../api/v2Api';
 import { addV2CartItem } from '../api/v2CartApi';
 import { useV2 } from '../state/V2Context';
 import type { ProductCardData } from '../../api/chat';
@@ -143,6 +143,8 @@ export default function V2HomePage() {
   const [products, setProducts] = useState<V2InstantProduct[]>([]);
   const [query, setQuery] = useState('');
   const [aiSearch, setAiSearch] = useState(false);
+  const [searchedQuery, setSearchedQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const displayProducts = useMemo(() => (products.length ? products : fallbackProducts), [products]);
 
   useEffect(() => {
@@ -170,12 +172,41 @@ export default function V2HomePage() {
     );
   }, [query]);
 
-  function handleSearch() {
+  async function resetProducts() {
+    setSearchedQuery('');
+    try {
+      const items = await getInstantProducts(4);
+      setProducts(items);
+    } catch (err) {
+      console.error(err);
+      setProducts([]);
+      showToast('商品库暂时不可用，已展示本地精选样例');
+    }
+  }
+
+  async function handleSearch() {
     const trimmed = query.trim();
-    if (trimmed === '节日' || trimmed === '520') {
+    if (aiSearch && (trimmed === '节日' || trimmed === '520')) {
       navigate('/v2/wizard');
-    } else if (trimmed) {
-      showToast(`搜索「${trimmed}」功能即将上线`);
+      return;
+    }
+    if (!trimmed) {
+      await resetProducts();
+      return;
+    }
+    setIsSearching(true);
+    try {
+      const items = await searchInstantProducts(trimmed, 20);
+      setProducts(items);
+      setSearchedQuery(trimmed);
+      if (items.length === 0) {
+        showToast(`没有找到「${trimmed}」相关商品`);
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('搜索失败，请确认后端已启动');
+    } finally {
+      setIsSearching(false);
     }
   }
 
@@ -210,7 +241,13 @@ export default function V2HomePage() {
               className="flex-1 bg-transparent text-[13px] font-bold text-slate-900 outline-none placeholder:font-normal placeholder:text-slate-400"
             />
             {query && (
-              <button onClick={() => setQuery('')} className="text-slate-400 transition hover:text-slate-600">
+              <button
+                onClick={() => {
+                  setQuery('');
+                  void resetProducts();
+                }}
+                className="text-slate-400 transition hover:text-slate-600"
+              >
                 <Icon name="x" className="h-4 w-4" />
               </button>
             )}
@@ -234,9 +271,10 @@ export default function V2HomePage() {
           </div>
           <button
             onClick={handleSearch}
+            disabled={isSearching}
             className="rounded-lg bg-[#ff3f63] px-5 py-1.5 text-[12px] font-bold text-white shadow-sm transition active:scale-95"
           >
-            搜索
+            {isSearching ? '搜索中' : '搜索'}
           </button>
         </div>
       </div>
@@ -295,14 +333,24 @@ export default function V2HomePage() {
       {/* 商品展示 */}
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-[15px] font-black text-slate-900">今日甄选</h2>
-          <span className="text-[10px] font-bold tracking-wider text-slate-300">REAL STOCK</span>
+          <h2 className="text-[15px] font-black text-slate-900">
+            {searchedQuery ? `搜索结果：${searchedQuery}` : '今日甄选'}
+          </h2>
+          <span className="text-[10px] font-bold tracking-wider text-slate-300">
+            {searchedQuery ? `${products.length} ITEMS` : 'REAL STOCK'}
+          </span>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          {displayProducts.map((product) => (
-            <HomeProductCard key={product.id} product={product} onAdd={handleAdd} />
-          ))}
-        </div>
+        {searchedQuery && products.length === 0 ? (
+          <div className="rounded-[18px] bg-white p-6 text-center text-[12px] font-bold text-slate-400 shadow-sm ring-1 ring-slate-100">
+            没有找到相关商品，换个关键词试试
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            {displayProducts.map((product) => (
+              <HomeProductCard key={product.id} product={product} onAdd={handleAdd} />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

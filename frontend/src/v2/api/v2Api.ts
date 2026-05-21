@@ -160,3 +160,30 @@ export async function getInstantProducts(limit = 4): Promise<V2InstantProduct[]>
     tag: p.tags?.[0] || '精选',
   }));
 }
+
+export async function searchInstantProducts(query: string, limit = 20): Promise<V2InstantProduct[]> {
+  const params = new URLSearchParams({
+    q: query,
+    limit: String(limit),
+  });
+  const response = await fetch(`${API_BASE}/products/search?${params.toString()}`);
+  if (!response.ok) {
+    throw new Error(`Search products failed: ${response.status}`);
+  }
+  const list = (await response.json()) as Array<{
+    product_id: string;
+    name: string;
+    price: number | string | null;
+    image_url?: string | null;
+    tags?: string[];
+    highlights?: string[];
+  }>;
+  return list.map((p) => ({
+    id: p.product_id,
+    name: p.name,
+    price: toNumber(p.price),
+    image: p.image_url || '',
+    desc: p.highlights?.[0] || '',
+    tag: p.tags?.[0] || '搜索结果',
+  }));
+}

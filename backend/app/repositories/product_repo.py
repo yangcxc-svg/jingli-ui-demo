@@ -15,12 +15,57 @@ class ProductRepository:
         products = seed_product_catalog.list_products()
         return [self._to_response(product) for product in products]
 
+    async def search_products(self, query: str, limit: int = 20) -> list[ProductResponse]:
+        keyword = query.strip().lower()
+        products = seed_product_catalog.list_products()
+        if not keyword:
+            return [self._to_response(product) for product in products[:limit]]
+
+        scored: list[tuple[int, int, dict[str, object]]] = []
+        for index, product in enumerate(products):
+            score = self._match_score(product, keyword)
+            if score > 0:
+                scored.append((score, -index, product))
+        scored.sort(reverse=True)
+        return [self._to_response(product) for _score, _index, product in scored[:limit]]
+
     async def create_product(self, payload: ProductCreate) -> ProductResponse:
         return ProductResponse(
             product_id="product_placeholder",
             status="active",
             **payload.model_dump(),
         )
+
+    @staticmethod
+    def _match_score(product: dict[str, object], keyword: str) -> int:
+        def text(value: object) -> str:
+            if isinstance(value, list):
+                return " ".join(text(item) for item in value)
+            if isinstance(value, dict):
+                return " ".join(f"{k} {text(v)}" for k, v in value.items())
+            return str(value or "")
+
+        weighted_fields: list[tuple[int, object]] = [
+            (80, product.get("name")),
+            (50, product.get("brand")),
+            (40, product.get("category")),
+            (35, product.get("subcategory")),
+            (28, product.get("tags")),
+            (26, product.get("comparison_tags")),
+            (24, product.get("use_cases")),
+            (24, product.get("scenarios")),
+            (20, product.get("target_people")),
+            (18, product.get("highlights")),
+            (12, product.get("knowledge_text")),
+            (8, product.get("specs")),
+        ]
+
+        total = 0
+        for weight, value in weighted_fields:
+            haystack = text(value).lower()
+            if keyword and keyword in haystack:
+                total += weight
+        return total
 
     @staticmethod
     def _to_response(product: dict[str, object]) -> ProductResponse:
