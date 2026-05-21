@@ -95,7 +95,7 @@ function HomeProductCard({
     <article className="overflow-hidden rounded-[18px] bg-white shadow-sm ring-1 ring-slate-100">
       <div className="relative h-[92px] overflow-hidden bg-slate-100">
         <ProductImage product={product} />
-        <span className="absolute left-2.5 top-2.5 rounded-full bg-slate-950/70 px-2 py-0.5 text-[10px] font-black text-white backdrop-blur">
+        <span className="absolute left-2.5 top-2.5 rounded-full bg-slate-950/70 px-2 py-0.5 text-[11px] font-black text-white backdrop-blur">
           {product.tag || '精选好礼'}
         </span>
       </div>
@@ -103,16 +103,16 @@ function HomeProductCard({
         <h3 className="line-clamp-2 min-h-8 text-[12px] font-black leading-4 text-slate-950">
           {product.name}
         </h3>
-        <p className="mt-1 line-clamp-2 min-h-7 text-[9px] font-semibold leading-[13px] text-slate-500">
-          {product.desc || '京礼真实商品库精选，适合体面送礼。'}
+        <p className="mt-1 line-clamp-2 min-h-7 text-[12px] font-semibold leading-[13px] text-slate-500">
+          {product.desc || '京礼精选，体面送礼。'}
         </p>
-        <div className="mt-1 text-[17px] font-black tracking-tight text-[#ff3f63]">
+        <div className="mt-1 text-[16px] font-black tracking-tight text-[#e4393c]">
           ¥{Math.round(product.price).toLocaleString('zh-CN')}
         </div>
         <button
           type="button"
           onClick={() => onAdd(product)}
-          className="mt-2 h-8 w-full rounded-xl bg-gradient-to-r from-[#ff3f63] to-[#ff6b35] text-[11px] font-black text-white shadow-md transition active:scale-[0.98]"
+          className="mt-2 h-8 w-full rounded-xl bg-gradient-to-r from-[#e4393c] to-[#e4393c] text-[12px] font-black text-white shadow-md transition active:scale-[0.98]"
         >
           加入购物车
         </button>
@@ -128,7 +128,7 @@ function HighlightText({ text, match }: { text: string; match: string }) {
     <>
       {parts.map((part, i) =>
         part.toLowerCase() === match.toLowerCase() ? (
-          <span key={i} className="text-[#ff3f63]">{part}</span>
+          <span key={i} className="text-[#e4393c]">{part}</span>
         ) : (
           <span key={i}>{part}</span>
         ),
@@ -200,14 +200,14 @@ export default function V2HomePage() {
       {/* 搜索卡片 */}
       <div className="mb-4 rounded-[18px] bg-white p-4 shadow-sm ring-1 ring-slate-100">
         <div className="flex items-center gap-2">
-          <div className="flex flex-1 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 focus-within:border-[#ff3f63]">
+          <div className="flex flex-1 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 focus-within:border-[#e4393c]">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               placeholder="搜索礼物、场合、对象..."
-              className="flex-1 bg-transparent text-[13px] font-bold text-slate-900 outline-none placeholder:font-normal placeholder:text-slate-400"
+              className="flex-1 bg-transparent text-[14px] font-bold text-slate-900 outline-none placeholder:font-normal placeholder:text-slate-400"
             />
             {query && (
               <button onClick={() => setQuery('')} className="text-slate-400 transition hover:text-slate-600">
@@ -219,13 +219,13 @@ export default function V2HomePage() {
 
         <div className="mt-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <label className="flex cursor-pointer items-center gap-1.5 text-[11px] font-bold text-slate-600">
-              <span className="text-[#ff3f63]">Ai</span> 搜索
+            <label className="flex cursor-pointer items-center gap-1.5 text-[12px] font-bold text-slate-600">
+              <span className="text-[#e4393c]">Ai</span> 搜索
               <input
                 type="checkbox"
                 checked={aiSearch}
                 onChange={(e) => setAiSearch(e.target.checked)}
-                className="h-4 w-4 accent-[#ff3f63]"
+                className="h-4 w-4 accent-[#e4393c]"
               />
             </label>
             <button className="text-slate-400 transition hover:text-slate-600">
@@ -234,7 +234,7 @@ export default function V2HomePage() {
           </div>
           <button
             onClick={handleSearch}
-            className="rounded-lg bg-[#ff3f63] px-5 py-1.5 text-[12px] font-bold text-white shadow-sm transition active:scale-95"
+            className="rounded-lg bg-[#e4393c] px-5 py-1.5 text-[12px] font-bold text-white shadow-sm transition active:scale-95"
           >
             搜索
           </button>
@@ -252,7 +252,7 @@ export default function V2HomePage() {
                 className="flex w-full items-center gap-2.5 text-left transition"
               >
                 <Icon name="info" className="h-3.5 w-3.5 shrink-0 text-slate-300" />
-                <span className="text-[13px] text-slate-700">
+                <span className="text-[14px] text-slate-700">
                   <HighlightText text={s} match={query.trim()} />
                 </span>
               </button>
@@ -262,7 +262,7 @@ export default function V2HomePage() {
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-50">
               <Icon name="sparkles" className="h-4 w-4 text-indigo-500" />
             </div>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ff3f63]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e4393c]">
               <Icon name="mic" className="h-4 w-4 text-white" />
             </div>
           </div>
@@ -283,7 +283,7 @@ export default function V2HomePage() {
                     navigate('/v2/wizard');
                   }
                 }}
-                className="rounded-full bg-white px-3 py-1.5 text-[11px] font-bold text-slate-600 shadow-sm ring-1 ring-slate-100 transition hover:text-[#ff3f63] hover:ring-[#ff3f63]/30"
+                className="rounded-full bg-white px-3 py-1.5 text-[12px] font-bold text-slate-600 shadow-sm ring-1 ring-slate-100 transition hover:text-[#e4393c] hover:ring-[#e4393c]/30"
               >
                 {tag}
               </button>
@@ -295,8 +295,8 @@ export default function V2HomePage() {
       {/* 商品展示 */}
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-[15px] font-black text-slate-900">今日甄选</h2>
-          <span className="text-[10px] font-bold tracking-wider text-slate-300">REAL STOCK</span>
+          <h2 className="text-[16px] font-black text-slate-900">今日甄选</h2>
+          <span className="text-[11px] font-bold tracking-wider text-slate-300">REAL STOCK</span>
         </div>
         <div className="grid grid-cols-2 gap-3">
           {displayProducts.map((product) => (
