@@ -52,6 +52,30 @@ function ProductImage({ rec }: { rec: V2Recommendation }) {
   );
 }
 
+interface SolutionCardProps {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+  accent: string;
+}
+
+function SolutionCard({ label, value, icon, accent }: SolutionCardProps) {
+  return (
+    <div className="flex items-start gap-3 rounded-2xl bg-slate-50 p-3.5">
+      <div
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+        style={{ backgroundColor: accent + '12' }}
+      >
+        <div style={{ color: accent }}>{icon}</div>
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="text-[11px] font-black text-slate-700">{label}</div>
+        <div className="mt-1 text-[11px] font-semibold leading-relaxed text-slate-500">{value}</div>
+      </div>
+    </div>
+  );
+}
+
 export default function V2RecommendationsPage() {
   const navigate = useNavigate();
   const { recommendations, showToast, setCartItems, triggerIsland } = useV2();
@@ -173,48 +197,146 @@ export default function V2RecommendationsPage() {
         </div>
       </section>
 
+      {/* ===== 商品列表（前置） ===== */}
+      <div className="space-y-4">
+        {list.map((gift, idx) => {
+          const isAdded = addedIds.has(gift.productId);
+          return (
+            <article
+              key={gift.productId}
+              className="grid grid-cols-[108px_minmax(0,1fr)] gap-4 rounded-[18px] bg-white p-4 shadow-[0_8px_20px_rgba(15,23,42,0.06)] ring-1 ring-slate-100"
+            >
+              <div className="min-w-0">
+                <div className="h-[108px] w-[108px] overflow-hidden rounded-2xl bg-slate-50">
+                  <ProductImage rec={gift} />
+                </div>
+                <p className="mt-2 truncate text-center text-[10px] font-black text-slate-400">
+                  {gift.tags[0] || gift.scenarios[0] || `方案 ${idx + 1}`}
+                </p>
+              </div>
+
+              <div className="min-w-0">
+                <div className="mb-1.5 flex items-start justify-between gap-3">
+                  <h2 className="min-w-0 flex-1 text-[14px] font-black leading-5 text-slate-950 line-clamp-2">
+                    {isCombo && gift.giftRole === 'main_gift' ? '主礼 · ' : ''}
+                    {isCombo && gift.giftRole === 'addon_gift' ? '副礼 · ' : ''}
+                    {!isCombo && idx === 0 ? '首推 · ' : ''}
+                    {!isCombo && idx > 0 ? `备选${idx} · ` : ''}
+                    {gift.name}
+                  </h2>
+                  <span className="shrink-0 text-[14px] font-black text-[#ff3f63]">¥{gift.price}</span>
+                </div>
+
+                <p className="mb-3 text-[11px] font-semibold leading-5 text-slate-500 line-clamp-3">
+                  {gift.rationale || answer || '这份礼物匹配当前画像，适合作为专属送礼方案。'}
+                </p>
+
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  {(gift.tags.length > 0 ? gift.tags : gift.scenarios).slice(0, 2).map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-lg bg-[#fff0f2] px-2.5 py-1 text-[10px] font-black text-[#ff3f63]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between gap-2">
+                  <button
+                    type="button"
+                    className="rounded-lg bg-[#fff0f2] px-3 py-2 text-[10px] font-black text-[#ff3f63]"
+                  >
+                    写专属语音卡
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePickToCart(gift)}
+                    className={`rounded-xl px-4 py-2 text-[10px] font-black shadow-[0_8px_16px_rgba(2,7,25,0.14)] transition active:scale-95 ${
+                      isAdded
+                        ? 'bg-emerald-500 text-white'
+                        : 'bg-[#020719] text-white'
+                    }`}
+                  >
+                    {isAdded ? '取消加入' : '加入购物车'}
+                  </button>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      {/* ===== 解决方案（后置 + 美化） ===== */}
       {isCombo && solution && (
-        <section className="mb-4 rounded-[18px] bg-white p-4 shadow-[0_8px_20px_rgba(15,23,42,0.06)] ring-1 ring-slate-100">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="text-[14px] font-black text-slate-950">完整送礼解决方案</h2>
+        <section className="mt-5 rounded-[18px] bg-white p-4 shadow-[0_8px_20px_rgba(15,23,42,0.06)] ring-1 ring-slate-100">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#fff0f2]">
+                <Icon name="gift" className="h-4 w-4 text-[#ff3f63]" />
+              </div>
+              <h2 className="text-[14px] font-black text-slate-950">完整送礼解决方案</h2>
+            </div>
             <span className="rounded-full bg-[#fff0f2] px-2.5 py-1 text-[9px] font-black text-[#ff3f63]">
               组合方案
             </span>
           </div>
-          <p className="text-[11px] font-semibold leading-5 text-slate-500">
+
+          <p className="mb-4 text-[11px] font-semibold leading-relaxed text-slate-500">
             {solution.recommendationReason || answer}
           </p>
-          <div className="mt-3 grid gap-2">
-            {[
-              ['送礼话术', solution.giftTalk],
-              ['送礼时机', solution.givingTiming],
-              ['送礼地点', solution.givingPlace],
-              ['包装建议', solution.packagingAdvice],
-              ['对方推辞时', solution.recipientReactionReply],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-xl bg-slate-50 px-3 py-2">
-                <div className="text-[10px] font-black text-slate-700">{label}</div>
-                <div className="mt-1 text-[10px] font-semibold leading-4 text-slate-500">{value}</div>
-              </div>
-            ))}
+
+          <div className="grid gap-2.5">
+            <SolutionCard
+              label="送礼话术"
+              value={solution.giftTalk}
+              icon={<Icon name="message-circle" className="h-4 w-4" />}
+              accent="#818cf8"
+            />
+            <SolutionCard
+              label="送礼时机"
+              value={solution.givingTiming}
+              icon={<Icon name="clock" className="h-4 w-4" />}
+              accent="#fbbf24"
+            />
+            <SolutionCard
+              label="送礼地点"
+              value={solution.givingPlace}
+              icon={<Icon name="map-pin" className="h-4 w-4" />}
+              accent="#34d399"
+            />
+            <SolutionCard
+              label="包装建议"
+              value={solution.packagingAdvice}
+              icon={<Icon name="box" className="h-4 w-4" />}
+              accent="#a78bfa"
+            />
+            <SolutionCard
+              label="对方推辞时"
+              value={solution.recipientReactionReply}
+              icon={<Icon name="heart" className="h-4 w-4" />}
+              accent="#fb7185"
+            />
           </div>
+
           {solution.avoidTips.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1.5">
+            <div className="mt-4 flex flex-wrap gap-2">
               {solution.avoidTips.slice(0, 3).map((tip) => (
                 <span
                   key={tip}
-                  className="rounded-full bg-amber-50 px-2.5 py-1 text-[9px] font-black text-amber-700"
+                  className="rounded-full bg-amber-50 px-3 py-1 text-[9px] font-black text-amber-700"
                 >
                   避坑：{tip}
                 </span>
               ))}
             </div>
           )}
+
           <button
             type="button"
             onClick={handleAddAllToCart}
             disabled={isAddingAll}
-            className={`mt-3 h-10 w-full rounded-2xl text-[11px] font-black text-white shadow-[0_8px_16px_rgba(2,7,25,0.14)] transition active:scale-[0.98] ${
+            className={`mt-5 h-10 w-full rounded-2xl text-[11px] font-black text-white shadow-[0_8px_16px_rgba(2,7,25,0.14)] transition active:scale-[0.98] ${
               list.every((gift) => addedIds.has(gift.productId)) ? 'bg-emerald-500' : 'bg-[#020719]'
             }`}
           >
@@ -228,99 +350,45 @@ export default function V2RecommendationsPage() {
       )}
 
       {!isCombo && solution && (
-        <section className="mb-4 rounded-[18px] bg-white p-4 shadow-[0_8px_20px_rgba(15,23,42,0.06)] ring-1 ring-slate-100">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="text-[14px] font-black text-slate-950">单品送礼建议</h2>
+        <section className="mt-5 rounded-[18px] bg-white p-4 shadow-[0_8px_20px_rgba(15,23,42,0.06)] ring-1 ring-slate-100">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#fff0f2]">
+                <Icon name="gift" className="h-4 w-4 text-[#ff3f63]" />
+              </div>
+              <h2 className="text-[14px] font-black text-slate-950">单品送礼建议</h2>
+            </div>
             <span className="rounded-full bg-[#fff0f2] px-2.5 py-1 text-[9px] font-black text-[#ff3f63]">
               选 1 件即可
             </span>
           </div>
-          <p className="text-[11px] font-semibold leading-5 text-slate-500">
+
+          <p className="mb-4 text-[11px] font-semibold leading-relaxed text-slate-500">
             {solution.recommendationReason || solution.summary || answer}
           </p>
-          <div className="mt-3 grid gap-2">
-            {[
-              ['怎么说', solution.giftTalk],
-              ['什么时候送', solution.givingTiming],
-              ['包装建议', solution.packagingAdvice],
-            ].map(([label, value]) => (
-              <div key={label} className="rounded-xl bg-slate-50 px-3 py-2">
-                <div className="text-[10px] font-black text-slate-700">{label}</div>
-                <div className="mt-1 text-[10px] font-semibold leading-4 text-slate-500">{value}</div>
-              </div>
-            ))}
+
+          <div className="grid gap-2.5">
+            <SolutionCard
+              label="怎么说"
+              value={solution.giftTalk}
+              icon={<Icon name="message-circle" className="h-4 w-4" />}
+              accent="#818cf8"
+            />
+            <SolutionCard
+              label="什么时候送"
+              value={solution.givingTiming}
+              icon={<Icon name="clock" className="h-4 w-4" />}
+              accent="#fbbf24"
+            />
+            <SolutionCard
+              label="包装建议"
+              value={solution.packagingAdvice}
+              icon={<Icon name="box" className="h-4 w-4" />}
+              accent="#a78bfa"
+            />
           </div>
         </section>
       )}
-
-      <div className="space-y-4">
-        {list.map((gift, idx) => {
-          const isAdded = addedIds.has(gift.productId);
-          return (
-          <article
-            key={gift.productId}
-            className="grid grid-cols-[108px_minmax(0,1fr)] gap-4 rounded-[18px] bg-white p-4 shadow-[0_8px_20px_rgba(15,23,42,0.06)] ring-1 ring-slate-100"
-          >
-            <div className="min-w-0">
-              <div className="h-[108px] w-[108px] overflow-hidden rounded-2xl bg-slate-50">
-                <ProductImage rec={gift} />
-              </div>
-              <p className="mt-2 truncate text-center text-[10px] font-black text-slate-400">
-                {gift.tags[0] || gift.scenarios[0] || `方案 ${idx + 1}`}
-              </p>
-            </div>
-
-            <div className="min-w-0">
-              <div className="mb-1.5 flex items-start justify-between gap-3">
-                <h2 className="min-w-0 flex-1 text-[14px] font-black leading-5 text-slate-950 line-clamp-2">
-                  {isCombo && gift.giftRole === 'main_gift' ? '主礼 · ' : ''}
-                  {isCombo && gift.giftRole === 'addon_gift' ? '副礼 · ' : ''}
-                  {!isCombo && idx === 0 ? '首推 · ' : ''}
-                  {!isCombo && idx > 0 ? `备选${idx} · ` : ''}
-                  {gift.name}
-                </h2>
-                <span className="shrink-0 text-[14px] font-black text-[#ff3f63]">¥{gift.price}</span>
-              </div>
-
-              <p className="mb-3 text-[11px] font-semibold leading-5 text-slate-500 line-clamp-3">
-                {gift.rationale || answer || '这份礼物匹配当前画像，适合作为专属送礼方案。'}
-              </p>
-
-              <div className="mb-3 flex flex-wrap gap-1.5">
-                {(gift.tags.length > 0 ? gift.tags : gift.scenarios).slice(0, 2).map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-lg bg-[#fff0f2] px-2.5 py-1 text-[10px] font-black text-[#ff3f63]"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-between gap-2">
-                <button
-                  type="button"
-                  className="rounded-lg bg-[#fff0f2] px-3 py-2 text-[10px] font-black text-[#ff3f63]"
-                >
-                  写专属语音卡
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handlePickToCart(gift)}
-                  className={`rounded-xl px-4 py-2 text-[10px] font-black shadow-[0_8px_16px_rgba(2,7,25,0.14)] transition active:scale-95 ${
-                    isAdded
-                      ? 'bg-emerald-500 text-white'
-                      : 'bg-[#020719] text-white'
-                  }`}
-                >
-                  {isAdded ? '取消加入' : '加入购物车'}
-                </button>
-              </div>
-            </div>
-          </article>
-          );
-        })}
-      </div>
 
       {list.length > 0 && (
         <div className="sticky bottom-3 mt-5 rounded-[18px] bg-white/95 p-3 shadow-[0_10px_28px_rgba(15,23,42,0.12)] ring-1 ring-slate-100 backdrop-blur">

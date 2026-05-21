@@ -1,6 +1,6 @@
 /**
- * v2 首页：按 Gemini 原型重做的轻奢白底首页。
- * 重点是品牌门面、强 hero、双列甄选商品卡，而不是暗黑商品列表。
+ * v2 首页：搜索中心 + 甄选商品，与整体浅色清爽风格统一。
+ * 搜索框输入「节日」或「520」后跳转到 /v2/wizard。
  */
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,14 @@ import { getInstantProducts, type V2InstantProduct } from '../api/v2Api';
 import { addV2CartItem } from '../api/v2CartApi';
 import { useV2 } from '../state/V2Context';
 import type { ProductCardData } from '../../api/chat';
+
+const HOT_SEARCHES = ['520', '节日', '生日', '纪念日', '母亲节'];
+
+const SEARCH_SUGGESTIONS: Record<string, string[]> = {
+  '520': ['京礼-AI送礼助手', '520 礼物', '520 送男朋友礼物', '520 礼盒', '520 贺卡'],
+  '节日': ['节日送父母礼物', '节日礼盒', '节日送领导', '节日伴手礼'],
+  '生日': ['生日礼物', '生日惊喜', '生日礼盒', '生日送妈妈'],
+};
 
 const fallbackProducts: V2InstantProduct[] = [
   {
@@ -84,27 +92,27 @@ function HomeProductCard({
   onAdd: (product: V2InstantProduct) => void;
 }) {
   return (
-    <article className="overflow-hidden rounded-[20px] bg-white shadow-[0_12px_26px_rgba(15,23,42,0.07)] ring-1 ring-slate-100">
+    <article className="overflow-hidden rounded-[18px] bg-white shadow-sm ring-1 ring-slate-100">
       <div className="relative h-[92px] overflow-hidden bg-slate-100">
         <ProductImage product={product} />
-        <span className="absolute left-2.5 top-2.5 rounded-full bg-slate-950/78 px-2 py-0.5 text-[10px] font-black text-white backdrop-blur">
+        <span className="absolute left-2.5 top-2.5 rounded-full bg-slate-950/70 px-2 py-0.5 text-[10px] font-black text-white backdrop-blur">
           {product.tag || '精选好礼'}
         </span>
       </div>
       <div className="p-2.5">
-        <h3 className="line-clamp-2 min-h-8 text-[12px] font-black leading-4 text-[#111827]">
+        <h3 className="line-clamp-2 min-h-8 text-[12px] font-black leading-4 text-slate-950">
           {product.name}
         </h3>
         <p className="mt-1 line-clamp-2 min-h-7 text-[9px] font-semibold leading-[13px] text-slate-500">
           {product.desc || '京礼真实商品库精选，适合体面送礼。'}
         </p>
-        <div className="mt-1 text-[17px] font-black tracking-tight text-[#070b1a]">
+        <div className="mt-1 text-[17px] font-black tracking-tight text-[#ff3f63]">
           ¥{Math.round(product.price).toLocaleString('zh-CN')}
         </div>
         <button
           type="button"
           onClick={() => onAdd(product)}
-          className="mt-2 h-8 w-full rounded-[14px] bg-[#071026] text-[11px] font-black text-white shadow-[0_8px_14px_rgba(7,16,38,0.16)] transition active:scale-[0.98]"
+          className="mt-2 h-8 w-full rounded-xl bg-gradient-to-r from-[#ff3f63] to-[#ff6b35] text-[11px] font-black text-white shadow-md transition active:scale-[0.98]"
         >
           加入购物车
         </button>
@@ -113,10 +121,28 @@ function HomeProductCard({
   );
 }
 
+function HighlightText({ text, match }: { text: string; match: string }) {
+  if (!match) return <>{text}</>;
+  const parts = text.split(new RegExp(`(${match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'));
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === match.toLowerCase() ? (
+          <span key={i} className="text-[#ff3f63]">{part}</span>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
+
 export default function V2HomePage() {
   const navigate = useNavigate();
   const { showToast, setCartItems, triggerIsland } = useV2();
   const [products, setProducts] = useState<V2InstantProduct[]>([]);
+  const [query, setQuery] = useState('');
+  const [aiSearch, setAiSearch] = useState(false);
   const displayProducts = useMemo(() => (products.length ? products : fallbackProducts), [products]);
 
   useEffect(() => {
@@ -134,6 +160,30 @@ export default function V2HomePage() {
     };
   }, [showToast]);
 
+  const suggestions = useMemo(() => {
+    const trimmed = query.trim();
+    if (!trimmed) return [];
+    const key = Object.keys(SEARCH_SUGGESTIONS).find((k) => trimmed.includes(k));
+    if (!key) return [];
+    return SEARCH_SUGGESTIONS[key].filter(
+      (s) => s === '京礼-AI送礼助手' || s.toLowerCase().includes(trimmed.toLowerCase()),
+    );
+  }, [query]);
+
+  function handleSearch() {
+    const trimmed = query.trim();
+    if (trimmed === '节日' || trimmed === '520') {
+      navigate('/v2/wizard');
+    } else if (trimmed) {
+      showToast(`搜索「${trimmed}」功能即将上线`);
+    }
+  }
+
+  function handleSuggestionClick(suggestion: string) {
+    setQuery(suggestion);
+    navigate('/v2/wizard');
+  }
+
   async function handleAdd(product: V2InstantProduct) {
     try {
       const next = await addV2CartItem(toProductCard(product));
@@ -146,62 +196,108 @@ export default function V2HomePage() {
   }
 
   return (
-    <div className="min-h-full bg-[#f7f8fb] px-6 pb-8 pt-5 text-[#070b1a] animate-fadeIn">
-      <header className="mb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-[26px] font-black leading-none tracking-[-0.04em] text-[#070b1a]">
-            Maison d'Amour
-          </h1>
-          <p className="mt-2 text-[12px] font-black tracking-[0.12em] text-slate-400">
-            爱慕工坊 · 掌上自营店
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => navigate('/v2/cart')}
-          aria-label="查看购物车"
-          className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-[#ff9f1c] via-[#ff6b26] to-[#f43f5e] text-white shadow-[0_10px_20px_rgba(244,63,94,0.2)] transition active:scale-95"
-        >
-          <Icon name="gift" className="h-5 w-5" />
-        </button>
-      </header>
-
-      <section className="relative overflow-hidden rounded-[26px] bg-[#020719] px-5 py-5 shadow-[0_20px_34px_rgba(2,7,25,0.16)]">
-        <div className="pointer-events-none absolute -bottom-16 -left-12 h-44 w-44 rounded-full bg-[#fb3159]/25 blur-3xl" />
-        <div className="pointer-events-none absolute -right-8 top-10 h-40 w-40 rounded-full bg-[#ff9f1c]/18 blur-3xl" />
-        <div className="relative">
-          <div className="text-[11px] font-black tracking-[0.28em] text-[#ffd234]">
-            AI-GIFT EXPERT
+    <div className="min-h-full bg-[#f8f9fb] px-4 pb-24 pt-4 text-slate-950 animate-fadeIn">
+      {/* 搜索卡片 */}
+      <div className="mb-4 rounded-[18px] bg-white p-4 shadow-sm ring-1 ring-slate-100">
+        <div className="flex items-center gap-2">
+          <div className="flex flex-1 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 focus-within:border-[#ff3f63]">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              placeholder="搜索礼物、场合、对象..."
+              className="flex-1 bg-transparent text-[13px] font-bold text-slate-900 outline-none placeholder:font-normal placeholder:text-slate-400"
+            />
+            {query && (
+              <button onClick={() => setQuery('')} className="text-slate-400 transition hover:text-slate-600">
+                <Icon name="x" className="h-4 w-4" />
+              </button>
+            )}
           </div>
-          <h2 className="mt-3.5 text-[22px] font-black leading-[1.32] tracking-[-0.04em] text-white">
-            卡在挑选礼物的关头?
-            <br />
-            让全新 <span className="text-[#ffd234]">京礼 AI</span> 拯救灵感!
-          </h2>
-          <p className="mt-3.5 max-w-[278px] text-[11px] font-semibold leading-5 text-slate-400">
-            一键分析送礼对象喜好，自主绘制质感概念图，生成体面又有分寸的送礼方案。
-          </p>
+        </div>
+
+        <div className="mt-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <label className="flex cursor-pointer items-center gap-1.5 text-[11px] font-bold text-slate-600">
+              <span className="text-[#ff3f63]">Ai</span> 搜索
+              <input
+                type="checkbox"
+                checked={aiSearch}
+                onChange={(e) => setAiSearch(e.target.checked)}
+                className="h-4 w-4 accent-[#ff3f63]"
+              />
+            </label>
+            <button className="text-slate-400 transition hover:text-slate-600">
+              <Icon name="image" className="h-5 w-5" />
+            </button>
+          </div>
           <button
-            type="button"
-            onClick={() => navigate('/v2/wizard')}
-            className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-[18px] bg-gradient-to-r from-[#fb3f63] via-[#ff6441] to-[#f59e0b] text-[14px] font-black text-white shadow-[0_12px_22px_rgba(251,63,99,0.2)] transition active:scale-[0.98]"
+            onClick={handleSearch}
+            className="rounded-lg bg-[#ff3f63] px-5 py-1.5 text-[12px] font-bold text-white shadow-sm transition active:scale-95"
           >
-            <Icon name="sparkles" className="h-4 w-4" />
-            <span>开启 AI 送礼专家</span>
-            <Icon name="arrow-right" className="h-3.5 w-3.5" />
+            搜索
           </button>
         </div>
-      </section>
+      </div>
 
-      <section className="mt-6">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 text-[17px] font-black tracking-[-0.04em] text-[#070b1a]">
-            <span className="text-sm">🌟</span>
-            今日甄选好物现货
-          </h2>
-          <span className="text-[10px] font-black tracking-[0.14em] text-slate-300">REAL STOCK</span>
+      {/* 搜索建议 */}
+      {suggestions.length > 0 && (
+        <div className="mb-4 rounded-[18px] bg-white p-4 shadow-sm ring-1 ring-slate-100">
+          <div className="space-y-3">
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                onClick={() => handleSuggestionClick(s)}
+                className="flex w-full items-center gap-2.5 text-left transition"
+              >
+                <Icon name="info" className="h-3.5 w-3.5 shrink-0 text-slate-300" />
+                <span className="text-[13px] text-slate-700">
+                  <HighlightText text={s} match={query.trim()} />
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className="mt-4 flex items-center justify-end gap-2 border-t border-slate-50 pt-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-50">
+              <Icon name="sparkles" className="h-4 w-4 text-indigo-500" />
+            </div>
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ff3f63]">
+              <Icon name="mic" className="h-4 w-4 text-white" />
+            </div>
+          </div>
         </div>
+      )}
 
+      {/* 热门搜索 */}
+      {!query && (
+        <div className="mb-5">
+          <h3 className="mb-2 text-[12px] font-bold text-slate-500">热门搜索</h3>
+          <div className="flex flex-wrap gap-2">
+            {HOT_SEARCHES.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => {
+                  setQuery(tag);
+                  if (tag === '节日' || tag === '520') {
+                    navigate('/v2/wizard');
+                  }
+                }}
+                className="rounded-full bg-white px-3 py-1.5 text-[11px] font-bold text-slate-600 shadow-sm ring-1 ring-slate-100 transition hover:text-[#ff3f63] hover:ring-[#ff3f63]/30"
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 商品展示 */}
+      <section>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-[15px] font-black text-slate-900">今日甄选</h2>
+          <span className="text-[10px] font-bold tracking-wider text-slate-300">REAL STOCK</span>
+        </div>
         <div className="grid grid-cols-2 gap-3">
           {displayProducts.map((product) => (
             <HomeProductCard key={product.id} product={product} onAdd={handleAdd} />

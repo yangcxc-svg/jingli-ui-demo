@@ -1,5 +1,5 @@
 /**
- * v2 支付成功 + 物流追踪页：复刻 Gemini 原型 SVG 二维码 + 顺丰节点 + 返回首页。
+ * v2 支付成功页：与整体浅色清爽风格统一。
  */
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,11 +20,11 @@ export default function V2OrderSuccessPage() {
 
   if (!latestOrder) {
     return (
-      <div className="px-5 py-8 text-center text-[12px] text-slate-500">
-        <p>暂无订单数据</p>
+      <div className="flex min-h-full flex-col items-center justify-center bg-[#f8f9fb] px-6 py-20 text-slate-500">
+        <p className="text-sm">暂无订单数据</p>
         <button
           onClick={() => navigate('/v2/home')}
-          className="mt-4 text-[11px] text-indigo-400 underline"
+          className="mt-4 text-xs font-bold text-[#ff3f63] underline underline-offset-4"
         >
           返回首页
         </button>
@@ -35,43 +35,39 @@ export default function V2OrderSuccessPage() {
   const { orderId, items, totalAmount, needLuxuryBox, needAudioQR, address } = latestOrder;
 
   return (
-    <div className="px-5 py-4 animate-fadeIn">
-      <div className="py-6 text-center">
-        <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10">
-          <Icon name="check" className="h-6 w-6 text-emerald-400" />
+    <div className="min-h-full bg-[#f8f9fb] px-4 pb-24 pt-6 text-slate-950 animate-fadeIn">
+      {/* 顶部庆祝 */}
+      <div className="mb-6 text-center">
+        <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-[#fff0f2]">
+          <Icon name="check" className="h-7 w-7 text-[#ff3f63]" />
         </div>
-        <h3 className="text-base font-bold text-white">订单支付成功</h3>
-        <p className="mt-1 text-[10px] text-slate-500">单号：{orderId}</p>
-        <p className="mt-1 text-[10px] text-slate-500">实付：{formatYuan(totalAmount)}</p>
+        <h1 className="text-[20px] font-black text-slate-950">订单支付成功</h1>
+        <p className="mt-1 text-[11px] text-slate-400">单号：{orderId}</p>
+        <p className="mt-1 text-[22px] font-black text-[#ff3f63]">{formatYuan(totalAmount)}</p>
       </div>
 
       <div className="space-y-4">
-        {/* 实体二维码语音卡片预览 */}
+        {/* 语音二维码卡片 */}
         {needAudioQR && (
-          <div className="rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-950/40 via-purple-950/20 to-[#0e1017] p-4">
-            <div className="mb-3 flex items-center space-x-1.5">
-              <Icon name="qr-code" className="h-4 w-4 text-cyan-400" />
-              <span className="text-[10px] font-bold tracking-wider text-cyan-400">
+          <div className="rounded-[18px] bg-white p-4 shadow-sm ring-1 ring-slate-100">
+            <div className="mb-3 flex items-center gap-1.5">
+              <Icon name="qr-code" className="h-4 w-4 text-[#ff3f63]" />
+              <span className="text-[10px] font-bold tracking-wider text-[#ff3f63]">
                 配音卡片二维码已随件印发
               </span>
             </div>
-
-            <div className="flex items-center space-x-4">
-              {/* 极精美的模拟 SVG 二维码图案 */}
-              <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
+            <div className="flex items-center gap-4">
+              <div className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-sm ring-1 ring-slate-100">
                 <svg className="h-full w-full text-slate-900" viewBox="0 0 100 100">
                   <rect x="0" y="0" width="30" height="30" fill="currentColor" />
                   <rect x="5" y="5" width="20" height="20" fill="white" />
                   <rect x="10" y="10" width="10" height="10" fill="currentColor" />
-
                   <rect x="70" y="0" width="30" height="30" fill="currentColor" />
                   <rect x="75" y="5" width="20" height="20" fill="white" />
                   <rect x="80" y="10" width="10" height="10" fill="currentColor" />
-
                   <rect x="0" y="70" width="30" height="30" fill="currentColor" />
                   <rect x="5" y="75" width="20" height="20" fill="white" />
                   <rect x="10" y="80" width="10" height="10" fill="currentColor" />
-
                   <path d="M 40,10 H 50 V 20 H 40 Z" fill="currentColor" />
                   <path d="M 10,40 H 20 V 50 H 10 Z" fill="currentColor" />
                   <path d="M 50,40 H 60 V 60 H 50 Z" fill="currentColor" />
@@ -85,10 +81,9 @@ export default function V2OrderSuccessPage() {
                   </div>
                 </div>
               </div>
-
               <div className="flex-1">
-                <p className="text-[11px] font-bold text-white">收信人扫一扫听到你</p>
-                <p className="mt-1 text-[10px] leading-relaxed text-slate-400">
+                <p className="text-[13px] font-black text-slate-950">收信人扫一扫听到你</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
                   对方在拆礼盒时，只需用手机摄像头扫描此贺卡卡片，即可立时听到你在客户端合成的高品质祝福。
                 </p>
               </div>
@@ -96,41 +91,81 @@ export default function V2OrderSuccessPage() {
           </div>
         )}
 
-        {/* 礼盒清单 */}
-        <div className="rounded-xl border border-slate-900 bg-[#11131c] p-3">
-          <span className="mb-2 block text-[10px] font-bold tracking-wider text-slate-500">
-            本单礼物（{items.length}）
+        {/* 礼物清单 */}
+        <div className="rounded-[18px] bg-white p-4 shadow-sm ring-1 ring-slate-100">
+          <div className="mb-3 flex items-center justify-between">
+            <span className="text-[10px] font-bold tracking-wider text-slate-500">
+              本单礼物（{items.length}）
+            </span>
             {needLuxuryBox && (
-              <span className="ml-2 rounded-full bg-indigo-500/10 px-1.5 py-0.5 text-[9px] text-indigo-300">
+              <span className="rounded-full bg-[#fff0f2] px-2 py-0.5 text-[9px] font-black text-[#ff3f63]">
                 奢华礼盒
               </span>
             )}
-          </span>
-          <ul className="space-y-1.5">
+          </div>
+          <ul className="space-y-2">
             {items.map((it, idx) => (
               <li
                 key={`${it.productId}-${idx}`}
-                className="flex items-center justify-between text-[11px]"
+                className="flex items-center justify-between text-[12px]"
               >
-                <span className="truncate text-slate-300">{it.name}</span>
-                <span className="font-bold text-white">{formatYuan(it.price)}</span>
+                <span className="truncate text-slate-700">{it.name}</span>
+                <span className="font-black text-slate-950">{formatYuan(it.price)}</span>
               </li>
             ))}
           </ul>
+          <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
+            <span className="text-[12px] font-bold text-slate-500">总计</span>
+            <span className="text-[16px] font-black text-[#ff3f63]">{formatYuan(totalAmount)}</span>
+          </div>
         </div>
 
-        {/* 顺丰轨迹进度条 */}
-        <div className="rounded-xl border border-slate-900 bg-[#11131c] p-3">
+        {/* 分享卡片 */}
+        <div className="rounded-[18px] bg-white p-4 shadow-sm ring-1 ring-slate-100">
+          <div className="mb-3 flex items-center gap-1.5">
+            <Icon name="gift" className="h-4 w-4 text-[#ff3f63]" />
+            <span className="text-[10px] font-bold tracking-wider text-[#ff3f63]">
+              分享给朋友填写收礼地址
+            </span>
+          </div>
+          <p className="mb-3 text-[11px] leading-relaxed text-slate-500">
+            发送链接给好友，好友填写收礼地址后自动发货。你也可以随时在订单详情中查看填写进度。
+          </p>
+          <div className="mb-3 flex items-center gap-2">
+            <div className="flex-1 overflow-hidden rounded-lg bg-slate-50 px-3 py-2 text-[10px] text-slate-500">
+              <span className="truncate">https://jingli.ai/share/{orderId}</span>
+            </div>
+            <button
+              onClick={() => {
+                navigator.clipboard?.writeText(`https://jingli.ai/share/${orderId}`);
+                triggerIsland('链接已复制', '快去微信粘贴分享给好友吧', 3000);
+              }}
+              className="shrink-0 rounded-lg bg-[#fff0f2] px-3 py-2 text-[10px] font-black text-[#ff3f63] transition hover:bg-rose-100"
+            >
+              复制链接
+            </button>
+          </div>
+          <button
+            onClick={() => triggerIsland('已唤起微信', '请选择要分享的好友', 3000)}
+            className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#ff3f63] to-[#ff6b35] py-2.5 text-[11px] font-black text-white shadow-md transition active:scale-[0.98]"
+          >
+            <Icon name="message-circle" className="h-3.5 w-3.5" />
+            分享到微信
+          </button>
+        </div>
+
+        {/* 物流轨迹 */}
+        <div className="rounded-[18px] bg-white p-4 shadow-sm ring-1 ring-slate-100">
           <span className="mb-2 block text-[10px] font-bold tracking-wider text-slate-500">
             一公里物流节点轨迹
           </span>
-          <div className="flex items-center space-x-3 text-[11px]">
-            <div className="h-1.5 w-1.5 shrink-0 animate-ping rounded-full bg-indigo-500" />
-            <span className="font-bold text-indigo-400">
+          <div className="flex items-center gap-2 text-[11px]">
+            <div className="h-1.5 w-1.5 shrink-0 animate-ping rounded-full bg-[#ff3f63]" />
+            <span className="font-bold text-[#ff3f63]">
               顺丰揽件中：{address.fullAddress.split(' ')[0] || '浙江省杭州市西湖区'}
             </span>
           </div>
-          <div className="mt-2 flex items-center space-x-3 text-[10px] text-slate-500">
+          <div className="mt-2 flex items-center gap-2 text-[10px] text-slate-500">
             <Icon name="truck" className="h-3.5 w-3.5" />
             <span>预计 24h 内由顺丰特快配送至：{address.recipient} {address.phone}</span>
           </div>
@@ -139,7 +174,7 @@ export default function V2OrderSuccessPage() {
         {/* 返回首页 */}
         <button
           onClick={() => navigate('/v2/home')}
-          className="w-full rounded-xl bg-slate-800 py-2.5 text-center text-[11px] font-bold text-slate-300 transition-transform hover:bg-slate-700 active:scale-95"
+          className="w-full rounded-2xl bg-white py-3 text-center text-[12px] font-bold text-slate-700 shadow-sm ring-1 ring-slate-100 transition hover:bg-slate-50 active:scale-[0.98]"
         >
           返回首页尊享阁
         </button>

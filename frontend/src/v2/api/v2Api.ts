@@ -54,6 +54,7 @@ export interface V2RecommendationResult {
 export interface V2WizardInput {
   relation: string;
   age: string;
+  occasion?: string;
   budget: number;
   tags: string[];
   background?: string;
@@ -66,10 +67,11 @@ const toNumber = (value: number | string | null | undefined): number => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
-const buildMessage = ({ relation, age, budget, tags, background }: V2WizardInput): string => {
+const buildMessage = ({ relation, age, occasion, budget, tags, background }: V2WizardInput): string => {
+  const occasionPart = occasion?.trim() ? `送礼场合：${occasion.trim()}。` : '';
   const tagPart = tags.length > 0 ? `TA 的特质标签：${tags.join('、')}。` : '';
   const backgroundPart = background?.trim() ? `补充要求：${background.trim()}。` : '';
-  return `想给${relation}（${age}）挑选一份心意礼物，预算约 ${budget} 元。${tagPart}${backgroundPart}请推荐合适的方案。`;
+  return `想给${relation}（${age}）挑选一份心意礼物，预算约 ${budget} 元。${occasionPart}${tagPart}${backgroundPart}请推荐合适的方案。`;
 };
 
 const cardToRecommendation = (card: ProductCardData): V2Recommendation => ({
