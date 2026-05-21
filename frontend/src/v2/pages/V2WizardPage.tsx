@@ -9,26 +9,25 @@ import { generateRecommendations } from '../api/v2Api';
 import { useV2 } from '../state/V2Context';
 
 const RELATIONS = [
-  { label: '伴侣/恋人', value: '恋人', emoji: '玫瑰' },
-  { label: '长辈/父母', value: '长辈', emoji: '家' },
-  { label: '知心好友', value: '死党', emoji: '干杯' },
-  { label: '职场伙伴', value: '同事', emoji: '公文包' },
-  { label: '可爱宝贝', value: '孩子', emoji: '宝宝' },
-  { label: '授业/恩师', value: '老师', emoji: '学士帽' },
+  { label: '父母', value: '父母', emoji: '👨‍👩‍👧' },
+  { label: '伴侣', value: '伴侣', emoji: '💑' },
+  { label: '子女', value: '子女', emoji: '👶' },
+  { label: '同事', value: '同事', emoji: '💼' },
+  { label: '领导', value: '领导', emoji: '👔' },
+  { label: '挚友', value: '挚友', emoji: '🤝' },
+  { label: '客户', value: '客户', emoji: '📊' },
+  { label: '长辈', value: '长辈', emoji: '👴' },
+  { label: '晚辈', value: '晚辈', emoji: '🧒' },
 ];
 
-const OCCASIONS = ['新婚之喜', '生日惊喜', '节日送礼', '乔迁新居', '探望长辈'];
-const BUDGETS = [150, 500, 1500, 3000];
-const ALL_TAGS = ['科技控', '文艺小资', '实用主义', '户外运动', '猫奴狗党', '美食饕餮', '极简生活', '二次元'];
+const OCCASIONS = ['传统节日', '现代节日', '人生节点', '职场场景', '情感表达'];
 
-const relationEmoji: Record<string, string> = {
-  玫瑰: '🌹',
-  家: '🏡',
-  干杯: '🍻',
-  公文包: '💼',
-  宝宝: '👶',
-  学士帽: '🎓',
-};
+const ALL_TAGS = [
+  '实用主义', '健康养生', '浪漫情怀', '个性化',
+  '教育成长', '兴趣培养', '商务精英', '品质生活',
+  '科技控', '文艺小资', '户外运动', '美食饕餮',
+  '极简生活', '二次元', '猫奴狗党', '家居生活',
+];
 
 const ageFromWizard = (age: string) => {
   const matched = age.match(/\d+/);
@@ -47,7 +46,6 @@ export default function V2WizardPage() {
   } = useV2();
   const [isGenerating, setIsGenerating] = useState(false);
   const selectedAge = ageFromWizard(wizard.age);
-  const selectedOccasion = OCCASIONS[0];
 
   const handleGenerate = async () => {
     if (isGenerating) return;
@@ -78,9 +76,6 @@ export default function V2WizardPage() {
         >
           <Icon name="chevron-left" className="h-[18px] w-[18px]" />
         </button>
-        <div className="rounded-full bg-[#fff0f2] px-3.5 py-1.5 text-[10px] font-black tracking-wide text-[#ff3f63] shadow-sm">
-          ✨ Gemini 3.5 专家模式
-        </div>
         <div className="w-8" />
       </div>
 
@@ -100,67 +95,74 @@ export default function V2WizardPage() {
                 type="button"
                 key={rel.value}
                 onClick={() => setWizard({ relation: rel.value })}
-                  className={`h-9 rounded-xl border text-[10px] font-black transition-all ${
+                className={`h-9 rounded-xl border text-[10px] font-black transition-all ${
                   wizard.relation === rel.value
                     ? 'border-[#ff3f63] bg-white text-[#ff3f63] shadow-sm'
                     : 'border-slate-200 bg-white text-slate-600 shadow-sm hover:border-slate-300'
                 }`}
               >
-                {rel.label} <span className="text-[10px]">{relationEmoji[rel.emoji]}</span>
+                {rel.label} <span className="text-[10px]">{rel.emoji}</span>
               </button>
             ))}
           </div>
         </section>
 
-        <section className="rounded-2xl border border-slate-100 bg-[#f5f8fb] px-4 py-3.5 shadow-sm">
+        <section className="rounded-2xl border border-slate-100 bg-[#f5f8fb] py-3.5 shadow-sm">
           <div className="mb-2.5 flex items-center justify-between">
             <h2 className="text-[13px] font-black text-slate-700">2. 对方年龄:</h2>
             <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-[#ff3f63] shadow-sm">
               {selectedAge} 岁
             </span>
           </div>
-          <input
-            type="range"
-            min={18}
-            max={70}
-            step={1}
-            value={selectedAge}
-            onChange={(e) => setWizard({ age: `${e.target.value}岁` })}
-            className="w-full accent-[#ff3f63]"
-          />
+          <div className="px-4">
+            <input
+              type="number"
+              min={18}
+              max={70}
+              value={selectedAge}
+              onChange={(e) => setWizard({ age: `${e.target.value}岁` })}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-bold text-slate-700 outline-none focus:border-[#ff3f63]"
+            />
+          </div>
         </section>
 
         <section>
           <h2 className="mb-2.5 text-[13px] font-black text-slate-700">3. 赠送场合:</h2>
-          <button
-            type="button"
-            className="flex h-11 w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-4 text-left text-[12px] font-bold text-slate-700 shadow-sm"
-          >
-            <span>{selectedOccasion} 💍</span>
-            <span className="text-lg leading-none text-slate-500">⌄</span>
-          </button>
+          <div className="relative">
+            <select
+              value={wizard.occasion}
+              onChange={(e) => setWizard({ occasion: e.target.value })}
+              className="h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 text-[12px] font-bold text-slate-700 shadow-sm outline-none focus:border-[#ff3f63]"
+            >
+              {OCCASIONS.map((occ) => (
+                <option key={occ} value={occ}>
+                  {occ}
+                </option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-lg leading-none text-slate-500">
+              ⌄
+            </span>
+          </div>
         </section>
 
-        <section>
+        <section className="rounded-2xl border border-slate-100 bg-[#f5f8fb] py-3.5 shadow-sm">
           <div className="mb-2.5 flex items-center justify-between">
             <h2 className="text-[13px] font-black text-slate-700">4. 预算范围 (元):</h2>
-            <span className="text-[12px] font-black text-[#ff3f63]">¥{wizard.budget}</span>
+            <span className="rounded-full bg-white px-3 py-1 text-[11px] font-black text-[#ff3f63] shadow-sm">
+              ¥{wizard.budget}
+            </span>
           </div>
-          <div className="grid grid-cols-4 gap-2">
-            {BUDGETS.map((budget) => (
-              <button
-                type="button"
-                key={budget}
-                onClick={() => setWizard({ budget })}
-                className={`h-9 rounded-xl border text-[10px] font-black transition-all ${
-                  wizard.budget === budget
-                    ? 'border-[#ff3f63] bg-white text-[#ff3f63] shadow-sm'
-                    : 'border-slate-200 bg-white text-slate-600 shadow-sm hover:border-slate-300'
-                }`}
-              >
-                {budget === 3000 ? '奢华精选' : `¥${budget}`}
-              </button>
-            ))}
+          <div className="px-4">
+            <input
+              type="range"
+              min={100}
+              max={5000}
+              step={100}
+              value={wizard.budget}
+              onChange={(e) => setWizard({ budget: Number(e.target.value) })}
+              className="w-full accent-[#ff3f63]"
+            />
           </div>
         </section>
 

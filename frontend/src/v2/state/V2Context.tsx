@@ -16,6 +16,7 @@ import type { V2RecommendationResult } from '../api/v2Api';
 export interface V2WizardState {
   relation: string;
   age: string;
+  occasion: string;
   budget: number;
   tags: string[];
   background: string;
@@ -36,6 +37,17 @@ export interface V2Address {
   fullAddress: string;
 }
 
+export interface V2OrderSolution {
+  summary: string;
+  recommendationReason: string;
+  givingTiming: string;
+  givingPlace: string;
+  giftTalk: string;
+  recipientReactionReply: string;
+  packagingAdvice: string;
+  avoidTips: string[];
+}
+
 export interface V2Order {
   orderId: string;
   paidAt: string;
@@ -47,6 +59,7 @@ export interface V2Order {
   needLuxuryBox: boolean;
   needAudioQR: boolean;
   address: V2Address;
+  solution?: V2OrderSolution | null;
 }
 
 interface IslandMessage {
@@ -91,8 +104,9 @@ interface V2ContextValue {
 const V2Context = createContext<V2ContextValue | null>(null);
 
 const DEFAULT_WIZARD: V2WizardState = {
-  relation: '恋人',
-  age: '20-30岁',
+  relation: '伴侣',
+  age: '31岁',
+  occasion: '情感表达',
   budget: 600,
   tags: [],
   background: '',
