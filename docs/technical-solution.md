@@ -4,37 +4,48 @@
 
 ### 1.1 运营现状
 
-京礼 AI 导购当前处于 MVP 验证阶段，核心目标是验证“自然语言送礼需求 -> AI 理解意图 -> 商品推荐 -> 送礼方案 -> 加入购物车”的完整闭环。
+京礼 AI 导购当前处于 MVP 验证阶段，目标是验证一条完整的 AI 导购链路：
 
-当前已完成能力：
+```text
+用户表达送礼需求
+  -> AI 理解送礼意图
+  -> 后端基于真实商品库推荐商品
+  -> 生成单品/组合送礼方案
+  -> 前端展示商品卡片
+  -> 加入购物车/礼单
+```
 
-- 移动端 v2 前端原型，包含首页、AI 送礼画像表单、推荐结果页、购物车页和搜索页。
-- FastAPI 后端服务，提供商品、送礼推荐、礼单购物车、健康检查等接口。
-- 商品知识库采用 `storage/sample_docs/seed_products.json`，当前以本地 JSON 种子数据承载真实商品信息。
-- AI 推荐链路已从“直接调用大模型”升级为“意图抽取 + 混合召回 + 商品打分 + 预算组合优化 + 大模型解释”的混合式推荐方案。
-- 支持单品推荐与组合推荐分流：
-  - 单品推荐：返回 3 个候选商品，给用户选择。
-  - 组合推荐：返回主礼 + 副礼组合，并生成送礼话术、时机、地点、包装和避坑建议。
+当前已具备能力：
+
+- v2 移动端前端页面：包括首页、AI 送礼画像页、推荐结果页、搜索页、购物车页。
+- FastAPI 后端：提供商品、搜索、推荐、送礼方案、购物车、健康检查等接口。
+- 商品知识库：使用 `storage/sample_docs/seed_products.json` 存放真实商品数据。
+- AI 推荐链路：已从“直接让大模型推荐”升级为“意图抽取 + 混合召回 + 商品打分 + 预算组合优化 + 大模型解释”。
+- 支持两种推荐形态：
+  - 单品推荐：识别用户只需要一个礼物时，返回 3 个候选单品。
+  - 组合推荐：识别用户需要一套送礼方案时，返回主礼 + 副礼组合，并附带送礼建议。
 
 ### 1.2 发展规划
 
 短期目标：
 
-- 扩充真实商品库，提高不同场景、预算、人群下的覆盖率。
-- 完善商品搜索、加购、结算前链路，提升 Demo 可演示性。
-- 完善推荐解释、证据链和调试日志，便于排查“为什么推荐这个商品”。
+- 扩充真实商品库，覆盖更多送礼对象、场景、预算区间。
+- 修复商品图片、价格、标签等基础数据质量问题。
+- 完善前端演示链路，让推荐、加购、购物车体验稳定可演示。
+- 增强推荐解释能力，让用户知道“为什么推荐这个商品”。
 
 中期目标：
 
-- 引入持久化数据库，替代内存礼单和本地 JSON 商品库。
-- 引入向量检索或搜索引擎，提高召回质量和规模承载能力。
-- 引入用户反馈闭环，例如点击、加购、不喜欢、购买等行为，优化排序策略。
-- 建立推荐效果评估集，持续追踪预算命中率、场景命中率、加购转化率等指标。
+- 引入数据库，替代本地 JSON 和内存购物车。
+- 引入搜索引擎或向量数据库，提升召回质量与扩展能力。
+- 接入用户反馈数据，例如点击、加购、不喜欢、购买，用于优化推荐排序。
+- 建立推荐评估集，持续追踪预算命中率、场景命中率、加购转化率。
 
 长期目标：
 
-- 建设面向多业务场景的 AI 导购平台，支持商品库接入、策略配置、A/B 实验、效果监控和多渠道部署。
-- 支持多 Agent 或多工具协同，包括实时价格、库存、优惠、评价摘要、图片理解和个性化用户画像。
+- 建设可配置、可观测、可灰度的 AI 导购推荐平台。
+- 支持多 Agent 或多工具协同，包括实时库存、实时价格、优惠信息、评价摘要、图片理解和用户画像。
+- 支持 Web、小程序、APP、客服坐席等多渠道接入。
 
 ## 2. 系统架构设计
 
@@ -42,10 +53,10 @@
 
 系统采用前后端分离架构：
 
-- 前端负责移动端交互、画像表单、推荐结果展示、购物车和搜索。
-- 后端负责 API 编排、AI 意图抽取、商品召回、推荐排序、组合优化、礼单状态管理。
-- 商品知识库当前以本地 JSON 加载到内存，后续可迁移至数据库和向量检索系统。
-- 大模型通过 OpenAI-compatible 客户端接入，支持真实模型与 mock 模式切换。
+- 前端负责移动端交互、画像表单、商品卡片展示、购物车和搜索体验。
+- 后端负责 API 编排、AI 意图抽取、商品召回、推荐排序、组合优化和购物车状态管理。
+- 商品知识库当前使用本地 JSON 加载到内存，后续可迁移到数据库、搜索引擎和向量数据库。
+- 大模型通过 OpenAI-compatible 客户端接入，支持真实模型和 mock 模式切换。
 
 ### 2.2 系统架构图
 
@@ -54,114 +65,168 @@ flowchart LR
   User["用户 / 浏览器"] --> FE["React + Vite 前端 v2"]
   FE --> API["FastAPI 后端 API"]
 
-  API --> Intent["意图抽取服务<br/>IntentExtractor"]
-  API --> Rec["推荐服务<br/>RecommendationService"]
-  API --> Cart["礼单购物车服务<br/>GiftListService"]
   API --> Product["商品服务<br/>ProductService"]
+  API --> GiftList["礼单购物车服务<br/>GiftListService"]
+  API --> Solution["送礼方案服务<br/>GiftSolutionService"]
+  API --> Rec["推荐服务<br/>RecommendationService"]
+
+  Rec --> Intent["意图抽取<br/>IntentExtractor"]
+  Rec --> Retrieval["混合召回<br/>RetrievalService"]
+  Rec --> Scorer["商品打分<br/>ProductScorer"]
+  Rec --> Optimizer["预算组合优化<br/>BudgetOptimizerService"]
+  Rec --> Judge["方案选择<br/>PlanJudgeService"]
 
   Intent --> LLM["大模型服务<br/>OpenAI-compatible API"]
-  Rec --> Retrieval["混合召回<br/>关键词 + 本地语义 + 结构化过滤"]
-  Rec --> Scorer["商品打分<br/>ProductScorer"]
-  Rec --> Optimizer["预算组合优化<br/>BudgetOptimizer"]
-  Rec --> Judge["方案选择<br/>PlanJudge"]
-  Rec --> LLM
+  Solution --> LLM
 
-  Retrieval --> Knowledge["商品知识库<br/>seed_products.json / KnowledgeStore"]
+  Retrieval --> Knowledge["商品知识库<br/>seed_products.json"]
   Product --> Knowledge
-  Cart --> Memory["内存状态<br/>MVP 阶段"]
+  GiftList --> Memory["内存购物车<br/>MVP 阶段"]
+
+  API --> Logs["模型日志 / 推荐证据 / 健康检查"]
 ```
 
 ### 2.3 领域和服务拆分与依赖关系
 
 | 领域 | 服务/模块 | 职责 | 依赖 |
 |---|---|---|---|
-| 用户交互 | `frontend/src/v2` | 移动端页面、表单、推荐卡片、购物车、搜索 | 后端 API |
-| 商品域 | `ProductService` / `product_repo` | 商品列表、商品搜索、商品卡片数据 | 商品知识库 |
-| 知识库域 | `SeedProductCatalog` / `KnowledgeStore` | 加载商品 JSON、校验、构建知识片段 | `seed_products.json` |
-| 意图域 | `IntentExtractor` | 将用户自然语言转成结构化送礼意图 | LLM、规则兜底 |
-| 推荐域 | `RecommendationService` | 推荐主流程编排 | 意图、召回、打分、优化、LLM |
-| 召回域 | `RetrievalService` | 关键词召回、本地语义召回 | KnowledgeStore、商品库 |
-| 排序域 | `ProductScorer` | 商品单品打分与解释 | GiftIntent、商品字段 |
-| 优化域 | `BudgetOptimizerService` | 单品/组合方案生成，预算约束和主副礼结构 | 排序候选 |
-| 解释域 | `GiftSolutionService` / LLM Prompt | 生成送礼方案、话术、时机、包装建议 | LLM、候选商品 |
-| 礼单域 | `GiftListService` | 加入购物车、删除、统计金额 | 内存仓库，后续数据库 |
-| 观测域 | `ModelLogService` / eval | 模型调用日志、推荐评估 | 后端服务 |
+| 前端交互 | `frontend/src/v2` | v2 移动端页面、表单、推荐卡片、购物车、搜索 | 后端 API |
+| 商品域 | `ProductService` / `ProductRepository` | 商品列表、商品详情、关键词搜索 | 商品知识库 |
+| 知识库域 | `SeedProductCatalog` / `KnowledgeStore` | 加载商品 JSON、校验商品字段、构建知识片段 | `seed_products.json` |
+| 意图域 | `IntentExtractor` | 将自然语言解析为结构化送礼意图 | LLM、规则兜底 |
+| 推荐域 | `RecommendationService` | 推荐主流程编排 | 意图、召回、打分、优化 |
+| 召回域 | `RetrievalService` | 关键词召回、本地语义召回、结构化召回 | 商品知识库 |
+| 排序域 | `ProductScorer` | 单品相关度、预算、偏好、禁忌等打分 | `GiftIntent`、商品字段 |
+| 优化域 | `BudgetOptimizerService` | 组合枚举、预算约束、主副礼结构优化 | 排序候选商品 |
+| 方案域 | `GiftSolutionService` | 生成单品/组合送礼方案、话术、时机、包装建议 | 推荐结果、LLM |
+| 礼单域 | `GiftListService` | 加入购物车、移除、合计金额 | 内存仓库，后续数据库 |
+| 观测域 | `ModelLogService` / `EvalService` | 模型日志、推荐评估、链路调试 | 后端服务 |
 
 ## 3. 技术选型
 
-| 层级 | 当前 MVP 选型 | 说明 | 后续演进 |
-|---|---|---|---|
-| 前端框架 | React + TypeScript + Vite | 开发速度快，适合移动端 Demo 和组件化迭代 | 可继续保持 |
-| 样式方案 | Tailwind CSS + 自定义 CSS | 快速实现 v2 移动端视觉 | 可沉淀设计系统 |
-| 路由 | React Router | 支持多页面原型 | 可扩展权限路由 |
-| 后端语言 | Python | AI 应用生态成熟，便于算法迭代 | 可继续保持 |
-| 后端框架 | FastAPI | 类型友好、接口文档自动生成、异步支持好 | 可用于生产 |
-| 数据校验 | Pydantic | 商品、意图、推荐结果 schema 校验 | 可继续保持 |
-| 商品库 | 本地 JSON + 内存加载 | MVP 简单可控，便于快速改商品 | PostgreSQL / MySQL |
-| 知识检索 | 内存 KnowledgeStore | 关键词检索 + 本地稀疏语义召回 | Elasticsearch / OpenSearch / Qdrant |
-| 大模型接入 | OpenAI-compatible LLM Client | 支持多供应商切换和 mock 模式 | 增加模型路由和降级策略 |
-| 中间件 | 当前暂无独立中间件 | MVP 低复杂度 | Redis 缓存、消息队列、对象存储 |
-| 部署 | 本地开发启动 | 前后端分离 | Docker + Nginx + 云服务/K8s |
+### 3.1 当前 MVP 技术栈
+
+| 层级 | 技术选型 | 说明 |
+|---|---|---|
+| 前端框架 | React + TypeScript | 组件化、类型安全，适合快速构建移动端原型 |
+| 构建工具 | Vite | 启动快、开发体验好 |
+| 样式方案 | Tailwind CSS + 自定义 CSS | 快速实现移动端视觉 |
+| 前端路由 | React Router | 支持多页面原型 |
+| 后端语言 | Python | AI 应用生态成熟，便于算法迭代 |
+| 后端框架 | FastAPI | 自动生成接口文档，支持异步和 Pydantic 校验 |
+| 数据校验 | Pydantic | 商品、意图、推荐结果、API 入参统一校验 |
+| 商品数据 | JSON 文件 | MVP 阶段简单、透明、易编辑 |
+| 检索能力 | 内存关键词检索 + 本地语义召回 | 不依赖外部服务，便于快速验证 |
+| 大模型 | OpenAI-compatible LLM Client | 支持多模型供应商切换 |
+| 中间件 | 暂无独立中间件 | MVP 降低系统复杂度 |
+| 部署方式 | 本地前后端分离启动 | 后续迁移 Docker / 云服务 |
+
+### 3.2 后续生产化技术选型
+
+| 能力 | 建议选型 |
+|---|---|
+| 关系型数据库 | PostgreSQL / MySQL |
+| 缓存与会话 | Redis |
+| 搜索引擎 | OpenSearch / Elasticsearch |
+| 向量数据库 | Qdrant / Milvus / pgvector |
+| 对象存储 | S3 / OSS / COS |
+| API 网关 | Nginx / 云 API Gateway |
+| 部署 | Docker / Kubernetes |
+| 监控 | Prometheus + Grafana |
+| 日志 | Loki / ELK |
+| 链路追踪 | OpenTelemetry |
+| CI/CD | GitHub Actions / GitLab CI |
+
+### 3.3 技术架构简版
+
+前端：
+
+- React + Vite + Tailwind CSS
+- 采用移动端优先的响应式设计，当前主入口为 v2 移动端原型。
+
+后端：
+
+- Python + FastAPI
+- 负责商品服务、推荐服务、送礼方案生成、购物车/礼单接口和健康检查。
+
+AI 服务：
+
+- OpenAI-compatible LLM Client
+- 当前可对接智谱、通义千问、DeepSeek 等兼容 OpenAI 协议的模型服务。
+- 大模型主要承担意图抽取、推荐解释、送礼话术和方案生成。
+
+推荐算法：
+
+- 意图抽取 + 混合召回 + 商品打分 + 预算组合优化 + 大模型解释。
+- 商品推荐不直接交给大模型自由发挥，而是基于真实商品库和算法候选生成。
+
+商品知识库：
+
+- MVP 阶段使用 `storage/sample_docs/seed_products.json`。
+- 后端启动时加载到内存，并构建关键词检索和本地语义召回所需的商品知识片段。
+
+语音识别：
+
+- 当前 MVP 暂未接入语音识别。
+- 后续可扩展接入通义千问 `Qwen3-ASR-Flash` 等语音识别模型，用于“语音描述送礼需求 -> 文本意图抽取”。
+
+样式：
+
+- Tailwind CSS + 自定义 CSS。
+- 视觉上采用移动端优先、类 App 手机壳布局、白底轻奢风格和商品卡片化展示。
 
 ## 4. AI 推荐算法设计
 
-### 4.1 算法目标
+### 4.1 推荐链路
 
-当前算法不是让大模型直接读取全部商品库自由推荐，而是采用可控的混合推荐架构：
+当前推荐不是由大模型直接读取全部商品库并自由推荐，而是采用可控的混合式推荐链路：
 
 ```text
 用户输入
   -> 意图结构化抽取
-  -> 追问判断
-  -> 单品/组合需求判断
-  -> 混合召回
-  -> 商品打分
+  -> 是否需要追问
+  -> 单品/组合推荐判断
+  -> 混合召回候选商品
+  -> 商品打分排序
   -> 预算与组合优化
-  -> 大模型基于候选生成解释和送礼方案
+  -> 大模型基于候选商品生成推荐解释和送礼方案
 ```
-
-设计目标：
-
-- 降低大模型幻觉，保证推荐商品来自真实商品库。
-- 让预算、场景、人群、偏好成为可计算约束。
-- 支持单品推荐和组合推荐两种业务形态。
-- 不只推荐商品，还输出“怎么送”的整体解决方案。
 
 ### 4.2 意图抽取
 
-用户输入会被解析为 `GiftIntent`，主要字段包括：
+用户输入会被解析为 `GiftIntent`，主要字段如下：
 
 | 字段 | 含义 |
 |---|---|
-| `recipient` | 送礼对象，如女朋友、父母、领导 |
+| `recipient` | 送礼对象，如女朋友、父母、领导、客户 |
 | `relationship` | 关系分寸，如亲密关系、长辈关系、商务关系 |
-| `scenario` / `scenarios` | 送礼场景，如生日、见家长、乔迁 |
-| `budget` | 用户预算数字 |
+| `scenario` / `scenarios` | 送礼场景，如生日、见家长、乔迁、婚礼 |
+| `budget` | 用户预算 |
 | `budget_constraint_type` | 预算强度：`hard` / `soft` / `negotiable` / `unknown` |
 | `budget_upper_bound` | 根据预算语义计算出的预算上限 |
-| `preferences` | 明确偏好，如咖啡、茶、香氛、数码 |
-| `gift_style` | 风格偏好，如体面、实用、浪漫、健康 |
+| `preferences` | 偏好，如咖啡、茶、香氛、数码 |
+| `gift_style` | 风格，如体面、实用、浪漫、健康 |
 | `avoid` | 禁忌或不想要的方向 |
-| `target_people` | 用于匹配商品库的人群标签 |
+| `target_people` | 商品库匹配用的人群标签 |
 | `budget_level` | 预算档位：`low` / `mid` / `high` / `luxury` |
 
-预算语义规则：
+预算语义：
 
-- “500以内、不超过500、最多500”：硬约束，不允许浮动。
-- “500左右、大概500、约500”：软约束，默认允许 15% 浮动。
-- “预算可以加一点、可以放宽”：可协商，默认允许 30% 浮动。
+- `hard`：如“500 以内、不超过 500”，预算不允许浮动。
+- `soft`：如“500 左右、大概 500”，默认允许 15% 浮动。
+- `negotiable`：如“预算可以加一点”，默认允许 30% 浮动。
 
 ### 4.3 召回算法
 
-当前采用混合召回：
+混合召回包括：
 
-1. 结构化召回：基于 `scenarios`、`target_people`、`budget_level`、价格过滤商品库。
-2. 关键词召回：将商品知识文本切片后，用关键词命中和词频打分返回 Top K。
-3. 本地语义召回：将 query 和商品文本转成稀疏 token 向量，用余弦相似度召回。
-4. 放宽召回：当条件过严无结果时，逐步放宽人群/场景等条件。
-5. 兜底召回：返回通用礼品候选，避免无结果。
+1. 结构化召回：基于场景、人群、预算档位、价格过滤商品。
+2. 关键词召回：对商品知识文本做关键词命中和词频打分。
+3. 本地语义召回：将 query 和商品文本转成稀疏 token 向量，计算余弦相似度。
+4. 放宽召回：严格条件无结果时，逐步放宽人群/场景等条件。
+5. 兜底召回：返回通用礼品候选，避免无推荐结果。
 
-拼接后的检索 query 由以下字段组成：
+检索 query 由以下字段拼接：
 
 ```text
 用户原始输入
@@ -172,11 +237,9 @@ flowchart LR
 + 固定补充词：组合礼单 / 送礼 / 礼物 / 预算 / 场景
 ```
 
-大模型不会直接读取全部商品库进行匹配。商品候选由本地召回算法产生，大模型主要负责意图抽取和最终自然语言解释。
-
 ### 4.4 单品打分
 
-单个商品打分权重：
+单品打分权重：
 
 | 打分项 | 权重 |
 |---|---:|
@@ -191,15 +254,15 @@ flowchart LR
 | 明显超预算惩罚 | -28 |
 | 价格未知惩罚 | -6 |
 
-### 4.5 组合优化目标函数
+### 4.5 组合优化数学形式
 
-组合推荐可以抽象为一个带约束的组合优化问题。给定候选商品集合：
+组合推荐可以抽象为带约束的组合优化问题。给定候选商品集合：
 
 $$
 \mathcal{P} = \{p_1, p_2, \dots, p_n\}
 $$
 
-为每个商品定义二元决策变量：
+定义二元决策变量：
 
 $$
 x_i =
@@ -209,7 +272,7 @@ x_i =
 \end{cases}
 $$
 
-其中每个商品包含价格 $price_i$、单品相关度分数 $rel_i$、品类 $cat_i$、标签集合 $tag_i$ 等属性。推荐目标是在满足预算、数量、场景和主副礼约束的前提下，最大化组合方案的综合效用：
+目标函数为：
 
 $$
 \max_{\mathbf{x}} \quad
@@ -232,7 +295,7 @@ R(\mathbf{x}) =
 \right)
 $$
 
-表示组合整体相关度；
+表示组合整体相关度。
 
 $$
 B(\mathbf{x}) =
@@ -244,7 +307,7 @@ B(\mathbf{x}) =
 \end{cases}
 $$
 
-表示预算使用合理性，$U$ 为根据用户预算语义计算出的预算上限；
+表示预算使用合理性，$U$ 为预算语义上限。
 
 $$
 D(\mathbf{x}) =
@@ -254,88 +317,41 @@ D(\mathbf{x}) =
 \frac{|\bigcup_{x_i=1} tag_i|}{2 \cdot \sum_i x_i}
 $$
 
-表示品类和标签多样性；
+表示品类和标签多样性。
 
-$$
-C(\mathbf{x})
-$$
-
-表示主礼与副礼的互补性，当前规则会偏好“一个更贵重的主礼 + 一个或多个轻量副礼”的组合结构；
-
-$$
-P(\mathbf{x})
-$$
-
-表示超预算惩罚，惩罚强度由用户预算表达决定：`hard` 预算惩罚最高，`soft` 次之，`negotiable` 最低。
-
-约束条件如下：
+约束条件：
 
 $$
 \sum_{i=1}^{n} x_i price_i \leq U
 $$
 
-预算约束；
+预算约束。
 
 $$
 1 \leq \sum_{i=1}^{n} x_i \leq K
 $$
 
-商品数量约束，$K$ 为最大推荐商品数；
+商品数量约束。
 
 $$
 match(p_i, intent) = 1 \quad \text{or} \quad relax(intent) = 1
 $$
 
-场景、人群和偏好约束。若严格条件无结果，允许进入放宽召回；
+场景、人群和偏好约束。
 
 $$
 \exists p_m \in \mathcal{P}, \quad role(p_m) = main\_gift
 $$
 
-主礼约束。组合方案至少需要一个主礼；
+主礼约束。
 
 $$
 price_m \geq \alpha \cdot \min(price_j), \quad j \neq m, x_j = 1
 $$
 
-主副礼层次约束。当前实现中 $\alpha$ 取约 $1.5$，用于避免副礼比主礼更贵重。
+主副礼层次约束。当前实现中 $\alpha \approx 1.5$。
 
-当前 MVP 没有引入外部数学规划求解器，而是在召回后的 Top 16 候选商品中枚举组合，计算上述目标函数并选择得分最高的方案。这样可以在小规模候选集下保持实现简单、可解释、响应速度可控。
-
-组合方案目标函数：
-
-```text
-objective_score =
-  0.55 * relevance_score
-+ 0.20 * budget_score
-+ 0.15 * diversity_score
-+ 0.10 * complement_score
-- overage_penalty
-```
-
-| 维度 | 权重 | 说明 |
-|---|---:|---|
-| `relevance_score` | 55% | 商品与用户需求的整体相关性 |
-| `budget_score` | 20% | 预算使用是否合理 |
-| `diversity_score` | 15% | 商品品类和标签是否丰富 |
-| `complement_score` | 10% | 主礼 + 副礼是否形成合理搭配 |
-| `overage_penalty` | 扣分 | 根据预算强弱惩罚超预算 |
-
-主副礼规则：
-
-- 组合中相关度不明显掉队且价格更高的商品优先成为主礼。
-- 主礼价格通常应高于副礼，避免“副礼压过主礼”。
-- 品类不同、预算利用率合理的组合会获得更高搭配分。
-
-### 4.6 大模型最终生成
-
-大模型最终只接收算法筛出的候选商品和方案信息，用于生成：
-
-- 推荐理由。
-- 商品对比说明。
-- 单品送礼建议。
-- 组合送礼解决方案。
-- 送礼话术、送礼时机、地点、包装建议和避坑提醒。
+MVP 当前没有引入外部数学规划求解器，而是在召回后的 Top 16 候选商品中枚举组合，计算目标函数并选择得分最高的方案。
 
 ## 5. API 接口设计
 
@@ -343,21 +359,21 @@ objective_score =
 
 | 接口 | 方法 | 说明 |
 |---|---|---|
-| `/api/health/ready` | GET | 后端健康检查 |
+| `/api/health/ready` | GET | 健康检查 |
 | `/api/products` | GET | 获取商品列表 |
-| `/api/products/search` | GET | 根据关键词搜索商品 |
-| `/api/chat/stream` | POST | 聊天流式推荐 |
+| `/api/products/search` | GET | 商品关键词搜索 |
+| `/api/chat/stream` | POST | 聊天式流式推荐 |
 | `/api/recommendations` | POST | 推荐算法接口 |
 | `/api/gift-solution/generate` | POST | 生成单品/组合送礼方案 |
 | `/api/gift-plan/generate` | POST | 生成结构化组合礼单 |
-| `/api/gift-list` | GET | 获取礼单购物车 |
-| `/api/gift-list/items` | POST | 加入礼单 |
-| `/api/gift-list/items/{product_id}` | DELETE | 移除礼单商品 |
+| `/api/gift-list` | GET | 获取购物车/礼单 |
+| `/api/gift-list/items` | POST | 加入购物车 |
+| `/api/gift-list/items/{product_id}` | DELETE | 从购物车移除 |
 | `/api/eval/model-logs` | GET | 查看模型调用日志 |
 
-### 5.2 核心接口示例
+### 5.2 请求/响应格式
 
-#### 5.2.1 生成送礼解决方案
+#### 5.2.1 生成送礼方案
 
 请求：
 
@@ -386,18 +402,18 @@ Content-Type: application/json
   },
   "products": [
     {
-      "product_id": "xxx",
-      "name": "主礼商品",
-      "price": 1280,
+      "product_id": "100064",
+      "name": "剑南春水晶剑52度浓香型白酒500ml*2瓶礼盒装",
+      "price": 898,
       "gift_role": "main_gift",
-      "reason": "匹配见家长场景，同时价格在预算内"
+      "reason": "匹配商务送礼场景，同时适合商务人士"
     }
   ],
   "solution": {
     "summary": "这套方案主打体面、稳重和实用。",
     "gift_talk": "可以说这是特意挑选的一点心意。",
     "timing": "建议在正式拜访时递上。",
-    "place": "适合在对方家中或见面入座后赠送。",
+    "place": "适合在对方家中或工作环境优雅处赠送。",
     "packaging": "建议使用礼袋并附手写卡片。",
     "avoid_tips": ["不要主动强调价格", "不要过度推销产品功能"]
   }
@@ -418,17 +434,17 @@ GET /api/products/search?q=白酒&limit=20
 {
   "items": [
     {
-      "product_id": "100102181309",
-      "name": "五粮液 精品 浓香型白酒",
-      "price": 7999,
-      "image_url": "https://...",
-      "tags": ["高端", "白酒", "商务"]
+      "product_id": "100064",
+      "name": "剑南春水晶剑52度浓香型白酒500ml*2瓶礼盒装",
+      "price": 898,
+      "image_url": "https://example.com/product.jpg",
+      "tags": ["白酒", "商务送礼"]
     }
   ]
 }
 ```
 
-#### 5.2.3 加入礼单
+#### 5.2.3 加入购物车
 
 请求：
 
@@ -439,7 +455,7 @@ Content-Type: application/json
 
 ```json
 {
-  "product_id": "100102181309",
+  "product_id": "100064",
   "quantity": 1
 }
 ```
@@ -450,12 +466,12 @@ Content-Type: application/json
 {
   "items": [
     {
-      "product_id": "100102181309",
+      "product_id": "100064",
       "quantity": 1,
-      "subtotal": 7999
+      "subtotal": 898
     }
   ],
-  "total_amount": 7999
+  "total_amount": 898
 }
 ```
 
@@ -465,7 +481,7 @@ Content-Type: application/json
 stateDiagram-v2
   [*] --> UserInput
   UserInput --> IntentExtraction
-  IntentExtraction --> Clarification: 关键信息不足
+  IntentExtraction --> Clarification: 信息不足
   Clarification --> UserInput
   IntentExtraction --> ShapeDecision: 信息足够
   ShapeDecision --> SingleRecommendation: 单品需求
@@ -474,7 +490,8 @@ stateDiagram-v2
   ComboRecommendation --> GiftSolution
   ProductCards --> AddToCart
   GiftSolution --> AddToCart
-  AddToCart --> Checkout
+  AddToCart --> Cart
+  Cart --> Checkout
   Checkout --> [*]
 ```
 
@@ -486,10 +503,10 @@ stateDiagram-v2
 
 - 商品数据：`storage/sample_docs/seed_products.json`
 - 商品知识切片：后端启动时加载到内存 `KnowledgeStore`
-- 礼单购物车：内存存储，后端重启后清空
-- 模型日志：当前以服务内记录和接口查询为主
+- 购物车/礼单：内存存储，后端重启后清空
+- 模型日志：服务内记录，可通过接口查询
 
-### 6.2 目标数据库 ER 图
+### 6.2 目标 ER 图
 
 ```mermaid
 erDiagram
@@ -503,7 +520,6 @@ erDiagram
   PRODUCT ||--o{ PRODUCT_TARGET_PEOPLE : targets
   PRODUCT ||--o{ KNOWLEDGE_CHUNK : indexed_by
   CONVERSATION ||--o{ RECOMMENDATION_LOG : generates
-  PRODUCT ||--o{ RECOMMENDATION_LOG_ITEM : recommended
 
   USER {
     bigint id PK
@@ -513,12 +529,13 @@ erDiagram
 
   PRODUCT {
     varchar product_id PK
+    varchar sku
     varchar name
     varchar category
     decimal price
-    varchar image_url
-    varchar purchase_url
     varchar budget_level
+    text image_url
+    text purchase_url
     json raw_payload
   }
 
@@ -547,7 +564,7 @@ erDiagram
   }
 ```
 
-### 6.3 目标表结构与索引
+### 6.3 表结构和索引说明
 
 #### `products`
 
@@ -561,23 +578,23 @@ erDiagram
 | `subcategory` | varchar | 二级品类 |
 | `price` | decimal | 当前价格 |
 | `budget_level` | varchar | 预算档位 |
-| `image_url` | text | 图片 |
+| `image_url` | text | 商品图片 |
 | `purchase_url` | text | 购买链接 |
-| `status` | varchar | 上架状态 |
-| `raw_payload` | json | 原始扩展字段 |
+| `status` | varchar | 商品状态 |
+| `raw_payload` | json | 扩展字段 |
 | `created_at` / `updated_at` | datetime | 时间字段 |
 
 建议索引：
 
 - `idx_products_category`
-- `idx_products_budget_level`
 - `idx_products_price`
+- `idx_products_budget_level`
 - `idx_products_status`
-- `idx_products_name_fulltext`，用于搜索。
+- `idx_products_name_fulltext`
 
 #### `product_tags` / `product_scenarios` / `product_target_people`
 
-用于支持结构化过滤与召回。
+用于结构化召回。
 
 建议索引：
 
@@ -589,20 +606,18 @@ erDiagram
 
 | 字段 | 类型 | 说明 |
 |---|---|---|
-| `chunk_id` | varchar PK | 切片 ID |
+| `chunk_id` | varchar PK | 知识切片 ID |
 | `product_id` | varchar FK | 商品 ID |
-| `text` | text | 知识文本 |
-| `embedding` | vector/json | 向量，后续接向量库 |
+| `text` | text | 商品知识文本 |
+| `embedding` | vector/json | 向量字段，后续扩展 |
 | `created_at` | datetime | 创建时间 |
 
 建议索引：
 
-- 文本索引：用于关键词检索。
-- 向量索引：后续接 Qdrant / pgvector / Elasticsearch dense vector。
+- 文本索引：支持关键词检索。
+- 向量索引：支持语义召回。
 
 #### `gift_lists` / `gift_list_items`
-
-用于购物车和礼单持久化。
 
 建议索引：
 
@@ -611,8 +626,6 @@ erDiagram
 - `idx_gift_list_items_product_id`
 
 #### `recommendation_logs`
-
-用于推荐链路观测和效果评估。
 
 建议索引：
 
@@ -626,103 +639,110 @@ erDiagram
 
 MVP 阶段目标：
 
-- 单机本地开发：支持 1-5 QPS 演示流量。
-- 推荐接口响应：
-  - 不调用真实大模型时：500ms-1500ms。
-  - 调用真实大模型时：3s-15s，取决于模型服务。
-- 商品库规模：当前百级，MVP 可扩展到千级。
+- 单机演示 QPS：1-5。
+- 商品搜索接口 P95：300ms 内。
+- 推荐接口：
+  - 不调用真实大模型：500ms-1500ms。
+  - 调用真实大模型：3s-15s，取决于模型服务。
+- 商品库规模：当前百级，可支撑 MVP 演示。
 
 生产阶段目标：
 
-- 推荐接口 P95 响应时间控制在 3s 内，流式接口首 token 1s-2s。
-- 商品搜索接口 P95 控制在 300ms 内。
-- 支持水平扩展至 100+ QPS。
-- 商品规模支持 10 万级以上，需要引入数据库、搜索引擎和向量检索。
+- 推荐接口 P95 控制在 3s 内。
+- 流式回复首 token 控制在 1s-2s。
+- 支持 100+ QPS。
+- 商品规模支持 10 万级以上。
 
 容量规划：
 
-- API 服务无状态部署，按 CPU 和 LLM 并发瓶颈水平扩容。
+- API 服务无状态部署，通过增加实例水平扩容。
 - 商品检索迁移到 OpenSearch/Qdrant 后，由检索集群承载召回压力。
-- Redis 缓存热点商品、热门推荐和会话状态。
+- Redis 缓存热门商品、热门推荐、会话状态。
+- LLM 调用增加并发控制、超时和降级。
 
 ### 7.2 可读与延展
 
-当前代码按领域拆分服务：
+模块化设计：
 
-- `IntentExtractor` 只负责意图抽取。
-- `RetrievalService` 只负责召回。
-- `ProductScorer` 只负责单品打分。
-- `BudgetOptimizerService` 只负责组合方案搜索与目标函数。
-- `GiftSolutionService` 只负责解决方案生成。
+- 意图抽取、召回、打分、组合优化、送礼解释拆分为独立服务。
+- 推荐权重、预算策略、召回策略后续可配置化。
+- 本地语义召回可以替换为向量数据库，不影响推荐主流程。
+- 购物车内存实现可以替换为数据库实现，不影响前端接口。
 
-后续扩展点：
+无状态扩展：
 
-- 替换本地语义召回为真实 embedding 向量库。
-- 替换规则打分为学习排序模型。
-- 增加策略配置中心，动态调整权重。
-- 增加多模型路由和降级。
+- API 层尽量保持无状态。
+- 会话、购物车、用户画像后续迁移到 Redis/数据库。
+- 多实例可通过负载均衡水平扩展。
 
 ### 7.3 监控与告警
 
 指标监控：
 
-- API QPS、错误率、P50/P95/P99 响应时间。
+- API QPS、错误率、P50/P95/P99 延迟。
 - LLM 调用次数、耗时、失败率、超时率。
 - 推荐召回数量、空召回率、预算命中率、场景命中率。
-- 加购率、点击率、用户反馈“不喜欢”率。
+- 商品搜索次数、加购率、点击率、不喜欢率。
 
 日志：
 
-- 请求日志：trace_id、user_id、conversation_id、接口耗时。
-- 推荐日志：意图抽取结果、召回数量、候选商品、打分证据、最终方案。
-- 模型日志：prompt_name、model、token、latency、error。
+- 请求日志：trace_id、接口、耗时、状态码。
+- 推荐日志：意图结果、召回数量、候选商品、打分证据、最终方案。
+- 模型日志：模型名、prompt 名称、耗时、错误信息。
 
 链路追踪：
 
-- 前端请求 -> API -> 意图抽取 -> 召回 -> 打分 -> LLM 生成。
-- 每次推荐生成一个 trace_id，便于排查。
+```text
+前端请求
+  -> API
+  -> 意图抽取
+  -> 商品召回
+  -> 商品打分
+  -> 组合优化
+  -> LLM 解释
+  -> 前端展示
+```
 
 分级告警：
 
-- P1：服务不可用、推荐接口错误率 > 20%、LLM 全部失败。
-- P2：推荐接口 P95 明显升高、空召回率异常、商品库加载失败。
-- P3：单个模型供应商波动、部分接口慢查询。
+- P1：服务不可用、推荐接口错误率超过 20%、LLM 全部失败。
+- P2：推荐接口 P95 显著升高、商品库加载失败、空召回率异常。
+- P3：单模型供应商波动、部分接口慢查询、图片加载失败率升高。
 
 ### 7.4 安全
 
 认证授权：
 
-- MVP 阶段可不启用登录，仅本地演示。
-- 生产阶段应接入用户身份认证，如 JWT / OAuth2 / 企业 SSO。
-- 管理类接口、商品库更新接口需要管理员权限。
+- MVP 阶段仅本地演示，可以不启用登录。
+- 生产阶段接入 JWT / OAuth2 / 企业 SSO。
+- 商品管理、策略配置、日志查询等后台接口需要管理员权限。
 
-数据安全：
+数据加密：
 
-- API Key 不允许写入代码仓库，统一使用环境变量或密钥管理服务。
-- HTTPS 传输，敏感配置加密存储。
-- 用户输入、会话记录、推荐日志按最小必要原则保存。
-- 日志脱敏，避免记录完整手机号、地址、密钥等敏感信息。
+- 全站 HTTPS。
+- API Key、数据库密码等敏感信息使用环境变量或密钥管理服务。
+- 数据库存储敏感字段时进行加密或脱敏。
 
 内容安全：
 
-- 对用户输入做长度限制、注入风险过滤。
-- 大模型输出限定只能基于候选商品，不允许编造不存在商品。
-- 对外展示前可增加敏感词和合规检查。
+- 限制用户输入长度。
+- 大模型输出必须基于候选商品，不允许编造商品。
+- 对 Prompt 注入、敏感词、违规内容进行过滤。
 
 ### 7.5 容错与故障恢复
 
 容错策略：
 
-- LLM 调用失败时可降级到规则推荐和模板回复。
+- LLM 调用失败时降级到规则推荐和模板回复。
 - 召回为空时触发放宽召回和兜底召回。
-- 商品图片不可用时前端使用占位图。
-- 商品库校验失败时启动失败并输出明确错误，避免脏数据进入推荐链路。
+- 商品图片加载失败时前端展示占位图。
+- 商品库校验失败时后端启动失败并输出明确错误。
 
 故障恢复：
 
 - API 服务无状态，异常实例可直接重启。
 - 数据库定期备份，支持按时间点恢复。
-- 商品库版本化管理，发现错误商品数据可回滚到上一个稳定版本。
+- 商品库、Prompt、推荐权重全部版本化，支持快速回滚。
 
 ## 8. 部署与运维方案
 
@@ -744,11 +764,12 @@ MVP 本地部署：
 flowchart LR
   Client["用户浏览器 / 小程序"] --> CDN["CDN / 静态资源"]
   Client --> LB["负载均衡"]
+
   LB --> API1["API Server 1"]
   LB --> API2["API Server 2"]
   LB --> API3["API Server N"]
 
-  API1 --> Redis["Redis 缓存 / 会话"]
+  API1 --> Redis["Redis"]
   API2 --> Redis
   API3 --> Redis
 
@@ -764,19 +785,19 @@ flowchart LR
   API2 --> LLM
   API3 --> LLM
 
-  API1 --> Log["日志 / 监控 / 链路追踪"]
-  API2 --> Log
-  API3 --> Log
+  API1 --> Monitor["日志 / 监控 / 链路追踪"]
+  API2 --> Monitor
+  API3 --> Monitor
 ```
 
 高可用设计：
 
-- 前端静态资源部署到 CDN，降低源站压力。
-- 后端 API 多实例无状态部署，负载均衡分发流量。
-- Redis 和数据库采用主从或云托管高可用版本。
-- 检索服务独立集群部署，避免拖垮主 API。
-- LLM 接入支持超时、重试、备用模型和 mock 降级。
-- 限流和熔断保护，防止大量用户涌入时服务雪崩。
+- 前端静态资源部署到 CDN。
+- 后端 API 多实例无状态部署。
+- 负载均衡自动摘除异常实例。
+- Redis、数据库、搜索引擎使用高可用集群或云托管版本。
+- LLM 接入配置超时、重试、熔断和备用模型。
+- 对推荐接口、搜索接口增加限流，防止突发流量打垮系统。
 
 ### 8.2 CI/CD 流程
 
@@ -785,34 +806,36 @@ flowchart LR
 ```text
 开发分支提交
   -> Pull Request
-  -> 静态检查
-  -> 单元测试
+  -> 代码检查
   -> 前端构建
   -> 后端测试
+  -> 商品库校验
   -> Docker 镜像构建
-  -> 部署到测试环境
+  -> 测试环境部署
   -> 自动化冒烟测试
   -> 人工验收
-  -> 部署到生产环境
+  -> 生产环境发布
 ```
 
 前端检查：
 
-- `npm run build`
-- TypeScript 类型检查。
-- 基础页面冒烟测试。
+```bash
+cd frontend
+npm run build
+```
 
 后端检查：
 
-- `python -m app.scripts.validate_products`
-- 单元测试和接口测试。
-- 推荐评估集回归测试。
+```bash
+cd backend
+python -m app.scripts.validate_products
+```
 
 发布策略：
 
 - 测试环境自动部署。
 - 生产环境手动批准。
-- 重要版本使用灰度发布或蓝绿发布。
+- 重要版本采用灰度发布或蓝绿发布。
 
 ### 8.3 回滚方案
 
@@ -821,43 +844,32 @@ flowchart LR
 - 新版本导致服务不可用。
 - 推荐接口错误率显著升高。
 - 商品推荐结果严重错误。
-- 数据库迁移造成业务异常。
-- 大模型 Prompt 或策略导致大范围异常输出。
+- 数据库迁移导致业务异常。
+- Prompt 或算法策略导致大范围异常输出。
 
 回滚步骤：
 
 1. 暂停当前发布流水线。
-2. 关闭新版本流量入口或将负载均衡切回旧版本。
-3. 回滚后端镜像到上一个稳定版本。
-4. 回滚前端静态资源版本。
-5. 如果涉及数据库迁移，执行预先准备的回滚脚本或恢复备份。
-6. 如果涉及商品库或推荐权重，回滚到上一个稳定配置。
+2. 从负载均衡摘除新版本实例。
+3. 后端镜像回滚到上一个稳定版本。
+4. 前端静态资源回滚到上一个稳定版本。
+5. 如果涉及数据库迁移，执行回滚脚本或恢复备份。
+6. 如果涉及商品库、Prompt、推荐权重，回滚到上一个稳定配置。
 7. 验证核心接口：
    - 健康检查。
    - 商品搜索。
    - 推荐生成。
    - 加入购物车。
-8. 复盘故障原因，补充测试用例和告警规则。
+8. 复盘故障原因，补充测试和告警。
 
 回滚原则：
 
-- 代码、配置、商品数据、Prompt、算法权重都需要版本化。
-- 数据库变更必须提前准备向前兼容方案。
-- 推荐策略上线应支持灰度和快速开关。
+- 代码、配置、商品数据、Prompt、算法权重均需版本化。
+- 数据库变更优先采用向前兼容设计。
+- 推荐策略上线需要支持灰度和快速开关。
 
-## 9. 风险与后续优化
+## 9. 总结
 
-| 风险 | 当前表现 | 优化方向 |
-|---|---|---|
-| 商品库规模小 | 部分场景推荐不够丰富 | 自动化商品采集、人工审核、商品标签治理 |
-| 本地检索能力有限 | 语义召回较粗糙 | 接入 embedding 和向量数据库 |
-| 权重依赖人工经验 | 部分推荐结果可能不稳定 | 引入评估集、A/B 实验、学习排序 |
-| LLM 响应慢 | 真实模型调用耗时较长 | 流式输出、缓存、模型路由 |
-| 礼单未持久化 | 重启后购物车丢失 | 接入数据库和用户体系 |
-| 观测不足 | 线上问题定位成本高 | 完善 trace、指标、推荐证据日志 |
+京礼 AI 导购 MVP 当前已经打通从自然语言需求到真实商品推荐的核心闭环。系统的关键特点是：不把推荐完全交给大模型自由发挥，而是通过结构化意图、混合召回、规则打分、预算组合优化和大模型解释共同完成推荐。
 
-## 10. 总结
-
-京礼 AI 导购 MVP 已经完成从用户自然语言到真实商品推荐的核心闭环。当前系统的关键价值在于：不是简单地把问题交给大模型，而是通过结构化意图、混合召回、规则打分、预算优化和大模型解释共同完成推荐。
-
-后续随着商品库扩展、检索能力增强、用户反馈接入和部署体系完善，该系统可以从演示型 MVP 逐步演进为可生产化的 AI 导购推荐平台。
+该方案在 MVP 阶段保持实现简单、链路透明、便于演示；后续可以通过数据库、搜索引擎、向量检索、用户反馈和监控体系逐步演进为生产级 AI 导购平台。

@@ -24,16 +24,12 @@ const recToProductCard = (rec: V2Recommendation): ProductCardData => ({
 });
 
 function ProductImage({ rec }: { rec: V2Recommendation }) {
-  if (!rec.imageUrl) {
+  const [failed, setFailed] = useState(false);
+
+  if (!rec.imageUrl || failed) {
     return (
-      <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 text-center text-slate-400">
-        <Icon name="image" className="mb-3 h-8 w-8 text-slate-400" />
-        <button
-          type="button"
-          className="rounded-md bg-[#e4393c] px-3 py-1.5 text-[11px] font-black text-white shadow-sm"
-        >
-          生成实物图
-        </button>
+      <div className="grid h-full w-full place-items-center rounded-2xl bg-gradient-to-br from-slate-100 via-white to-orange-50 text-2xl">
+        🎁
       </div>
     );
   }
@@ -42,12 +38,7 @@ function ProductImage({ rec }: { rec: V2Recommendation }) {
       src={rec.imageUrl}
       alt={rec.name}
       className="h-full w-full rounded-2xl object-cover"
-      onError={(e) => {
-        const target = e.currentTarget as HTMLImageElement;
-        target.style.display = 'none';
-        const fallback = target.parentElement?.querySelector('[data-fallback]');
-        if (fallback) (fallback as HTMLElement).style.display = 'flex';
-      }}
+      onError={() => setFailed(true)}
     />
   );
 }
